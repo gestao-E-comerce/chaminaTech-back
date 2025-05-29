@@ -1,0 +1,93 @@
+package Ecomerce.assmar.Controller;
+
+import Ecomerce.assmar.DTO.FuncionarioDTO;
+import Ecomerce.assmar.DTO.MateriaDTO;
+import Ecomerce.assmar.DTO.MensagemDTO;
+import Ecomerce.assmar.Service.MateriaService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.nio.file.AccessDeniedException;
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/materia")
+@CrossOrigin(origins = "http://localhost:4200")
+public class MateriaController {
+    @Autowired
+    MateriaService materiaService;
+
+//    @GetMapping("/{id}")
+//    public ResponseEntity<MateriaDTO> findMateriaById(@PathVariable Long id) {
+//        MateriaDTO materiaDTO = materiaService.findMateriaById(id);
+//        if (materiaDTO != null) {
+//            return ResponseEntity.ok(materiaDTO);
+//        } else {
+//            return ResponseEntity.notFound().build();
+//        }
+//    }
+    @GetMapping("/lista")
+    public List<MateriaDTO> listarMateriasPorNome(
+            @RequestParam Long matrizId,
+            @RequestParam Boolean deletado,
+            @RequestParam(required = false) String termoPesquisa,
+            @RequestParam(required = false) Boolean ativo) {
+        return materiaService.listarMaterias(matrizId, deletado, termoPesquisa, ativo);
+    }
+
+    @GetMapping("/listarMateriasDeposito")
+    public ResponseEntity<List<MateriaDTO>> listarMateriasDeposito(
+            @RequestParam Long matrizId,
+            @RequestParam(required = false) String termoPesquisa) {
+        return ResponseEntity.ok(materiaService.listarMateriasDepositos(matrizId, termoPesquisa));
+    }
+
+    @GetMapping("/listarMateriasDepositoDescartar")
+    public ResponseEntity<List<MateriaDTO>> listarMateriasDepositosDescartados(
+            @RequestParam Long matrizId,
+            @RequestParam(required = false) String termoPesquisa) {
+        return ResponseEntity.ok(materiaService.listarMateriasDepositosDescartados(matrizId, termoPesquisa));
+    }
+
+    @PostMapping
+    public ResponseEntity<MensagemDTO> cadastrarMateria(@RequestBody MateriaDTO materiaDTO) {
+        try {
+            return ResponseEntity.ok(materiaService.cadastrarMateria(materiaDTO));
+        } catch (Exception e) {
+            MensagemDTO mensagem = new MensagemDTO(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return ResponseEntity.badRequest().body(mensagem);
+        }
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<MensagemDTO> editarMateria(@PathVariable Long id, @RequestBody MateriaDTO materiaDTO) {
+        try {
+            return ResponseEntity.ok(materiaService.editarMateria(id, materiaDTO));
+        } catch (Exception e) {
+            MensagemDTO mensagem = new MensagemDTO(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return ResponseEntity.badRequest().body(mensagem);
+        }
+    }
+
+    @PutMapping("/desativar/{id}")
+    public ResponseEntity<MensagemDTO> desativarMateria(@PathVariable Long id, @RequestBody MateriaDTO materiaDTO) {
+        try {
+            return ResponseEntity.ok(materiaService.ativarOuDesativarMateria(id, materiaDTO));
+        } catch (Exception e) {
+            MensagemDTO mensagem = new MensagemDTO(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return ResponseEntity.badRequest().body(mensagem);
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<MensagemDTO> deletarMateria(@PathVariable Long id) {
+        try {
+            return ResponseEntity.ok(materiaService.deletarMateria(id));
+        } catch (Exception e) {
+            MensagemDTO mensagem = new MensagemDTO(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return ResponseEntity.badRequest().body(mensagem);
+        }
+    }
+}
