@@ -8,10 +8,10 @@
 		<version>3.2.4</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>E-comerce</groupId>
-	<artifactId>assmar</artifactId>
+	<groupId>ChaminaTech</groupId>
+	<artifactId>ChaminaTech-back</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>assmar</name>
+	<name>ChaminaTech</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
 		<java.version>17</java.version>
