@@ -1,0 +1,25 @@
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: backend-service
+#   namespace: producao
+# spec:
+#   selector:
+#     app: backend
+#   ports:
+#     - port: 8080
+#       targetPort: 8080
+#   type: ClusterIP
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+  namespace: producao
+spec:
+  selector:
+    app: backend
+  type: NodePort # ← troque
+  ports:
+    - port: 8080 # porta que o Ingress usará
+      targetPort: 8080
+      protocol: TCP

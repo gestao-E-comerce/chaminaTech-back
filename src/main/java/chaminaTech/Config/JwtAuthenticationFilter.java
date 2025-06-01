@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Date;
 
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
@@ -35,7 +36,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         final String userName;
 
         String requestURI = request.getRequestURI();
-        if (requestURI.contains("/api/login") || requestURI.contains("/ws")) {
+        if (requestURI.contains("/api/login") || requestURI.contains("/api/ws")) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -60,13 +61,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
 
             if (jwtService.isTokenValid(jwt, userDetails)) {
-//                Date expirationDate = jwtService.extractExpiration(jwt);
-//                long expirationThreshold = 5 * 60 * 1000; // 5 minutos
+                Date expirationDate = jwtService.extractExpiration(jwt);
+                long expirationThreshold = 10 * 60 * 1000; // 10 minutos
 
-//                if (expirationDate != null && expirationDate.getTime() - System.currentTimeMillis() < expirationThreshold) {
+                if (expirationDate != null && expirationDate.getTime() - System.currentTimeMillis() < expirationThreshold) {
                 String newJwtToken = jwtService.generateToken((Usuario) userDetails);
                 response.setHeader("Authorization", "Bearer " + newJwtToken);
-//                }
+                }
 
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities());

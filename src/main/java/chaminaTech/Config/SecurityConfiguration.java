@@ -36,7 +36,7 @@ public class SecurityConfiguration {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Configure o CORS aqui usando o CorsConfigurationSource bean
                 .authorizeHttpRequests((requests) -> requests
 //                        .requestMatchers("/**").permitAll()  // Permite todas as requisições para o frontend (Angular)
-                        .requestMatchers("/api/login", "/ws/**", "/sockjs/**").permitAll()  // Permite o acesso à rota de login sem token
+                        .requestMatchers("/api/login", "/api/ws/**", "/sockjs/**").permitAll()  // Permite o acesso à rota de login sem token
                         .anyRequest().authenticated())  // Exige autenticação para todas as outras requisições
                 .authenticationProvider(authenticationProvider)  // Define o provedor de autenticação
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)  // Adiciona o filtro de autenticação JWT antes do filtro de autenticação padrão
