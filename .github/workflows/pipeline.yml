@@ -37,7 +37,7 @@ jobs:
       - name: Build da imagem Docker
         run: docker build -t $IMAGE_NAME:${{ github.sha }} .
 
-      - name: Push da imagem para o Docker Hub
+      - name: Push da imagem Docker
         run: docker push $IMAGE_NAME:${{ github.sha }}
 
       - name: Autenticar no Google Cloud
@@ -57,7 +57,7 @@ jobs:
             --region $CLUSTER_LOCATION \
             --project $PROJECT_ID
 
-      - name: Garantir que o namespace existe
+      - name: Criar namespace (se não existir)
         run: |
           kubectl get ns $NAMESPACE || kubectl create ns $NAMESPACE
 
