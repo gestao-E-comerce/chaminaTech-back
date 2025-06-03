@@ -13,14 +13,13 @@ public interface EstoqueRepository extends JpaRepository<Estoque, Long> {
     @Query("""
                 SELECT e FROM Estoque e
                 WHERE e.matriz.id = :matrizId
-                AND e.deletado = :deletado
+                AND e.deletado = false
                   AND (:ativo IS NULL OR e.ativo = :ativo)
                   AND (:produtoNome IS NULL OR CAST(e.produto.nome AS string) LIKE %:produtoNome%)
                   ORDER BY e.id ASC
             """)
     List<Estoque> listarEstoques(
             @Param("matrizId") Long matrizId,
-            @Param("deletado") Boolean deletado,
             @Param("ativo") Boolean ativo,
             @Param("produtoNome") String produtoNome
     );

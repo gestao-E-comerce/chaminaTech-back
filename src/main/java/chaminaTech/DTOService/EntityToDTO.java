@@ -406,6 +406,10 @@ public class EntityToDTO {
         permissaoDTO.setEditarFilho(permissao.getEditarFilho());
         permissaoDTO.setDeletarFilho(permissao.getDeletarFilho());
 
+        permissaoDTO.setMatriz(permissao.getMatriz());
+        permissaoDTO.setCadastrarMatriz(permissao.getCadastrarMatriz());
+        permissaoDTO.setEditarMatriz(permissao.getEditarMatriz());
+
         permissaoDTO.setProduto(permissao.getProduto());
         permissaoDTO.setCadastrarProduto(permissao.getCadastrarProduto());
         permissaoDTO.setEditarProduto(permissao.getEditarProduto());

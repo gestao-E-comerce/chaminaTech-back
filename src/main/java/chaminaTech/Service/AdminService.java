@@ -53,11 +53,11 @@ public class AdminService {
         return new MensagemDTO("Admin atualizado com sucesso!", HttpStatus.CREATED);
     }
 
-    public List<MatrizDTO> listarMatrizes(Boolean deletado, String termoPesquisa, Boolean ativo) {
-        return adminRepository.findAllMatrizes(deletado, termoPesquisa, ativo).stream().map(entityToDTO::matrizToDTO).toList();
+    public List<MatrizDTO> listarMatrizes(String termoPesquisa, Boolean ativo) {
+        return adminRepository.findAllMatrizes(termoPesquisa, ativo).stream().map(entityToDTO::matrizToDTO).toList();
     }
-    public List<MatrizDTO> listarFilhos(Boolean deletado, String termoPesquisa, Boolean ativo) {
-        return adminRepository.findAllFilhos(deletado, termoPesquisa, ativo).stream().map(entityToDTO::matrizToDTO).toList();
+    public List<MatrizDTO> listarFilhos(String termoPesquisa, Boolean ativo) {
+        return adminRepository.findAllFilhos(termoPesquisa, ativo).stream().map(entityToDTO::matrizToDTO).toList();
     }
 
     public String buscarChaveApiCoordenadas() {

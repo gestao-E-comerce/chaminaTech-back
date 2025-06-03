@@ -27,8 +27,8 @@ public class MateriaService {
     @Autowired
     private AuditoriaService auditoriaService;
 
-    public List<MateriaDTO> listarMaterias(Long matrizId, Boolean deletado, String termoPesquisa, Boolean ativo) {
-        return materiaRepository.listarMaterias(matrizId, deletado, termoPesquisa, ativo).stream()
+    public List<MateriaDTO> listarMaterias(Long matrizId, String termoPesquisa, Boolean ativo) {
+        return materiaRepository.listarMaterias(matrizId, termoPesquisa, ativo).stream()
                 .map(entityToDTO::materiaToDTO)
                 .collect(Collectors.toList());
     }

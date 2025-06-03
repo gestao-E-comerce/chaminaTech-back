@@ -1,5 +1,6 @@
 package chaminaTech.Service;
 
+import chaminaTech.DTOService.PermissaoUtil;
 import chaminaTech.Entity.Auditoria;
 import chaminaTech.Repository.AuditoriaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,7 @@ public class AuditoriaService {
             LocalDateTime dataFim,
             Pageable pageable
     ) {
+        PermissaoUtil.validarOuLancar("auditoria");
         if (matrizId == null) {
             throw new IllegalArgumentException("O campo 'matrizId' é obrigatório.");
         }

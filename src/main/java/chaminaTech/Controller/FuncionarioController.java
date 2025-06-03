@@ -30,10 +30,9 @@ public class FuncionarioController {
     @GetMapping("/lista")
     public List<FuncionarioDTO> listarFuncionarios(
             @RequestParam Long matrizId,
-            @RequestParam Boolean deletado,
             @RequestParam(required = false) String termoPesquisa,
             @RequestParam(required = false) Boolean ativo) {
-        return funcionarioService.listarFuncionarios(matrizId, deletado, termoPesquisa, ativo);
+        return funcionarioService.listarFuncionarios(matrizId, termoPesquisa, ativo);
     }
 
     @PostMapping

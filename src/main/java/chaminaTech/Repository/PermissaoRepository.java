@@ -31,6 +31,7 @@ public interface PermissaoRepository extends JpaRepository<Permissao, Long> {
     @Query("""
                 SELECT COUNT(u) > 0 FROM Usuario u
                 WHERE u.permissao.id = :permissaoId
+                AND u.deletado = false
             """)
     boolean existeUsuarioComPermissao(@Param("permissaoId") Long permissaoId);
 }

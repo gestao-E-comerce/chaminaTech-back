@@ -35,8 +35,8 @@ public class DepositoService {
     @Autowired
     private AuditoriaService auditoriaService;
 
-    public List<DepositoDTO> listarDepositos(Long matrizId, Boolean deletado, Boolean ativo, String materiaNome) {
-        List<Deposito> depositos = depositoRepository.listarDepositos(matrizId, deletado, ativo, materiaNome);
+    public List<DepositoDTO> listarDepositos(Long matrizId, Boolean ativo, String materiaNome) {
+        List<Deposito> depositos = depositoRepository.listarDepositos(matrizId, ativo, materiaNome);
 
         return depositos.stream()
                 .map(entityToDTO::depositoToDTO)

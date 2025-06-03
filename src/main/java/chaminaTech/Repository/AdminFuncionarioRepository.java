@@ -11,14 +11,13 @@ public interface AdminFuncionarioRepository extends JpaRepository<AdminFuncionar
     @Query("""
                 SELECT f FROM AdminFuncionario f
                 WHERE f.admin.id = :adminId
-                  AND f.deletado = :deletado
+                  AND f.deletado = false
                   AND (:termoPesquisa IS NULL OR CAST(f.nome AS string) LIKE %:termoPesquisa%)
                   AND (:ativo IS NULL OR f.ativo = :ativo)
                   ORDER BY f.id ASC
             """)
     List<AdminFuncionario> buscarFuncionarios(
             @Param("adminId") Long adminId,
-            @Param("deletado") Boolean deletado,
             @Param("termoPesquisa") String termoPesquisa,
             @Param("ativo") Boolean ativo);
 
@@ -26,16 +25,16 @@ public interface AdminFuncionarioRepository extends JpaRepository<AdminFuncionar
             SELECT COUNT(f) > 0 FROM AdminFuncionario f
             WHERE f.admin.id = :adminId
             AND f.nome = :nome
-            AND f.deletado = :deletado
+            AND f.deletado = false
             """)
-    boolean existsByNomeAndAdminIdAndDeletado(@Param("adminId") Long adminId, @Param("nome") String nome, @Param("deletado") boolean deletado);
+    boolean existsByNomeAndAdminIdAndDeletado(@Param("adminId") Long adminId, @Param("nome") String nome);
 
     @Query("""
             SELECT COUNT(f) > 0 FROM AdminFuncionario f
             WHERE f.admin.id = :adminId
             AND f.nome = :nome
-            AND f.deletado = :deletado
+            AND f.deletado = false
             AND f.id != :funcionarioId
             """)
-    boolean existsByNomeAndAdminIdAndDeletadoAndNotId(@Param("adminId") Long adminId, @Param("nome") String nome, @Param("deletado") boolean deletado, @Param("funcionarioId") Long funcionarioId);
+    boolean existsByNomeAndAdminIdAndDeletadoAndNotId(@Param("adminId") Long adminId, @Param("nome") String nome, @Param("funcionarioId") Long funcionarioId);
 }

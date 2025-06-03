@@ -53,6 +53,7 @@ public class MatrizService {
     }
 
     public MensagemDTO cadastrarMatriz(MatrizDTO matrizDTO) {
+        PermissaoUtil.validarOuLancar("cadastrarMatriz");
         Matriz matriz = dtoToEntity.DTOToMatriz(matrizDTO);
         if (matriz.getPassword() == null) {
             throw new IllegalStateException("Password obrigatório!");
@@ -61,7 +62,7 @@ public class MatrizService {
             throw new IllegalStateException("Username já está em uso.");
         }
         matriz.setPassword(passwordEncoder.encode(matriz.getPassword()));
-        if (matrizRepository.existsByNomeAndDeletado(matriz.getNome(), false)) {
+        if (matrizRepository.existsByNomeAndDeletado(matriz.getNome())) {
             throw new IllegalStateException("Já existe uma matriz com esse nome!");
         }
 
@@ -122,7 +123,7 @@ public class MatrizService {
     }
 
     public MensagemDTO editarMatriz(Long id, MatrizDTO matrizDTO) {
-        PermissaoUtil.validarOuLancar("editarConfiguracoes");
+        PermissaoUtil.validarOuLancar("editarMatriz");
         matrizDTO.setId(id);
         Matriz matriz = dtoToEntity.DTOToMatriz(matrizDTO);
         if (loginRepository.existsByUsernameExcludingId(matriz.getUsername(), matriz.getId())) {
@@ -156,7 +157,7 @@ public class MatrizService {
         }
         if (matriz.getPermissao() != null) {
             Permissao permissaoMatriz = matriz.getPermissao();
-            List<Funcionario> funcionarios = funcionarioRepository.buscarFuncionarios(matriz.getId(), false, null, null);
+            List<Funcionario> funcionarios = funcionarioRepository.buscarFuncionarios(matriz.getId(), null, null);
 
             if (funcionarios != null && !funcionarios.isEmpty()) {
                 for (Funcionario funcionario : funcionarios) {
@@ -170,6 +171,7 @@ public class MatrizService {
                         if (!Boolean.TRUE.equals(permissaoMatriz.getDeposito())) p.setDeposito(false);
                         if (!Boolean.TRUE.equals(permissaoMatriz.getMateria())) p.setMateria(false);
                         if (!Boolean.TRUE.equals(permissaoMatriz.getFilho())) p.setFilho(false);
+                        if (!Boolean.TRUE.equals(permissaoMatriz.getMatriz())) p.setMatriz(false);
                     }
                 }
 
@@ -246,6 +248,7 @@ public class MatrizService {
 
     @Transactional
     public MensagemDTO ativarOuDesativarMatriz(Long id, MatrizDTO matrizDTO) {
+        PermissaoUtil.validarOuLancar("editarMatriz");
         matrizDTO.setId(id);
         Matriz matriz = dtoToEntity.DTOToMatriz(matrizDTO);
 

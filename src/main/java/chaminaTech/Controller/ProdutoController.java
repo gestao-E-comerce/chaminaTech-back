@@ -40,7 +40,6 @@ public class ProdutoController {
     @GetMapping("/lista")
     public ResponseEntity<List<ProdutoDTO>> listarComFiltro(
             @RequestParam Long matrizId,
-            @RequestParam Boolean deletado,
             @RequestParam(required = false) Boolean ativo,
             @RequestParam(required = false) Boolean cardapio,
             @RequestParam(required = false) Boolean estocavel,
@@ -48,7 +47,7 @@ public class ProdutoController {
             @RequestParam(required = false) String categoriaNome,
             @RequestParam(required = false) String nome
     ) {
-        List<ProdutoDTO> resultado = produtoService.listarProdutosComFiltro(matrizId, deletado, ativo, cardapio, estocavel, validarExestencia, categoriaNome, nome);
+        List<ProdutoDTO> resultado = produtoService.listarProdutosComFiltro(matrizId, ativo, cardapio, estocavel, validarExestencia, categoriaNome, nome);
         return ResponseEntity.ok(resultado);
     }
     @GetMapping("/listarProdutosEstoque")

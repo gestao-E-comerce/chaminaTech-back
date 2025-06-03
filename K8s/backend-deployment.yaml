@@ -33,8 +33,8 @@ spec:
               value: "https://chaminatech.com"
           resources:
             requests:
-              cpu: "200m"
-              memory: "512Mi"
+              cpu: "1000m"       # 1 vCPU garantido
+              memory: "2Gi"      # 2 GB garantidos
             limits:
-              cpu: "500m"
-              memory: "1Gi"
+              cpu: "2"           # limite máximo 2 vCPUs
+              memory: "4Gi"  

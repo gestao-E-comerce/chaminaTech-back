@@ -40,8 +40,8 @@ public class EstoqueService {
     private AuditoriaService auditoriaService;
 
 
-    public List<EstoqueDTO> listarEstoques(Long matrizId, Boolean deletado, Boolean ativo, String produtoNome) {
-        List<Estoque> estoques = estoqueRepository.listarEstoques(matrizId, deletado, ativo, produtoNome);
+    public List<EstoqueDTO> listarEstoques(Long matrizId, Boolean ativo, String produtoNome) {
+        List<Estoque> estoques = estoqueRepository.listarEstoques(matrizId, ativo, produtoNome);
 
         return estoques.stream().map(entityToDTO::estoqueToDTO).collect(Collectors.toList());
     }

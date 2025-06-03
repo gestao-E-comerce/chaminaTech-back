@@ -30,11 +30,10 @@ public class CategoriaController {
     @GetMapping("/lista")
     public ResponseEntity<List<CategoriaDTO>> listarCategorias(
             @RequestParam Long matrizId,
-            @RequestParam Boolean deletado,
             @RequestParam(required = false) Boolean ativo,
             @RequestParam(required = false) String nome
     ) {
-        List<CategoriaDTO> resultado = categoriaService.listarCategorias(matrizId, deletado, ativo, nome);
+        List<CategoriaDTO> resultado = categoriaService.listarCategorias(matrizId, ativo, nome);
         return ResponseEntity.ok(resultado);
     }
 

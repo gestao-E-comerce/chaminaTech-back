@@ -86,7 +86,7 @@ public class LoginService {
                 )
         );
 
-        Funcionario funcionario = funcionarioRepository.buscarFuncionarios(matrizId, false,null,null).stream()
+        Funcionario funcionario = funcionarioRepository.buscarFuncionarios(matrizId, null,null).stream()
                 .filter(f -> f.getUsername().equals(loginDTO.getUsername()))
                 .findFirst()
                 .orElse(null);

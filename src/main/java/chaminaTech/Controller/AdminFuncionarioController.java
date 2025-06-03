@@ -30,10 +30,9 @@ public class AdminFuncionarioController {
     @GetMapping("/lista")
     public List<AdminFuncionarioDTO> listarAdminFuncionarios(
             @RequestParam Long adminId,
-            @RequestParam Boolean deletado,
             @RequestParam(required = false) String termoPesquisa,
             @RequestParam(required = false) Boolean ativo) {
-        return adminFuncionarioService.listarAdminFuncionarios(adminId, deletado, termoPesquisa, ativo);
+        return adminFuncionarioService.listarAdminFuncionarios(adminId, termoPesquisa, ativo);
     }
 
     @PostMapping

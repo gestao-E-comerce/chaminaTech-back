@@ -95,6 +95,7 @@ public class GestaoCaixaService {
     }
 
     public MensagemDTO zerarCupom(Long matrizId) {
+        PermissaoUtil.validarOuLancar("editarConfiguracoes");
         boolean temCuponsAtivos = gestaoCaixaRepository.existsByMatrizIdAndAtivoTrue(matrizId);
 
         if (temCuponsAtivos) {

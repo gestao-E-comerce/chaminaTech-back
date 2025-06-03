@@ -35,7 +35,6 @@ public class PermissaoUtil {
             case "historicoVenda" -> permissao.getHistoricoVenda();
             case "imprimir" -> permissao.getImprimir();
 
-            case "caixa" -> permissao.getCaixa();
             case "editarCaixa" -> permissao.getEditarCaixa();
             case "deletarCaixa" -> permissao.getDeletarCaixa();
             case "historicoCaixa" -> permissao.getHistoricoCaixa();
@@ -85,6 +84,10 @@ public class PermissaoUtil {
             case "cadastrarFilho" -> permissao.getCadastrarFilho();
             case "editarFilho" -> permissao.getEditarFilho();
             case "deletarFilho" -> permissao.getDeletarFilho();
+
+            case "matriz" -> permissao.getMatriz();
+            case "cadastrarMatriz" -> permissao.getCadastrarMatriz();
+            case "editarMatriz" -> permissao.getEditarMatriz();
 
             case "produto" -> permissao.getProduto();
             case "cadastrarProduto" -> permissao.getCadastrarProduto();

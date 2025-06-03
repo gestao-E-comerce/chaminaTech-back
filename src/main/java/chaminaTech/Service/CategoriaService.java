@@ -36,8 +36,8 @@ public class CategoriaService {
         return entityToDTO.categoriaToDTO(categoria);
     }
 
-    public List<CategoriaDTO> listarCategorias(Long matrizId, Boolean deletado, Boolean ativo, String nome) {
-        List<Categoria> categorias = categoriaRepository.listarCategorias(matrizId, deletado, ativo, nome);
+    public List<CategoriaDTO> listarCategorias(Long matrizId, Boolean ativo, String nome) {
+        List<Categoria> categorias = categoriaRepository.listarCategorias(matrizId, ativo, nome);
 
         return categorias.stream()
                 .map(entityToDTO::categoriaToDTO)

@@ -16,7 +16,7 @@ public interface MatrizRepository extends JpaRepository<Matriz, Long> {
 
     List<Matriz> findByMatrizIdAndAtivo(Long matrizId, boolean ativo);
 
-    boolean existsByNomeAndDeletado(String nome, boolean deletado);
+    boolean existsByNomeAndDeletado(String nome);
 
     @Query("SELECT COUNT(m) > 0 FROM Matriz m WHERE m.nome = :nome AND m.deletado = false AND m.id <> :idAtual")
     boolean existsByNomeAndDeletadoAndNotId(@Param("nome") String nome, @Param("idAtual") Long idAtual);

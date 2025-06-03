@@ -89,6 +89,10 @@ public class Permissao {
     private Boolean editarFilho = false;
     private Boolean deletarFilho = false;
 
+    private Boolean matriz = false;
+    private Boolean cadastrarMatriz = false;
+    private Boolean editarMatriz = false;
+
     private Boolean produto = false;
     private Boolean cadastrarProduto = false;
     private Boolean editarProduto = false;

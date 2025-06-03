@@ -38,8 +38,8 @@ public class ProdutoService {
         return produtoOptional.map(entityToDTO::produtoToDTO).orElse(null);
     }
 
-    public List<ProdutoDTO> listarProdutosComFiltro(Long matrizId, Boolean deletado, Boolean ativo, Boolean cardapio, Boolean estocavel, Boolean validarExestencia, String categoriaNome, String nome) {
-        List<Produto> produtos = produtoRepository.listarProdutos(matrizId, deletado, ativo, cardapio, estocavel, validarExestencia, categoriaNome, nome);
+    public List<ProdutoDTO> listarProdutosComFiltro(Long matrizId, Boolean ativo, Boolean cardapio, Boolean estocavel, Boolean validarExestencia, String categoriaNome, String nome) {
+        List<Produto> produtos = produtoRepository.listarProdutos(matrizId, ativo, cardapio, estocavel, validarExestencia, categoriaNome, nome);
 
         return produtos.stream()
                 .map(entityToDTO::produtoToDTO)

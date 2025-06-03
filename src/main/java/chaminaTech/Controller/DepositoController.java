@@ -21,11 +21,10 @@ public class DepositoController {
     @GetMapping("/lista")
     public ResponseEntity<List<DepositoDTO>> listarDepositos(
             @RequestParam Long matrizId,
-            @RequestParam Boolean deletado,
             @RequestParam(required = false) Boolean ativo,
             @RequestParam(required = false) String materiaNome
     ) {
-        List<DepositoDTO> resultado = depositoService.listarDepositos(matrizId, deletado, ativo, materiaNome);
+        List<DepositoDTO> resultado = depositoService.listarDepositos(matrizId, ativo, materiaNome);
         return ResponseEntity.ok(resultado);
     }
 

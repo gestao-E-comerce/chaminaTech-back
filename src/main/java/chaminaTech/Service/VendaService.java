@@ -566,6 +566,7 @@ public class VendaService {
 
     @Transactional
     public MensagemDTO salvarMesaParcial(VendaDTO vendaDTO) {
+        PermissaoUtil.validarOuLancar("cadastrarVenda");
         Timestamp agora = new Timestamp(System.currentTimeMillis());
         Venda venda = dtoToEntity.DTOToVenda(vendaDTO);
         venda.setDataVenda(agora);

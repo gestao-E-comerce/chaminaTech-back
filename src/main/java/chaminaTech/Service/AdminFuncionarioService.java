@@ -38,11 +38,11 @@ public class AdminFuncionarioService {
         return entityToDTO.adminFuncionarioToDTO(adminFuncionario);
     }
 
-    public List<AdminFuncionarioDTO> listarAdminFuncionarios(Long adminId, Boolean deletado, String termoPesquisa, Boolean ativo) {
+    public List<AdminFuncionarioDTO> listarAdminFuncionarios(Long adminId, String termoPesquisa, Boolean ativo) {
         PermissaoUtil.validarOuLancar("funcionario");
         try {
             Usuario usuarioLogado = PermissaoUtil.getUsuarioLogado();
-            return adminFuncionarioRepository.buscarFuncionarios(adminId, deletado, termoPesquisa, ativo).stream()
+            return adminFuncionarioRepository.buscarFuncionarios(adminId, termoPesquisa, ativo).stream()
                     .filter(funcionario -> {
                         // só aplica o filtro se o logado for FUNCIONARIO
                         if ("ADMINFUNCIONARIO".equalsIgnoreCase(usuarioLogado.getRole())) {
@@ -70,7 +70,7 @@ public class AdminFuncionarioService {
 
         adminFuncionario.setRole("ADMINFUNCIONARIO");
         adminFuncionario.setPassword(passwordEncoder.encode(adminFuncionario.getPassword()));
-        if (adminFuncionarioRepository.existsByNomeAndAdminIdAndDeletado(adminFuncionarioDTO.getAdmin().getId(), adminFuncionario.getNome(), false)) {
+        if (adminFuncionarioRepository.existsByNomeAndAdminIdAndDeletado(adminFuncionarioDTO.getAdmin().getId(), adminFuncionario.getNome())) {
             throw new IllegalStateException("UserName indispensável!");
         }
 
@@ -104,7 +104,7 @@ public class AdminFuncionarioService {
             adminFuncionario.setPassword(passwordEncoder.encode(adminFuncionario.getPassword()));
         }
 
-        if (adminFuncionarioRepository.existsByNomeAndAdminIdAndDeletadoAndNotId(adminFuncionarioDTO.getAdmin().getId(), adminFuncionario.getNome(), false, adminFuncionario.getId())) {
+        if (adminFuncionarioRepository.existsByNomeAndAdminIdAndDeletadoAndNotId(adminFuncionarioDTO.getAdmin().getId(), adminFuncionario.getNome(), adminFuncionario.getId())) {
             throw new IllegalStateException("Já existe um adminFuncionario com esse nome!");
         }
 

@@ -11,14 +11,13 @@ public interface MateriaRepository extends JpaRepository<Materia, Long> {
     @Query("""
                 SELECT m FROM Materia m
                 WHERE m.matriz.id = :matrizId
-                  AND m.deletado = :deletado
+                  AND m.deletado = false
                   AND (:termoPesquisa IS NULL OR CAST(m.nome AS string) LIKE %:termoPesquisa%)
                   AND (:ativo IS NULL OR m.ativo = :ativo)
                   ORDER BY m.id ASC
             """)
     List<Materia> listarMaterias(
             @Param("matrizId") Long matrizId,
-            @Param("deletado") Boolean deletado,
             @Param("termoPesquisa") String termoPesquisa,
             @Param("ativo") Boolean ativo
     );
@@ -82,7 +81,7 @@ public interface MateriaRepository extends JpaRepository<Materia, Long> {
 
     @Query("SELECT COUNT(d) > 0 FROM Deposito d " +
             "WHERE d.materia.id = :materiaId " +
-            "AND d.ativo = true")
+            "AND d.ativo = true" )
     boolean existsByMateriaEmDepositoAtivo(@Param("materiaId") Long materiaId);
 
     @Query("SELECT COUNT(om) > 0 FROM ObservacaoMateria om " +

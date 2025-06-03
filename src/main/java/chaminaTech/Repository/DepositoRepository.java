@@ -13,14 +13,13 @@ public interface DepositoRepository extends JpaRepository<Deposito, Long> {
     @Query("""
                 SELECT d FROM Deposito d
                 WHERE d.matriz.id = :matrizId
-                AND d.deletado = :deletado
+                AND d.deletado = false
                   AND (:ativo IS NULL OR d.ativo = :ativo)
                   AND (:materiaNome IS NULL OR CAST(d.materia.nome AS string) LIKE %:materiaNome%)
                   ORDER BY d.id ASC
             """)
     List<Deposito> listarDepositos(
             @Param("matrizId") Long matrizId,
-            @Param("deletado") Boolean deletado,
             @Param("ativo") Boolean ativo,
             @Param("materiaNome") String materiaNome
     );

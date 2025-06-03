@@ -13,7 +13,7 @@ public interface ProdutoRepository extends JpaRepository<Produto, Long> {
     @Query("""
                 SELECT p FROM Produto p
                 WHERE p.matriz.id = :matrizId
-                AND p.deletado = :deletado
+                AND p.deletado = false
                   AND (:ativo IS NULL OR p.ativo = :ativo)
                   AND (:cardapio IS NULL OR p.cardapio = :cardapio)
                   AND (:estocavel IS NULL OR p.estocavel = :estocavel)
@@ -24,7 +24,6 @@ public interface ProdutoRepository extends JpaRepository<Produto, Long> {
             """)
     List<Produto> listarProdutos(
             @Param("matrizId") Long matrizId,
-            @Param("deletado") Boolean deletado,
             @Param("ativo") Boolean ativo,
             @Param("cardapio") Boolean cardapio,
             @Param("estocavel") Boolean estocavel,
@@ -59,8 +58,8 @@ public interface ProdutoRepository extends JpaRepository<Produto, Long> {
             """)
     List<Object[]> listarProdutosEstoquesDescartados(@Param("matrizId") Long matrizId, @Param("termoPesquisa") String termoPesquisa);
 
-    @Query("SELECT p FROM Produto p WHERE p.matriz.id = :matrizId AND p.ativo = :ativo AND p.validarExestencia = true AND p.estocavel = true")
-    List<Produto> findByMatrizIdAndAtivoAndValidarExestenciaTrue(@Param("matrizId") Long matrizId, @Param("ativo") Boolean ativo);
+//    @Query("SELECT p FROM Produto p WHERE p.matriz.id = :matrizId AND p.ativo = :ativo AND p.validarExestencia = true AND p.estocavel = true")
+//    List<Produto> findByMatrizIdAndAtivoAndValidarExestenciaTrue(@Param("matrizId") Long matrizId, @Param("ativo") Boolean ativo);
 
     @Query("SELECT p FROM Produto p WHERE p.codigo = :codigo AND p.ativo = true AND p.matriz.id = :matrizId AND p.deletado = false AND p.cardapio = true")
     Optional<Produto> findByCodigoAndMatrizIdAndAtivo(@Param("codigo") Integer codigo, @Param("matrizId") Long matrizId);

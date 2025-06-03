@@ -21,11 +21,10 @@ public class EstoqueController {
     @GetMapping("/lista")
     public ResponseEntity<List<EstoqueDTO>> listarEstoques(
             @RequestParam Long matrizId,
-            @RequestParam Boolean deletado,
             @RequestParam(required = false) Boolean ativo,
             @RequestParam(required = false) String produtoNome
     ) {
-        List<EstoqueDTO> resultado = estoqueService.listarEstoques(matrizId, deletado, ativo, produtoNome);
+        List<EstoqueDTO> resultado = estoqueService.listarEstoques(matrizId, ativo, produtoNome);
         return ResponseEntity.ok(resultado);
     }
 

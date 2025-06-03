@@ -11,12 +11,12 @@ public interface CategoriaRepository extends JpaRepository<Categoria, Long> {
     @Query("""
                 SELECT c FROM Categoria c
                 WHERE c.matriz.id = :matrizId
-                AND c.deletado = :deletado
+                AND c.deletado = false
                   AND (:ativo IS NULL OR c.ativo = :ativo)
                   AND (:nome IS NULL OR CAST(c.nome AS string) LIKE %:nome%)
                 ORDER BY c.id ASC
             """)
-    List<Categoria> listarCategorias(@Param("matrizId") Long matrizId, @Param("deletado") Boolean deletado, @Param("ativo") Boolean ativo, @Param("nome") String nome);
+    List<Categoria> listarCategorias(@Param("matrizId") Long matrizId, @Param("ativo") Boolean ativo, @Param("nome") String nome);
 
     @Query("""
             SELECT COUNT(c) > 0 FROM Categoria c

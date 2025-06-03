@@ -40,19 +40,17 @@ public class AdminController {
 
     @GetMapping("/listarMatrizes")
     public List<MatrizDTO> listarAdministracaoes(
-            @RequestParam (required = false) Boolean deletado,
             @RequestParam(required = false) String termoPesquisa,
             @RequestParam(required = false) Boolean ativo) {
-        return adminService.listarMatrizes(deletado, termoPesquisa, ativo);
+        return adminService.listarMatrizes(termoPesquisa, ativo);
     }
 
     @GetMapping("/listarFilhos")
     public List<MatrizDTO> listarFilhos(
-            @RequestParam (required = false) Boolean deletado,
             @RequestParam(required = false) String termoPesquisa,
             @RequestParam(required = false) Boolean ativo
     ) {
-        return adminService.listarFilhos(deletado, termoPesquisa, ativo);
+        return adminService.listarFilhos(termoPesquisa, ativo);
     }
 
     @GetMapping("/chave-api")

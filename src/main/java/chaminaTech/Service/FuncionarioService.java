@@ -38,12 +38,12 @@ public class FuncionarioService {
         return entityToDTO.funcionarioToDTO(funcionario);
     }
 
-    public List<FuncionarioDTO> listarFuncionarios(Long matrizId, Boolean deletado, String termoPesquisa, Boolean ativo) {
+    public List<FuncionarioDTO> listarFuncionarios(Long matrizId, String termoPesquisa, Boolean ativo) {
         PermissaoUtil.validarOuLancar("funcionario");
         try {
             Usuario usuarioLogado = PermissaoUtil.getUsuarioLogado();
 
-            return funcionarioRepository.buscarFuncionarios(matrizId, deletado, termoPesquisa, ativo).stream()
+            return funcionarioRepository.buscarFuncionarios(matrizId, termoPesquisa, ativo).stream()
                     .filter(funcionario -> {
                         // só aplica o filtro se o logado for FUNCIONARIO
                         if ("FUNCIONARIO".equalsIgnoreCase(usuarioLogado.getRole())) {

@@ -17,22 +17,12 @@ public class MateriaController {
     @Autowired
     MateriaService materiaService;
 
-//    @GetMapping("/{id}")
-//    public ResponseEntity<MateriaDTO> findMateriaById(@PathVariable Long id) {
-//        MateriaDTO materiaDTO = materiaService.findMateriaById(id);
-//        if (materiaDTO != null) {
-//            return ResponseEntity.ok(materiaDTO);
-//        } else {
-//            return ResponseEntity.notFound().build();
-//        }
-//    }
     @GetMapping("/lista")
     public List<MateriaDTO> listarMateriasPorNome(
             @RequestParam Long matrizId,
-            @RequestParam Boolean deletado,
             @RequestParam(required = false) String termoPesquisa,
             @RequestParam(required = false) Boolean ativo) {
-        return materiaService.listarMaterias(matrizId, deletado, termoPesquisa, ativo);
+        return materiaService.listarMaterias(matrizId, termoPesquisa, ativo);
     }
 
     @GetMapping("/listarMateriasDeposito")
