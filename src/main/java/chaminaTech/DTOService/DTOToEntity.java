@@ -853,15 +853,8 @@ public class DTOToEntity {
         permissao.setId(permissaoDTO.getId());
         permissao.setNome(removerCaracteresESubirParaMaiusculo(permissaoDTO.getNome()));
 
-        permissao.setTodos(permissaoDTO.getTodos());
-
-        permissao.setCadastrar(permissaoDTO.getCadastrar());
-        permissao.setEditar(permissaoDTO.getEditar());
-        permissao.setDeletar(permissaoDTO.getDeletar());
-
         permissao.setVenda(permissaoDTO.getVenda());
         permissao.setTransferirVenda(permissaoDTO.getTransferirVenda());
-//        permissao.setFinalizarVenda(permissaoDTO.getFinalizarVenda());
         permissao.setLiberarVenda(permissaoDTO.getLiberarVenda());
         permissao.setCadastrarVenda(permissaoDTO.getCadastrarVenda());
         permissao.setDeletarVenda(permissaoDTO.getDeletarVenda());
@@ -926,7 +919,7 @@ public class DTOToEntity {
         permissao.setEditarFilho(permissaoDTO.getEditarFilho());
         permissao.setDeletarFilho(permissaoDTO.getDeletarFilho());
 
-        permissao.setMatriz(permissaoDTO.getMatriz());
+        permissao.setMatrizPermissao(permissaoDTO.getMatrizPermissao());
         permissao.setCadastrarMatriz(permissaoDTO.getCadastrarMatriz());
         permissao.setEditarMatriz(permissaoDTO.getEditarMatriz());
 

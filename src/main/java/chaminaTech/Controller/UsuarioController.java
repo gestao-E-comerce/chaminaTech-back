@@ -16,6 +16,7 @@ public class UsuarioController {
     @GetMapping("/{id}")
     public ResponseEntity<UsuarioDTO> findUsuarioById(@PathVariable Long id) {
         UsuarioDTO usuarioDTO = usuarioService.findUsuarioById(id);
+
         if (usuarioDTO != null) {
             return ResponseEntity.ok(usuarioDTO);
         } else {

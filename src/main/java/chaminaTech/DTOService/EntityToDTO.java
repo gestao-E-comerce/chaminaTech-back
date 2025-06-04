@@ -328,20 +328,11 @@ public class EntityToDTO {
     public PermissaoDTO permissaoToDTO(Permissao permissao) {
         PermissaoDTO permissaoDTO = new PermissaoDTO();
 
-        // Definindo os campos básicos do Permissao
-        permissaoDTO.setId(permissao.getId());
         permissaoDTO.setId(permissao.getId());
         permissaoDTO.setNome(permissao.getNome());
 
-        permissaoDTO.setTodos(permissao.getTodos());
-
-        permissaoDTO.setCadastrar(permissao.getCadastrar());
-        permissaoDTO.setEditar(permissao.getEditar());
-        permissaoDTO.setDeletar(permissao.getDeletar());
-
         permissaoDTO.setVenda(permissao.getVenda());
         permissaoDTO.setTransferirVenda(permissao.getTransferirVenda());
-//        permissaoDTO.setFinalizarVenda(permissao.getFinalizarVenda());
         permissaoDTO.setLiberarVenda(permissao.getLiberarVenda());
         permissaoDTO.setCadastrarVenda(permissao.getCadastrarVenda());
         permissaoDTO.setDeletarVenda(permissao.getDeletarVenda());
@@ -358,7 +349,6 @@ public class EntityToDTO {
         permissaoDTO.setEditarCaixa(permissao.getEditarCaixa());
         permissaoDTO.setDeletarCaixa(permissao.getDeletarCaixa());
         permissaoDTO.setHistoricoCaixa(permissao.getHistoricoCaixa());
-
 
         permissaoDTO.setCadastrarSangria(permissao.getCadastrarSangria());
         permissaoDTO.setEditarSangria(permissao.getEditarSangria());
@@ -406,7 +396,7 @@ public class EntityToDTO {
         permissaoDTO.setEditarFilho(permissao.getEditarFilho());
         permissaoDTO.setDeletarFilho(permissao.getDeletarFilho());
 
-        permissaoDTO.setMatriz(permissao.getMatriz());
+        permissaoDTO.setMatrizPermissao(permissao.getMatrizPermissao());
         permissaoDTO.setCadastrarMatriz(permissao.getCadastrarMatriz());
         permissaoDTO.setEditarMatriz(permissao.getEditarMatriz());
 
@@ -418,7 +408,6 @@ public class EntityToDTO {
         permissaoDTO.setEditarConfiguracoes(permissao.getEditarConfiguracoes());
         permissaoDTO.setAuditoria(permissao.getAuditoria());
 
-        // Conversão da Matriz associada ao Permissao
         UsuarioDTO usuarioDTO = new UsuarioDTO();
         if (permissao.getUsuario() != null) {
             usuarioDTO.setId(permissao.getUsuario().getId());

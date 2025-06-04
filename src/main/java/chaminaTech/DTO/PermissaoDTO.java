@@ -10,15 +10,8 @@ public class PermissaoDTO {
     private Long id;
     private String nome;
 
-    private Boolean todos = false;
-
-    private Boolean cadastrar = false;
-    private Boolean editar = false;
-    private Boolean deletar = false;
-
     private Boolean venda = false;
     private Boolean transferirVenda = false;
-//    private Boolean finalizarVenda = false;
     private Boolean liberarVenda = false;
     private Boolean cadastrarVenda = false;
     private Boolean deletarVenda = false;
@@ -84,7 +77,7 @@ public class PermissaoDTO {
     private Boolean editarFilho = false;
     private Boolean deletarFilho = false;
 
-    private Boolean matriz = false;
+    private Boolean matrizPermissao = false;
     private Boolean cadastrarMatriz = false;
     private Boolean editarMatriz = false;
 

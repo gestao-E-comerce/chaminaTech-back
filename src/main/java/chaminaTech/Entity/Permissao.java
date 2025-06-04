@@ -16,12 +16,6 @@ public class Permissao {
     @Column(nullable = false)
     private String nome;
 
-    private Boolean todos = false;
-
-    private Boolean cadastrar = false;
-    private Boolean editar = false;
-    private Boolean deletar = false;
-
     private Boolean venda = false;
     private Boolean transferirVenda = false;
     private Boolean liberarVenda = false;
@@ -89,7 +83,7 @@ public class Permissao {
     private Boolean editarFilho = false;
     private Boolean deletarFilho = false;
 
-    private Boolean matriz = false;
+    private Boolean matrizPermissao = false;
     private Boolean cadastrarMatriz = false;
     private Boolean editarMatriz = false;
 
@@ -99,7 +93,6 @@ public class Permissao {
     private Boolean deletarProduto = false;
 
     private Boolean editarConfiguracoes = false;
-
     private Boolean auditoria = false;
 
     @ManyToOne

@@ -85,7 +85,7 @@ public class PermissaoUtil {
             case "editarFilho" -> permissao.getEditarFilho();
             case "deletarFilho" -> permissao.getDeletarFilho();
 
-            case "matriz" -> permissao.getMatriz();
+            case "matrizPermissao" -> permissao.getMatrizPermissao();
             case "cadastrarMatriz" -> permissao.getCadastrarMatriz();
             case "editarMatriz" -> permissao.getEditarMatriz();
 

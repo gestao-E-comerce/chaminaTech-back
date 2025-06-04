@@ -34,7 +34,8 @@ public class PermissaoService {
         try {
             Usuario usuarioLogado = PermissaoUtil.getUsuarioLogado();
             return permissaoRepository.findByUsuarioId(usuarioId).stream()
-                    .filter(permissao -> !permissao.getId().equals(usuarioLogado.getPermissao().getId()))
+                    .filter(permissao -> !permissao.getId().equals(usuarioLogado.getPermissao().getId())
+                            && !permissao.getId().equals(1L))
                     .map(entityToDTO::permissaoToDTO)
                     .collect(Collectors.toList());
         } finally {

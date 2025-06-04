@@ -62,7 +62,7 @@ public class MatrizService {
             throw new IllegalStateException("Username já está em uso.");
         }
         matriz.setPassword(passwordEncoder.encode(matriz.getPassword()));
-        if (matrizRepository.existsByNomeAndDeletado(matriz.getNome())) {
+        if (matrizRepository.existsByNome(matriz.getNome())) {
             throw new IllegalStateException("Já existe uma matriz com esse nome!");
         }
 
@@ -171,7 +171,7 @@ public class MatrizService {
                         if (!Boolean.TRUE.equals(permissaoMatriz.getDeposito())) p.setDeposito(false);
                         if (!Boolean.TRUE.equals(permissaoMatriz.getMateria())) p.setMateria(false);
                         if (!Boolean.TRUE.equals(permissaoMatriz.getFilho())) p.setFilho(false);
-                        if (!Boolean.TRUE.equals(permissaoMatriz.getMatriz())) p.setMatriz(false);
+                        if (!Boolean.TRUE.equals(permissaoMatriz.getMatrizPermissao())) p.setMatrizPermissao(false);
                     }
                 }
 
