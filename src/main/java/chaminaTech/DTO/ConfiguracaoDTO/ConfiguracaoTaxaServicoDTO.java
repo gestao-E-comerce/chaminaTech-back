@@ -20,6 +20,6 @@ public class ConfiguracaoTaxaServicoDTO {
 
     private String tipo;
 
-    @JsonIgnoreProperties(value = {"configuracaoEntrega", "configuracaoRetirada", "configuracaoImpressao", "configuracaoTaxaServico",}, allowSetters = true)
+    @JsonIgnoreProperties(value = {"configuracaoEntrega", "configuracaoRetirada", "configuracaoImpressao", "configuracaoTaxaServico"})
     private MatrizDTO matriz;
 }

@@ -12,6 +12,6 @@ public class ConfiguracaoRetiradaDTO {
 
     private Integer tempoEstimadoRetidara;
 
-    @JsonIgnoreProperties(value = {"configuracaoEntrega", "configuracaoRetirada", "configuracaoImpressao", "configuracaoTaxaServico", }, allowSetters = true)
+    @JsonIgnoreProperties(value = {"configuracaoEntrega", "configuracaoRetirada", "configuracaoImpressao", "configuracaoTaxaServico"})
     private MatrizDTO matriz;
 }

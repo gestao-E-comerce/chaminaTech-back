@@ -20,7 +20,7 @@ public class ConfiguracaoImpressao {
 
     @OneToOne
     @JoinColumn(name = "matriz_id", nullable = false)
-    @JsonIgnoreProperties(value = {"configuracaoEntrega", "configuracaoRetirada", "configuracaoImpressao", "configuracaoTaxaServico", }, allowSetters = true)
+    @JsonIgnoreProperties(value = {"configuracaoEntrega", "configuracaoRetirada", "configuracaoImpressao", "configuracaoTaxaServico"})
     private Matriz matriz;
 
     @Column(nullable = false)

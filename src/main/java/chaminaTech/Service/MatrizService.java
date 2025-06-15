@@ -160,7 +160,8 @@ public class MatrizService {
 
 
     public MensagemDTO editarMatriz(Long id, MatrizDTO matrizDTO) {
-        PermissaoUtil.validarOuLancar("editarMatriz");
+        PermissaoUtil.validarAlgumaOuLancar("editarMatriz", "editarConfiguracoes");
+
         matrizDTO.setId(id);
         Matriz matriz = dtoToEntity.DTOToMatriz(matrizDTO);
         if (loginRepository.existsByUsernameExcludingId(matriz.getUsername(), matriz.getId())) {
@@ -201,6 +202,18 @@ public class MatrizService {
             }
         }
 
+        if (matriz.getConfiguracaoEntrega() != null) {
+            matriz.getConfiguracaoEntrega().setMatriz(matriz);
+        }
+        if (matriz.getConfiguracaoRetirada() != null) {
+            matriz.getConfiguracaoRetirada().setMatriz(matriz);
+        }
+        if (matriz.getConfiguracaoTaxaServico() != null) {
+            matriz.getConfiguracaoTaxaServico().setMatriz(matriz);
+        }
+        if (matriz.getConfiguracaoImpressao() != null) {
+            matriz.getConfiguracaoImpressao().setMatriz(matriz);
+        }
         matrizRepository.save(matriz);
 
         Usuario usuarioLogado = PermissaoUtil.getUsuarioLogado();

@@ -18,6 +18,6 @@ public class ConfiguracaoEntregaDTO {
     @JsonIgnoreProperties("configuracaoEntrega")
     private List<TaxaEntregaKmDTO> taxasEntregaKm;
 
-    @JsonIgnoreProperties(value = {"configuracaoEntrega", "configuracaoRetirada", "configuracaoImpressao", "configuracaoTaxaServico", }, allowSetters = true)
+    @JsonIgnoreProperties(value = {"configuracaoEntrega", "configuracaoRetirada", "configuracaoImpressao", "configuracaoTaxaServico"})
     private MatrizDTO matriz;
 }

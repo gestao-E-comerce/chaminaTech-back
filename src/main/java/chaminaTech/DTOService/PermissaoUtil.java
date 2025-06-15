@@ -20,8 +20,7 @@ public class PermissaoUtil {
 
     public static boolean validar(String permissaoChave) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        Usuario usuario = loginRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+        Usuario usuario = loginRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
         usuarioLogadoThread.set(usuario);
 
         Permissao permissao = usuario.getPermissao();
@@ -103,12 +102,19 @@ public class PermissaoUtil {
 
     public static void validarOuLancar(String permissaoChave) {
         if (!validar(permissaoChave)) {
-            throw new ResponseStatusException(
-                    HttpStatus.LOCKED,
-                    "Você não tem permissão para: " + permissaoChave
-            );
+            throw new ResponseStatusException(HttpStatus.LOCKED, "Você não tem permissão para: " + permissaoChave);
         }
     }
+
+    public static void validarAlgumaOuLancar(String... permissoes) {
+        for (String permissao : permissoes) {
+            if (validar(permissao)) {
+                return; // Se tiver ao menos uma, libera
+            }
+        }
+        throw new ResponseStatusException(HttpStatus.LOCKED, "Você não tem permissão");
+    }
+
 
     public static Usuario getUsuarioLogado() {
         Usuario usuario = usuarioLogadoThread.get();

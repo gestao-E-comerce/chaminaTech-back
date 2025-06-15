@@ -40,18 +40,18 @@ public class Matriz extends Usuario{
     private Double longitude;
 
     @OneToOne(mappedBy = "matriz", cascade = CascadeType.ALL)
-    @JsonIgnoreProperties(value = "matriz", allowSetters = true)
+    @JsonIgnoreProperties(value = {"matriz"}, allowSetters = true)
     private ConfiguracaoEntrega configuracaoEntrega;
 
     @OneToOne(mappedBy = "matriz", cascade = CascadeType.ALL)
-    @JsonIgnoreProperties(value = "matriz", allowSetters = true)
+    @JsonIgnoreProperties(value = {"matriz"}, allowSetters = true)
     private ConfiguracaoRetirada configuracaoRetirada;
 
     @OneToOne(mappedBy = "matriz", cascade = CascadeType.ALL)
-    @JsonIgnoreProperties(value = "matriz", allowSetters = true)
+    @JsonIgnoreProperties(value = {"matriz"}, allowSetters = true)
     private ConfiguracaoImpressao configuracaoImpressao;
 
     @OneToOne(mappedBy = "matriz", cascade = CascadeType.ALL)
-    @JsonIgnoreProperties(value = "matriz", allowSetters = true)
+    @JsonIgnoreProperties(value = {"matriz"}, allowSetters = true)
     private ConfiguracaoTaxaServico configuracaoTaxaServico;
 }

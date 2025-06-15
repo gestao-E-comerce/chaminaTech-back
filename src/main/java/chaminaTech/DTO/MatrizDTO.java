@@ -27,15 +27,15 @@ public class MatrizDTO extends UsuarioDTO {
 
     private Double longitude;
 
-    @JsonIgnoreProperties(value = "matriz", allowSetters = true)
+    @JsonIgnoreProperties(value = {"matriz"}, allowSetters = true)
     private ConfiguracaoEntregaDTO configuracaoEntrega;
 
-    @JsonIgnoreProperties(value = "matriz", allowSetters = true)
+    @JsonIgnoreProperties(value = {"matriz"}, allowSetters = true)
     private ConfiguracaoRetiradaDTO configuracaoRetirada;
 
-    @JsonIgnoreProperties(value = "matriz", allowSetters = true)
+    @JsonIgnoreProperties(value = {"matriz"}, allowSetters = true)
     private ConfiguracaoImpressaoDTO configuracaoImpressao;
 
-    @JsonIgnoreProperties(value = "matriz", allowSetters = true)
+    @JsonIgnoreProperties(value = {"matriz"}, allowSetters = true)
     private ConfiguracaoTaxaServicoDTO configuracaoTaxaServicio;
 }

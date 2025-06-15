@@ -14,7 +14,7 @@ import java.util.List;
 public class ConfiguracaoImpressaoDTO {
     private Long id;
 
-    @JsonIgnoreProperties(value = {"configuracaoEntrega", "configuracaoRetirada", "configuracaoImpressao", "configuracaoTaxaServico", }, allowSetters = true)
+    @JsonIgnoreProperties(value = {"configuracaoEntrega", "configuracaoRetirada", "configuracaoImpressao", "configuracaoTaxaServico"})
     private MatrizDTO matriz;
 
     private Boolean usarImpressora = true;
