@@ -41,13 +41,13 @@ public class Caixa {
     private String nomeImpressora;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "caixa_funcionario",nullable = false)
-    @JsonIgnoreProperties(value = {"matriz","caixas"})
+    @JoinColumn(name = "caixa_funcionario", nullable = false)
+    @JsonIgnoreProperties(value = {"matriz", "caixas"})
     private Funcionario funcionario;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn( name = "caixa_matriz",nullable = false)
-    @JsonIgnoreProperties(value = {"funcionarios","filhos","matriz","depositos","estoques","materias","produtos","vendas","categorias","clientes","gestaoCaixas","impressoras","identificador"})
+    @JoinColumn(name = "caixa_matriz", nullable = false)
+    @JsonIgnoreProperties(value = {"configuracaoEntrega", "configuracaoRetirada", "configuracaoImpressao", "configuracaoTaxaServico",}, allowSetters = true)
     private Matriz matriz;
 
     @OneToMany(mappedBy = "caixa", cascade = CascadeType.ALL)

@@ -1,5 +1,6 @@
 package chaminaTech.Entity;
 
+import chaminaTech.Entity.Configuracao.ConfiguracaoEntrega;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -19,7 +20,7 @@ public class TaxaEntregaKm {
     private Integer tempo;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "taxaEntregaKm_matriz", nullable = false)
-    @JsonIgnoreProperties(value = {"funcionarios","filhos","matriz","depositos","estoques","materias","produtos","vendas","categorias","clientes","gestaoCaixas","impressoras","identificador"})
-    private Matriz matriz;
+    @JoinColumn(name = "configuracao_entrega_id", nullable = false)
+    @JsonIgnoreProperties("taxasEntregaKm")
+    private ConfiguracaoEntrega configuracaoEntrega;
 }

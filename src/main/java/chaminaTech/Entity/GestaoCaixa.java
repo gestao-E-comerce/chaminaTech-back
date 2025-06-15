@@ -6,7 +6,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Getter @Setter
+@Getter
+@Setter
 public class GestaoCaixa {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,7 +22,8 @@ public class GestaoCaixa {
     private Venda venda;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "gestao_caixa_matriz",nullable = false)
-    @JsonIgnoreProperties(value = {"funcionarios","filhos","matriz","depositos","estoques","materias","produtos","vendas","categorias","clientes","gestaoCaixas","impressoras","identificador"})
+    @JoinColumn(name = "gestao_caixa_matriz", nullable = false)
+    @JsonIgnoreProperties(value = { "configuracaoEntrega", "configuracaoRetirada", "configuracaoImpressao",
+            "configuracaoTaxaServico", }, allowSetters = true)
     private Matriz matriz;
 }

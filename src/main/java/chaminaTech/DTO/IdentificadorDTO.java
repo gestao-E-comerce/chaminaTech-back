@@ -1,6 +1,8 @@
 package chaminaTech.DTO;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import chaminaTech.DTO.ConfiguracaoDTO.ConfiguracaoImpressaoDTO;
 import jakarta.persistence.Column;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,6 +19,6 @@ public class IdentificadorDTO {
     @Column(nullable = false)
     private String identificadorNome;
 
-    @JsonIgnoreProperties(value = {"funcionarios","filhos","matriz","depositos","estoques","materias","produtos","vendas","categorias","clientes","gestaoCaixas","impressoras","identificador"})
-    private MatrizDTO matriz;
+    @JsonIgnoreProperties("identificador")
+    private ConfiguracaoImpressaoDTO configuracaoImpressao;
 }

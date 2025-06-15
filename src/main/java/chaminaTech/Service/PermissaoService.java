@@ -43,7 +43,6 @@ public class PermissaoService {
         }
     }
 
-    // Cadastrar novo permissao
     public MensagemDTO cadastrarPermissao(PermissaoDTO permissaoDTO) {
         PermissaoUtil.validarOuLancar("cadastrarPermissao");
         Permissao permissao = dtoToEntity.DTOToPermissao(permissaoDTO);

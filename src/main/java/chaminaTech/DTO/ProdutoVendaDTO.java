@@ -25,6 +25,8 @@ public class ProdutoVendaDTO {
 
     private String motivoExclusao;
 
+    private int origemTransferenciaNumero;
+
     private List<ObservacoesDTO> observacoesProdutoVenda;
 
     @JsonIgnoreProperties(value = {"cliente","endereco","produtoVendas","funcionario","caixa","matriz","vendaPagamentos"})

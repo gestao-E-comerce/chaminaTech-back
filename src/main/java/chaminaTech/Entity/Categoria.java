@@ -10,7 +10,7 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-@JsonIgnoreProperties(value = {"produtos"}, allowGetters = true)
+@JsonIgnoreProperties(value = { "produtos" }, allowGetters = true)
 public class Categoria {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,11 +30,12 @@ public class Categoria {
     private Integer maxObs;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "categoria_matriz",nullable = false)
-    @JsonIgnoreProperties(value = {"funcionarios","filhos","matriz","depositos","estoques","materias","produtos","vendas","categorias","clientes","gestaoCaixas","impressoras","identificador"})
+    @JoinColumn(name = "categoria_matriz", nullable = false)
+    @JsonIgnoreProperties(value = { "configuracaoEntrega", "configuracaoRetirada", "configuracaoImpressao",
+            "configuracaoTaxaServico", }, allowSetters = true)
     private Matriz matriz;
 
     @OneToMany(mappedBy = "categoria", cascade = CascadeType.ALL)
-    @JsonIgnoreProperties(value = {"produtoVenda","categoria"}, allowSetters = true)
+    @JsonIgnoreProperties(value = { "produtoVenda", "categoria" }, allowSetters = true)
     private List<Observacoes> observacoesCategoria;
 }

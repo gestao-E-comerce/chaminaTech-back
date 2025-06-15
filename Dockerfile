@@ -1,26 +1,28 @@
-# Etapa 1: Construção do JAR com Maven
+# Etapa 1: Build com Maven
 FROM maven:3.8.4-openjdk-17-slim AS build
-
 WORKDIR /app
 
-# Copie o pom.xml e baixe as dependências
+# Copia pom.xml e baixa dependências
 COPY pom.xml .
-RUN mvn dependency:go-offline
+RUN mvn dependency:go-offline -B
 
-# Copie o restante do código
-COPY src /app/src
+# Copia todo o código-fonte
+COPY src ./src
 
-# Construa o JAR
-RUN mvn clean package -DskipTests
+# Compila e empacota sem testes
+RUN mvn clean package -DskipTests -B
 
-# Etapa 2: Imagem final com o JAR
-FROM openjdk:17-jdk-slim
-
+# Etapa 2: Runtime Java
+FROM eclipse-temurin:17-jre-focal
 WORKDIR /app
 
-# Copie o JAR correto
-COPY --from=build /app/target/ChaminaTech-back-0.0.1-SNAPSHOT.jar app.jar
+# Copia o JAR gerado (wildcard para pegar qualquer versão)
+COPY --from=build /app/target/*.jar app.jar
 
-EXPOSE 8080
+# Copia o keystore.p12 para o container
+COPY keystore.p12 /app/keystore.p12
+# Expõe porta usada pela aplicação
+EXPOSE 8443
 
-ENTRYPOINT ["java", "-jar", "app.jar"]
+# Comando padrão para iniciar a aplicação
+ENTRYPOINT ["java","-jar","app.jar"]

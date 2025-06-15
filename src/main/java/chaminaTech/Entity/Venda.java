@@ -5,11 +5,13 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.List;
 
 @Entity
-@Getter @Setter
+@Getter
+@Setter
 public class Venda {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -46,6 +48,8 @@ public class Venda {
 
     private Double valorTotal;
 
+    private Double valorBruto;
+
     @Column(nullable = false)
     private Timestamp dataVenda;
 
@@ -59,9 +63,13 @@ public class Venda {
 
     private Integer tempoEstimado;
 
+    private BigDecimal valorServico;
+
+    private BigDecimal desconto;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "venda_cliente")
-    @JsonIgnoreProperties(value = {"matriz","enderecos"})
+    @JsonIgnoreProperties(value = { "matriz", "enderecos" })
     private Cliente cliente;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -69,27 +77,28 @@ public class Venda {
     @JsonIgnoreProperties("cliente")
     private Endereco endereco;
 
-    @OneToMany(mappedBy = "venda",cascade = CascadeType.ALL)
-    @JsonIgnoreProperties(value = {"venda"}, allowSetters = true)
+    @OneToMany(mappedBy = "venda", cascade = CascadeType.ALL)
+    @JsonIgnoreProperties(value = { "venda" }, allowSetters = true)
     @OrderBy("data ASC")
     private List<ProdutoVenda> produtoVendas;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn( name = "venda_funcionario",nullable = false)
-    @JsonIgnoreProperties(value = {"matriz","caixas"})
+    @JoinColumn(name = "venda_funcionario", nullable = false)
+    @JsonIgnoreProperties(value = { "matriz", "caixas" })
     private Funcionario funcionario;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "venda_caixa")
-    @JsonIgnoreProperties(value = {"vendas","matriz","funcionario","sangrias","suprimentos"})
+    @JsonIgnoreProperties(value = { "vendas", "matriz", "funcionario", "sangrias", "suprimentos" })
     private Caixa caixa;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "venda_matriz",nullable = false)
-    @JsonIgnoreProperties(value = {"funcionarios","filhos","matriz","depositos","estoques","materias","produtos","vendas","categorias","clientes","gestaoCaixas","impressoras","identificador"})
+    @JoinColumn(name = "venda_matriz", nullable = false)
+    @JsonIgnoreProperties(value = { "configuracaoEntrega", "configuracaoRetirada", "configuracaoImpressao",
+            "configuracaoTaxaServico", }, allowSetters = true)
     private Matriz matriz;
 
     @OneToOne(mappedBy = "venda", cascade = CascadeType.ALL)
-    @JsonIgnoreProperties(value = {"venda"}, allowSetters = true)
+    @JsonIgnoreProperties(value = { "venda" }, allowSetters = true)
     private VendaPagamento vendaPagamento;
 }

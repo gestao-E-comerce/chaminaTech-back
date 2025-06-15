@@ -3,10 +3,8 @@ package chaminaTech.Service;
 import chaminaTech.DTO.MensagemDTO;
 import chaminaTech.DTO.SuprimentoDTO;
 import chaminaTech.DTOService.DTOToEntity;
-import chaminaTech.DTOService.EntityToDTO;
 import chaminaTech.DTOService.PermissaoUtil;
 import chaminaTech.Entity.Suprimento;
-import chaminaTech.Repository.CaixaRepository;
 import chaminaTech.Repository.SuprimentoRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,11 +16,7 @@ import java.sql.Timestamp;
 @Service
 public class SuprimentoService {
     @Autowired
-    private EntityToDTO entityToDTO;
-    @Autowired
     private DTOToEntity dtoToEntity;
-    @Autowired
-    private CaixaRepository caixaRepository;
     @Autowired
     private SuprimentoRepository suprimentoRepository;
     @Autowired

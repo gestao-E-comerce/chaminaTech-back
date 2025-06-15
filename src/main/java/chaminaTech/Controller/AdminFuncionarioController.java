@@ -12,7 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/adminFuncionario")
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "*")
 public class AdminFuncionarioController {
     @Autowired
     AdminFuncionarioService adminFuncionarioService;

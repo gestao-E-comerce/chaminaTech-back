@@ -32,28 +32,31 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(AbstractHttpConfigurer::disable) // Desabilita a proteção CSRF para APIs RESTful
-                .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Configure o CORS aqui usando o CorsConfigurationSource bean
+                .csrf(AbstractHttpConfigurer::disable)
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests((requests) -> requests
-//                        .requestMatchers("/**").permitAll()  // Permite todas as requisições para o frontend (Angular)
-                        .requestMatchers("/api/login", "/api/ws/**", "/sockjs/**").permitAll()  // Permite o acesso à rota de login sem token
-                        .anyRequest().authenticated())  // Exige autenticação para todas as outras requisições
-                .authenticationProvider(authenticationProvider)  // Define o provedor de autenticação
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)  // Adiciona o filtro de autenticação JWT antes do filtro de autenticação padrão
-                .sessionManagement(customizer -> customizer.sessionCreationPolicy(SessionCreationPolicy.STATELESS)); // Não usa sessões (baseado apenas no token)
+                        .requestMatchers("/api/login", "/api/ws/**", "/sockjs/**").permitAll()
+                        .anyRequest().authenticated())
+                .authenticationProvider(authenticationProvider)
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                .sessionManagement(customizer -> customizer.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
-        return http.build(); // Retorna a configuração do SecurityFilterChain
+        return http.build();
     }
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowCredentials(true);
-        configuration.setAllowedOrigins(List.of("http://localhost:4200"));
-        configuration.setAllowedMethods(Arrays.asList(HttpMethod.GET.name(), HttpMethod.POST.name(), HttpMethod.PUT.name(), HttpMethod.DELETE.name(),  HttpMethod.PATCH.name(), HttpMethod.OPTIONS.name()));
-        configuration.setAllowedHeaders(Arrays.asList(HttpHeaders.AUTHORIZATION, HttpHeaders.CONTENT_TYPE, HttpHeaders.ACCEPT, "chaveUnico", "Authorization"));
+       configuration.setAllowedOrigins(List.of("http://localhost:4200", "https://chaminatech.com",
+               "https://www.chaminatech.com"));
+        configuration.setAllowedMethods(Arrays.asList(HttpMethod.GET.name(), HttpMethod.POST.name(),
+                HttpMethod.PUT.name(), HttpMethod.DELETE.name(), HttpMethod.PATCH.name(), HttpMethod.OPTIONS.name()));
+        configuration.setAllowedHeaders(Arrays.asList(HttpHeaders.AUTHORIZATION, HttpHeaders.CONTENT_TYPE,
+                HttpHeaders.ACCEPT, "chaveUnico", "Authorization"));
         configuration.setExposedHeaders(List.of(HttpHeaders.AUTHORIZATION));
         configuration.setMaxAge(3600L);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
-    }}
+    }
+}

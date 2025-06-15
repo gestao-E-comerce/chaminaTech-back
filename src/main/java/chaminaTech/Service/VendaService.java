@@ -176,7 +176,7 @@ public class VendaService {
                 if (venda.getImprimirCadastrar()) {
                     processarImpressaoService.processarImpressaoProdutos(venda, venda.getProdutoVendas(), novoCupom, false);
                 }
-                if ((venda.getRetirada() && matriz.getImprimirConferenciaRetirada()) || (venda.getEntrega() && matriz.getImprimirConferenciaEntrega())) {
+                if ((venda.getRetirada() && matriz.getConfiguracaoImpressao().getImprimirConferenciaRetirada()) || (venda.getEntrega() && matriz.getConfiguracaoImpressao().getImprimirConferenciaEntrega())) {
                     processarImpressaoService.processarImpressaoConferencia(venda, novoCupom);
                 }
             }
@@ -301,11 +301,11 @@ public class VendaService {
                 if (vendaAtualizada.getImprimirDeletar()) {
                     processarImpressaoService.processarImpressaoProdutos(vendaAtualizada, produtosRemovidos, cupomExistente, true);
                 }
-                if (matriz.getImprimirComprovanteDeletarProduto()) {
+                if (matriz.getConfiguracaoImpressao().getImprimirComprovanteDeletarProduto()) {
                     processarImpressaoService.processarImpressaoComprovanteProdutoDeletado(vendaAtualizada, produtosRemovidos, cupomExistente);
                 }
             }
-            if (vendaAtualizada.getRetirada() && vendaAtualizada.getCaixa() != null && matriz.getImprimirComprovanteRecebementoRetirada() || vendaAtualizada.getEntrega() && vendaAtualizada.getCaixa() != null && matriz.getImprimirComprovanteRecebementoEntrega() || vendaAtualizada.getMesa() != null && vendaAtualizada.getVendaPagamento() != null && matriz.getImprimirComprovanteRecebementoMesa()) {
+            if (vendaAtualizada.getRetirada() && vendaAtualizada.getCaixa() != null && matriz.getConfiguracaoImpressao().getImprimirComprovanteRecebementoRetirada() || vendaAtualizada.getEntrega() && vendaAtualizada.getCaixa() != null && matriz.getConfiguracaoImpressao().getImprimirComprovanteRecebementoEntrega() || vendaAtualizada.getMesa() != null && vendaAtualizada.getVendaPagamento() != null && matriz.getConfiguracaoImpressao().getImprimirComprovanteRecebementoMesa()) {
                 processarImpressaoService.processarImpressaoComprovanteEnotaFiscal(vendaAtualizada, cupomExistente, matriz);
             }
         }
@@ -414,7 +414,7 @@ public class VendaService {
             if (!produtosRemovidosParaImpressao.isEmpty() && vendaAtualizada.getImprimirDeletar()) {
                 processarImpressaoService.processarImpressaoProdutos(vendaAtualizada, produtosRemovidosParaImpressao, cupomExistente, true);
             }
-            if (vendaAtualizada.getMatriz().getImprimirComprovanteDeletarVenda()) {
+            if (vendaAtualizada.getMatriz().getConfiguracaoImpressao().getImprimirComprovanteDeletarVenda()) {
                 processarImpressaoService.processarImpressaoComprovanteDeletacaoVenda(vendaAtualizada, cupomExistente);
             }
         }
@@ -454,13 +454,26 @@ public class VendaService {
 
         VendaDTO vendaDestinoDTO = transferenciaDTO.getVendaDestino();
         VendaDTO vendaOriginalDTO = transferenciaDTO.getVendaOriginal();
+        int totalTransferido = 0;
+
+//        int totalTransferido = vendaDestinoDTO.getProdutoVendas() != null
+//                ? vendaDestinoDTO.getProdutoVendas().size()
+//                : 0;
+        if (vendaDestinoDTO.getProdutoVendas() != null) {
+            List<ProdutoVendaDTO> produtosDestinoAtuais = vendaDestinoDTO.getProdutoVendas();
+            for (ProdutoVendaDTO produto : produtosDestinoAtuais) {
+                if (produto.getId() == null) {
+                    produto.setOrigemTransferenciaNumero(vendaOriginalDTO.getMesa());
+                    totalTransferido++;
+                }
+            }
+//            transferenciaDTO.getVendaDestino().getProdutoVendas().clear();
+//            transferenciaDTO.getVendaDestino().setProdutoVendas(produtosDestinoAtuais);
+        }
         Venda vendaDestinoEntity = dtoToEntity.DTOToVenda(vendaDestinoDTO);
         Venda vendaOriginalEntity = dtoToEntity.DTOToVenda(vendaOriginalDTO);
         boolean originalSemProdutos = vendaOriginalDTO.getProdutoVendas() == null || vendaOriginalDTO.getProdutoVendas().stream().noneMatch(ProdutoVendaDTO::getAtivo);
 
-        int totalTransferido = vendaDestinoDTO.getProdutoVendas() != null
-                ? vendaDestinoDTO.getProdutoVendas().size()
-                : 0;
 
         if (originalSemProdutos) {
             // ✅ Caso 1: Venda original sem produtos
@@ -614,7 +627,7 @@ public class VendaService {
             venda.setAtivo(false);
         }
         if (venda.getNomeImpressora() != null) {
-            if (venda.getMatriz().getImprimirComprovanteRecebementoMesa()) {
+            if (venda.getMatriz().getConfiguracaoImpressao().getImprimirComprovanteRecebementoMesa()) {
                 processarImpressaoService.processarImpressaoComprovanteEnotaFiscal(venda, cupomExistente, venda.getMatriz());
             }
         }

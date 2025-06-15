@@ -17,8 +17,8 @@ public class DepositoDescartar {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn( name = "deposito_materia",nullable = false)
-    @JsonIgnoreProperties(value = {"matriz"})
+    @JoinColumn(name = "deposito_materia", nullable = false)
+    @JsonIgnoreProperties(value = { "matriz" })
     private Materia materia;
 
     @Column(nullable = false)
@@ -30,7 +30,8 @@ public class DepositoDescartar {
     private String motivo;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "deposito_matriz",nullable = false)
-    @JsonIgnoreProperties(value = {"funcionarios","filhos","matriz","depositos","estoques","materias","produtos","vendas","categorias","clientes","gestaoCaixas","impressoras","identificador"})
+    @JoinColumn(name = "deposito_matriz", nullable = false)
+    @JsonIgnoreProperties(value = { "configuracaoEntrega", "configuracaoRetirada", "configuracaoImpressao",
+            "configuracaoTaxaServico", }, allowSetters = true)
     private Matriz matriz;
 }

@@ -26,11 +26,12 @@ public class Cliente {
     private String celular;
 
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
-    @JsonIgnoreProperties(value = {"cliente"}, allowSetters = true)
+    @JsonIgnoreProperties(value = { "cliente" }, allowSetters = true)
     private List<Endereco> enderecos;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cliente_matriz",nullable = false)
-    @JsonIgnoreProperties(value = {"funcionarios","filhos","matriz","depositos","estoques","materias","produtos","vendas","categorias","clientes","gestaoCaixas","impressoras","identificador"})
+    @JoinColumn(name = "cliente_matriz", nullable = false)
+    @JsonIgnoreProperties(value = { "configuracaoEntrega", "configuracaoRetirada", "configuracaoImpressao",
+            "configuracaoTaxaServico", }, allowSetters = true)
     private Matriz matriz;
 }

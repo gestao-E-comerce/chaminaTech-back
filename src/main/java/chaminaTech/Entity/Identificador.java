@@ -1,5 +1,6 @@
 package chaminaTech.Entity;
 
+import chaminaTech.Entity.Configuracao.ConfiguracaoImpressao;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -20,8 +21,8 @@ public class Identificador {
     @Column(nullable = false)
     private String identificadorNome;
 
-    @ManyToOne
-    @JoinColumn(name = "identificador_matriz",nullable = false)
-    @JsonIgnoreProperties(value = {"funcionarios","filhos","matriz","depositos","estoques","materias","produtos","vendas","categorias","clientes","gestaoCaixas","impressoras","identificador"})
-    private Matriz matriz;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "configuracao_impressao_id", nullable = false)
+    @JsonIgnoreProperties("identificador")
+    private ConfiguracaoImpressao configuracaoImpressao;
 }

@@ -1,67 +1,67 @@
-name: CI/CD Backend Java - GKE
+# name: CI/CD Backend Java - GKE
 
-on:
-  push:
-    branches: [ "main" ]
+# on:
+#   push:
+#     branches: [ "main" ]
 
-env:
-  IMAGE_NAME: homamalsuyoufi/chaminatechbackend
-  PROJECT_ID: chaminatech
-  CLUSTER_NAME: chaminatech-cluster
-  CLUSTER_LOCATION: us-central1
-  NAMESPACE: producao
+# env:
+#   IMAGE_NAME: homamalsuyoufi/chaminatechbackend
+#   PROJECT_ID: chaminatech
+#   CLUSTER_NAME: chaminatech-cluster
+#   CLUSTER_LOCATION: us-central1
+#   NAMESPACE: producao
 
-jobs:
-  build-and-deploy:
-    runs-on: ubuntu-latest
+# jobs:
+#   build-and-deploy:
+#     runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout do código
-        uses: actions/checkout@v4
+#     steps:
+#       - name: Checkout do código
+#         uses: actions/checkout@v4
 
-      - name: Setup JDK 17
-        uses: actions/setup-java@v2
-        with:
-          java-version: '17'
-          distribution: 'temurin'
+#       - name: Setup JDK 17
+#         uses: actions/setup-java@v2
+#         with:
+#           java-version: '17'
+#           distribution: 'temurin'
 
-      - name: Build do projeto com Maven
-        run: mvn clean package -DskipTests
+#       - name: Build do projeto com Maven
+#         run: mvn clean package -DskipTests
 
-      - name: Login no Docker Hub
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKER_HUB_USERNAME }}
-          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+#       - name: Login no Docker Hub
+#         uses: docker/login-action@v2
+#         with:
+#           username: ${{ secrets.DOCKER_HUB_USERNAME }}
+#           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
-      - name: Build da imagem Docker
-        run: docker build -t $IMAGE_NAME:${{ github.sha }} .
+#       - name: Build da imagem Docker
+#         run: docker build -t $IMAGE_NAME:${{ github.sha }} .
 
-      - name: Push da imagem Docker
-        run: docker push $IMAGE_NAME:${{ github.sha }}
+#       - name: Push da imagem Docker
+#         run: docker push $IMAGE_NAME:${{ github.sha }}
 
-      - name: Autenticar no Google Cloud
-        uses: google-github-actions/auth@v2
-        with:
-          credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
+#       - name: Autenticar no Google Cloud
+#         uses: google-github-actions/auth@v2
+#         with:
+#           credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
 
-      - name: Instalar Google Cloud SDK e kubectl
-        uses: google-github-actions/setup-gcloud@v2
-        with:
-          project_id: ${{ env.PROJECT_ID }}
-          install_components: 'kubectl,gke-gcloud-auth-plugin'
+#       - name: Instalar Google Cloud SDK e kubectl
+#         uses: google-github-actions/setup-gcloud@v2
+#         with:
+#           project_id: ${{ env.PROJECT_ID }}
+#           install_components: 'kubectl,gke-gcloud-auth-plugin'
 
-      - name: Acessar o cluster GKE
-        run: |
-          gcloud container clusters get-credentials $CLUSTER_NAME \
-            --region $CLUSTER_LOCATION \
-            --project $PROJECT_ID
+#       - name: Acessar o cluster GKE
+#         run: |
+#           gcloud container clusters get-credentials $CLUSTER_NAME \
+#             --region $CLUSTER_LOCATION \
+#             --project $PROJECT_ID
 
-      - name: Criar namespace (se não existir)
-        run: |
-          kubectl get ns $NAMESPACE || kubectl create ns $NAMESPACE
+#       - name: Criar namespace (se não existir)
+#         run: |
+#           kubectl get ns $NAMESPACE || kubectl create ns $NAMESPACE
 
-      - name: Aplicar arquivos Kubernetes
-        run: |
-          kubectl apply -f K8s/ --namespace=$NAMESPACE
-          kubectl set image deployment/backend backend=$IMAGE_NAME:${{ github.sha }} -n $NAMESPACE
+#       - name: Aplicar arquivos Kubernetes
+#         run: |
+#           kubectl apply -f K8s/ --namespace=$NAMESPACE
+#           kubectl set image deployment/backend backend=$IMAGE_NAME:${{ github.sha }} -n $NAMESPACE

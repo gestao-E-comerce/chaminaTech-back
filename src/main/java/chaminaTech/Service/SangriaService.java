@@ -3,7 +3,6 @@ package chaminaTech.Service;
 import chaminaTech.DTO.MensagemDTO;
 import chaminaTech.DTO.SangriaDTO;
 import chaminaTech.DTOService.DTOToEntity;
-import chaminaTech.DTOService.EntityToDTO;
 import chaminaTech.DTOService.PermissaoUtil;
 import chaminaTech.Entity.Caixa;
 import chaminaTech.Entity.Sangria;
@@ -20,8 +19,6 @@ import java.util.Optional;
 
 @Service
 public class SangriaService {
-    @Autowired
-    private EntityToDTO entityToDTO;
     @Autowired
     private DTOToEntity dtoToEntity;
     @Autowired

@@ -9,7 +9,8 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 
 @Entity
-@Getter @Setter
+@Getter
+@Setter
 public class Deposito {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,17 +23,17 @@ public class Deposito {
     private Boolean deletado = false;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn( name = "deposito_materia",nullable = false)
-    @JsonIgnoreProperties(value = {"matriz"})
+    @JoinColumn(name = "deposito_materia", nullable = false)
+    @JsonIgnoreProperties(value = { "matriz" })
     private Materia materia;
 
-    @Column(name = "quantidade",nullable = false)
+    @Column(name = "quantidade", nullable = false)
     private BigDecimal quantidade = BigDecimal.ZERO;
 
     @Column(name = "quantidade_vendido")
     private BigDecimal quantidadeVendido = BigDecimal.ZERO;
 
-    @Column(name = "valor_total",nullable = false)
+    @Column(name = "valor_total", nullable = false)
     private Double valorTotal = 0.0;
 
     @Column(name = "data_cadastrar")
@@ -42,7 +43,8 @@ public class Deposito {
     private Timestamp dataDesativar;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "deposito_matriz",nullable = false)
-    @JsonIgnoreProperties(value = {"funcionarios","filhos","matriz","depositos","estoques","materias","produtos","vendas","categorias","clientes","gestaoCaixas","impressoras","identificador"})
+    @JoinColumn(name = "deposito_matriz", nullable = false)
+    @JsonIgnoreProperties(value = { "configuracaoEntrega", "configuracaoRetirada", "configuracaoImpressao",
+            "configuracaoTaxaServico", }, allowSetters = true)
     private Matriz matriz;
 }

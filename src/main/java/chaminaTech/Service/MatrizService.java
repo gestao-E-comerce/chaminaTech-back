@@ -6,6 +6,10 @@ import chaminaTech.DTOService.DTOToEntity;
 import chaminaTech.DTOService.EntityToDTO;
 import chaminaTech.DTOService.PermissaoUtil;
 import chaminaTech.Entity.*;
+import chaminaTech.Entity.Configuracao.ConfiguracaoEntrega;
+import chaminaTech.Entity.Configuracao.ConfiguracaoImpressao;
+import chaminaTech.Entity.Configuracao.ConfiguracaoRetirada;
+import chaminaTech.Entity.Configuracao.ConfiguracaoTaxaServico;
 import chaminaTech.Repository.FuncionarioRepository;
 import chaminaTech.Repository.LoginRepository;
 import chaminaTech.Repository.MatrizRepository;
@@ -17,7 +21,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -66,21 +70,6 @@ public class MatrizService {
             throw new IllegalStateException("Já existe uma matriz com esse nome!");
         }
 
-        if (matriz.getImpressoras() != null) {
-            for (int i = 0; i < matriz.getImpressoras().size(); i++) {
-                matriz.getImpressoras().get(i).setMatriz(matriz);
-            }
-        }
-        if (matriz.getIdentificador() != null) {
-            for (int i = 0; i < matriz.getIdentificador().size(); i++) {
-                matriz.getIdentificador().get(i).setMatriz(matriz);
-            }
-        }
-        if (matriz.getTaxasEntregaKm() != null) {
-            for (int i = 0; i < matriz.getTaxasEntregaKm().size(); i++) {
-                matriz.getTaxasEntregaKm().get(i).setMatriz(matriz);
-            }
-        }
         String tipo;
         String descricao;
 
@@ -93,6 +82,8 @@ public class MatrizService {
             tipo = "MATRIZ";
             descricao = "Cadastrou uma nova matriz: " + matriz.getNome();
         }
+        criarConfiguracoesPadrao(matriz);
+
         matrizRepository.save(matriz);
 
         Usuario usuarioLogado = PermissaoUtil.getUsuarioLogado();
@@ -122,6 +113,52 @@ public class MatrizService {
         return new MensagemDTO(mensagem, HttpStatus.CREATED);
     }
 
+    private void criarConfiguracoesPadrao(Matriz matriz) {
+        // Configuração de Impressão
+        ConfiguracaoImpressao confImpressao = new ConfiguracaoImpressao();
+        confImpressao.setMatriz(matriz);
+        confImpressao.setUsarImpressora(true);
+        confImpressao.setImprimirComprovanteRecebementoBalcao(true);
+        confImpressao.setImprimirComprovanteRecebementoEntrega(true);
+        confImpressao.setImprimirComprovanteRecebementoMesa(true);
+        confImpressao.setImprimirComprovanteRecebementoRetirada(true);
+        confImpressao.setImprimirNotaFiscal(0);
+        confImpressao.setImprimirCadastrar(0);
+        confImpressao.setImprimirDeletar(0);
+        confImpressao.setImprimirComprovanteDeletarVenda(true);
+        confImpressao.setImprimirComprovanteDeletarProduto(true);
+        confImpressao.setImprimirConferenciaEntrega(true);
+        confImpressao.setImprimirConferenciaRetirada(true);
+        confImpressao.setImprimirConferenciaCaixa(true);
+        confImpressao.setImprimirAberturaCaixa(true);
+        confImpressao.setImprimirSangria(true);
+        confImpressao.setImprimirSuprimento(true);
+        confImpressao.setMostarMotivoDeletarVenda(true);
+        confImpressao.setMostarMotivoDeletarProduto(true);
+        matriz.setConfiguracaoImpressao(confImpressao);
+
+        // Configuração de Entrega
+        ConfiguracaoEntrega confEntrega = new ConfiguracaoEntrega();
+        confEntrega.setMatriz(matriz);
+        confEntrega.setCalcular(0);
+        matriz.setConfiguracaoEntrega(confEntrega);
+
+        // Configuração de Retirada
+        ConfiguracaoRetirada confRetirada = new ConfiguracaoRetirada();
+        confRetirada.setMatriz(matriz);
+        confRetirada.setTempoEstimadoRetidara(30);  // Exemplo: 30 min padrão
+        matriz.setConfiguracaoRetirada(confRetirada);
+
+        // Configuração de Taxa Serviço
+        ConfiguracaoTaxaServico confTaxaServico = new ConfiguracaoTaxaServico();
+        confTaxaServico.setMatriz(matriz);
+        confTaxaServico.setAplicar(false);
+        confTaxaServico.setPercentual(BigDecimal.valueOf(0.0));
+        confTaxaServico.setValorFixo(BigDecimal.valueOf(0.0));
+        matriz.setConfiguracaoTaxaServico(confTaxaServico);
+    }
+
+
     public MensagemDTO editarMatriz(Long id, MatrizDTO matrizDTO) {
         PermissaoUtil.validarOuLancar("editarMatriz");
         matrizDTO.setId(id);
@@ -139,22 +176,6 @@ public class MatrizService {
             matriz.setPassword(passwordEncoder.encode(matriz.getPassword()));
         }
 
-        if (matriz.getImpressoras() != null) {
-            for (int i = 0; i < matriz.getImpressoras().size(); i++) {
-                matriz.getImpressoras().get(i).setMatriz(matriz);
-            }
-        }
-        if (matriz.getIdentificador() != null) {
-            for (int i = 0; i < matriz.getIdentificador().size(); i++) {
-                matriz.getIdentificador().get(i).setMatriz(matriz);
-            }
-        }
-
-        if (matriz.getTaxasEntregaKm() != null) {
-            for (int i = 0; i < matriz.getTaxasEntregaKm().size(); i++) {
-                matriz.getTaxasEntregaKm().get(i).setMatriz(matriz);
-            }
-        }
         if (matriz.getPermissao() != null) {
             Permissao permissaoMatriz = matriz.getPermissao();
             List<Funcionario> funcionarios = funcionarioRepository.buscarFuncionarios(matriz.getId(), null, null);
@@ -180,44 +201,6 @@ public class MatrizService {
             }
         }
 
-
-        // Verificar se alguma impressora foi removida
-        List<Impressora> impressorasAtuais = matrizRepository.findById(id).get().getImpressoras();
-        List<Impressora> impressorasNovas = matriz.getImpressoras();
-
-        // Encontra impressoras que foram removidas
-        List<Impressora> impressorasRemovidas = new ArrayList<>();
-        for (Impressora impressoraAtual : impressorasAtuais) {
-            boolean impressoraExiste = false;
-            for (Impressora novaImpressora : impressorasNovas) {
-                if (impressoraAtual.getId().equals(novaImpressora.getId())) {
-                    impressoraExiste = true;
-                    break;
-                }
-            }
-            if (!impressoraExiste) {
-                impressorasRemovidas.add(impressoraAtual);
-            }
-        }
-
-        // Verifica se alguma das impressoras removidas está associada a produtos
-        for (Impressora impressoraRemovida : impressorasRemovidas) {
-            List<Produto> produtosRelacionados = produtoRepository.findProdutosByImpressoraAndMatriz(impressoraRemovida, matriz.getId());
-
-            if (!produtosRelacionados.isEmpty()) {
-                for (Produto produto : produtosRelacionados) {
-                    produto.getImpressoras().remove(impressoraRemovida);
-                    produtoRepository.save(produto);  // Salva o produto atualizado
-                }
-            }
-        }
-
-        if (matriz.getImpressoras() != null) {
-            for (int i = 0; i < matriz.getImpressoras().size(); i++) {
-                matriz.getImpressoras().get(i).setMatriz(matriz);
-            }
-        }
-        matriz.setForcarRemocaoImpressora(false);
         matrizRepository.save(matriz);
 
         Usuario usuarioLogado = PermissaoUtil.getUsuarioLogado();

@@ -8,7 +8,6 @@ import chaminaTech.Entity.*;
 import chaminaTech.Repository.DepositoRepository;
 import chaminaTech.Repository.EstoqueDescartarRepository;
 import chaminaTech.Repository.EstoqueRepository;
-import chaminaTech.Repository.ProdutoRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,8 +25,6 @@ public class EstoqueService {
     private EstoqueRepository estoqueRepository;
     @Autowired
     private DepositoRepository depositoRepository;
-    @Autowired
-    private ProdutoRepository produtoRepository;
     @Autowired
     private TratarEstoqueDeposito tratarEstoqueDeposito;
     @Autowired

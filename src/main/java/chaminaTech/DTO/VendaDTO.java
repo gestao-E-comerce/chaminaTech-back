@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -51,6 +52,12 @@ public class VendaDTO {
 
     private Integer tempoEstimado;
 
+    private BigDecimal valorServico;
+
+    private Double valorBruto;
+
+    private BigDecimal desconto;
+
     @JsonIgnoreProperties(value = {"matriz","enderecos"})
     private ClienteDTO cliente;
 
@@ -66,7 +73,7 @@ public class VendaDTO {
     @JsonIgnoreProperties(value = {"vendas","matriz","funcionario","sangrias","suprimentos"})
     private CaixaDTO caixa;
 
-    @JsonIgnoreProperties(value = {"funcionarios","filhos","matriz","depositos","estoques","materias","produtos","vendas","categorias","clientes","gestaoCaixas","impressoras","identificador"})
+    @JsonIgnoreProperties(value = {"configuracaoEntrega", "configuracaoRetirada", "configuracaoImpressao", "configuracaoTaxaServico", }, allowSetters = true)
     private MatrizDTO matriz;
 
     @JsonIgnoreProperties(value = {"venda"}, allowSetters = true)

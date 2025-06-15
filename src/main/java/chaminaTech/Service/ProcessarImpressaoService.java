@@ -647,7 +647,7 @@ public class ProcessarImpressaoService {
 
     // comprovante e nota fiscal
     public void processarImpressaoComprovanteEnotaFiscal(Venda venda, Integer numeroCupom, Matriz matriz) {
-        String nomeImpressoraCaixa = venda.getNomeImpressora();
+        // String nomeImpressoraCaixa = venda.getNomeImpressora();
 
         if (venda.getNotaFiscal()) {
             if (venda.getImprimirNotaFiscal()) {

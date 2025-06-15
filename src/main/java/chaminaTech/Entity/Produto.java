@@ -9,7 +9,8 @@ import lombok.Setter;
 import java.util.List;
 
 @Entity
-@Getter @Setter
+@Getter
+@Setter
 public class Produto {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -45,29 +46,28 @@ public class Produto {
     @Column(nullable = false)
     private Boolean deveImprimir = false;
 
-    @OneToMany(mappedBy = "produto",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "produto", cascade = CascadeType.ALL)
     @JsonIgnoreProperties("produto")
     private List<ProdutoMateria> produtoMaterias;
 
-    @OneToMany(mappedBy = "produto",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "produto", cascade = CascadeType.ALL)
     @JsonIgnoreProperties("produto")
     @JsonManagedReference
     private List<ProdutoComposto> produtoCompostos;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "produto_matriz")
-    @JsonIgnoreProperties(value = {"funcionarios","filhos","matriz","depositos","estoques","materias","produtos","vendas","categorias","clientes","gestaoCaixas","impressoras","identificador"})
+    @JsonIgnoreProperties(value = { "configuracaoEntrega", "configuracaoRetirada", "configuracaoImpressao",
+            "configuracaoTaxaServico", }, allowSetters = true)
     private Matriz matriz;
 
     @ManyToOne
     @JoinColumn(name = "produto_categoria")
-    @JsonIgnoreProperties(value = {"produtos", "matriz"}, allowSetters = true)
+    @JsonIgnoreProperties(value = { "produtos", "matriz" }, allowSetters = true)
     private Categoria categoria;
 
     @ManyToMany
-    @JoinTable(name = "produto_impressoras",
-            joinColumns = @JoinColumn(name = "produto_id"),
-            inverseJoinColumns = @JoinColumn(name = "impressora_id"))
+    @JoinTable(name = "produto_impressoras", joinColumns = @JoinColumn(name = "produto_id"), inverseJoinColumns = @JoinColumn(name = "impressora_id"))
     @JsonIgnoreProperties("matriz")
     private List<Impressora> impressoras;
 

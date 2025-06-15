@@ -15,6 +15,7 @@ import java.util.zip.ZipOutputStream;
 
 @RestController
 @RequestMapping("/installer")
+@CrossOrigin(origins = "*")
 public class InstallerController {
 
     @GetMapping("/download")

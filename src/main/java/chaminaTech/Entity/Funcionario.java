@@ -16,11 +16,12 @@ public class Funcionario extends Usuario {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "funcionario_matriz", nullable = false)
-    @JsonIgnoreProperties(value = {"funcionarios", "filhos", "matriz", "depositos", "estoques", "materias", "produtos", "vendas", "categorias", "clientes", "gestaoCaixas", "impressoras", "identificador"})
+    @JsonIgnoreProperties(value = { "configuracaoEntrega", "configuracaoRetirada", "configuracaoImpressao",
+            "configuracaoTaxaServico", }, allowSetters = true)
     private Matriz matriz;
 
     @OneToMany(mappedBy = "funcionario", cascade = CascadeType.ALL)
-    @JsonIgnoreProperties(value = {"matriz", "vendas", "funcionario", "sangrias"})
+    @JsonIgnoreProperties(value = { "matriz", "vendas", "funcionario", "sangrias" })
     private List<Caixa> caixas;
 
     private String preferenciaImpressaoProdutoNovo;

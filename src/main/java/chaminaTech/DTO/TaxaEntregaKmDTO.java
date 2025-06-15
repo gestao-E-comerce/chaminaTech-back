@@ -1,5 +1,6 @@
 package chaminaTech.DTO;
 
+import chaminaTech.DTO.ConfiguracaoDTO.ConfiguracaoEntregaDTO;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,6 +17,6 @@ public class TaxaEntregaKmDTO {
 
     private Integer tempo;
 
-    @JsonIgnoreProperties(value = {"funcionarios","filhos","matriz","depositos","estoques","materias","produtos","vendas","categorias","clientes","gestaoCaixas","impressoras","identificador"})
-    private MatrizDTO matriz;
+    @JsonIgnoreProperties("taxasEntregaKm")
+    private ConfiguracaoEntregaDTO configuracaoEntrega;
 }

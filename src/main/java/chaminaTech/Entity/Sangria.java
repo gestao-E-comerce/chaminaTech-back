@@ -29,7 +29,7 @@ public class Sangria {
     private String nomeImpressora;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "sangria_caixa", nullable = true)
+    @JoinColumn(name = "sangria_caixa", nullable = false)
     @JsonIgnoreProperties(value = {"vendas","funcionario","sangrias","suprimentos"})
     private Caixa caixa;
 

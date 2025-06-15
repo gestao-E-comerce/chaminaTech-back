@@ -31,6 +31,8 @@ public class ProdutoVenda {
 
     private String motivoExclusao;
 
+    private int origemTransferenciaNumero;
+
     @ManyToMany(cascade = CascadeType.MERGE)
     @JoinTable(name = "produto_venda_observacoes")
     private List<Observacoes> observacoesProdutoVenda;

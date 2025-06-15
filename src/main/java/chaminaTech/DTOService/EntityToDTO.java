@@ -1,7 +1,15 @@
 package chaminaTech.DTOService;
 
 import chaminaTech.DTO.*;
+import chaminaTech.DTO.ConfiguracaoDTO.ConfiguracaoEntregaDTO;
+import chaminaTech.DTO.ConfiguracaoDTO.ConfiguracaoImpressaoDTO;
+import chaminaTech.DTO.ConfiguracaoDTO.ConfiguracaoRetiradaDTO;
+import chaminaTech.DTO.ConfiguracaoDTO.ConfiguracaoTaxaServicoDTO;
 import chaminaTech.Entity.*;
+import chaminaTech.Entity.Configuracao.ConfiguracaoEntrega;
+import chaminaTech.Entity.Configuracao.ConfiguracaoImpressao;
+import chaminaTech.Entity.Configuracao.ConfiguracaoRetirada;
+import chaminaTech.Entity.Configuracao.ConfiguracaoTaxaServico;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -44,23 +52,6 @@ public class EntityToDTO {
         matrizDTO.setCelular(matriz.getCelular());
         matrizDTO.setEmail(matriz.getEmail());
         matrizDTO.setRole(matriz.getRole());
-        matrizDTO.setForcarRemocaoImpressora(matriz.getForcarRemocaoImpressora());
-        matrizDTO.setUsarImpressora(matriz.getUsarImpressora());
-        matrizDTO.setImprimirComprovanteRecebementoBalcao(matriz.getImprimirComprovanteRecebementoBalcao());
-        matrizDTO.setImprimirComprovanteRecebementoMesa(matriz.getImprimirComprovanteRecebementoMesa());
-        matrizDTO.setImprimirComprovanteRecebementoRetirada(matriz.getImprimirComprovanteRecebementoRetirada());
-        matrizDTO.setImprimirComprovanteRecebementoEntrega(matriz.getImprimirComprovanteRecebementoEntrega());
-        matrizDTO.setImprimirNotaFiscal(matriz.getImprimirNotaFiscal());
-        matrizDTO.setImprimirCadastrar(matriz.getImprimirCadastrar());
-        matrizDTO.setImprimirDeletar(matriz.getImprimirDeletar());
-        matrizDTO.setImprimirComprovanteDeletarVenda(matriz.getImprimirComprovanteDeletarVenda());
-        matrizDTO.setImprimirComprovanteDeletarProduto(matriz.getImprimirComprovanteDeletarProduto());
-        matrizDTO.setImprimirConferenciaEntrega(matriz.getImprimirConferenciaEntrega());
-        matrizDTO.setImprimirConferenciaRetirada(matriz.getImprimirConferenciaRetirada());
-        matrizDTO.setMostarMotivoDeletarVenda(matriz.getMostarMotivoDeletarVenda());
-        matrizDTO.setMostarMotivoDeletarProduto(matriz.getMostarMotivoDeletarProduto());
-        matrizDTO.setCalcular(matriz.getCalcular());
-        matrizDTO.setTempoEstimadoRetidara(matriz.getTempoEstimadoRetidara());
         matrizDTO.setEstado(matriz.getEstado());
         matrizDTO.setCidade(matriz.getCidade());
         matrizDTO.setBairro(matriz.getBairro());
@@ -70,110 +61,137 @@ public class EntityToDTO {
         matrizDTO.setLatitude(matriz.getLatitude());
         matrizDTO.setLongitude(matriz.getLongitude());
 
+        if (matriz.getConfiguracaoEntrega() != null) {
+            ConfiguracaoEntregaDTO configuracaoEntregaDTO = configuracaoEntregaToDTO(matriz.getConfiguracaoEntrega());
+            matrizDTO.setConfiguracaoEntrega(configuracaoEntregaDTO);
+        }
+
+        if (matriz.getConfiguracaoRetirada() != null) {
+            ConfiguracaoRetiradaDTO configuracaoRetiradaDTO = configuracaoRetiradaToDTO(matriz.getConfiguracaoRetirada());
+            matrizDTO.setConfiguracaoRetirada(configuracaoRetiradaDTO);
+        }
+
+        if (matriz.getConfiguracaoImpressao() != null) {
+            ConfiguracaoImpressaoDTO configuracaoImpressaoDTO = configuracaoImpressaoToDTO(matriz.getConfiguracaoImpressao());
+            matrizDTO.setConfiguracaoImpressao(configuracaoImpressaoDTO);
+        }
+
+        if (matriz.getConfiguracaoTaxaServico() != null) {
+            ConfiguracaoTaxaServicoDTO configuracaoTaxaServicoDTO = configuracaoTaxaServicioToDTO(matriz.getConfiguracaoTaxaServico());
+            matrizDTO.setConfiguracaoTaxaServicio(configuracaoTaxaServicoDTO);
+        }
+
         if (matriz.getMatriz() != null) {
             MatrizDTO filhoDTO = new MatrizDTO();
             filhoDTO.setId(matriz.getMatriz().getId());
             matrizDTO.setMatriz(filhoDTO.getMatriz());
         }
 
-        List<MatrizDTO> listaFilhosDTO = new ArrayList<>();
-        if (matriz.getFilhos() != null)
-            for (int i = 0; i < matriz.getFilhos().size(); i++) {
-                listaFilhosDTO.add(filhoToDTO(matriz.getFilhos().get(i)));
-            }
-        matrizDTO.setFilhos(listaFilhosDTO);
-
-        List<FuncionarioDTO> listaFuncinariosDTO = new ArrayList<>();
-        if (matriz.getFuncionarios() != null)
-            for (int i = 0; i < matriz.getFuncionarios().size(); i++) {
-                listaFuncinariosDTO.add(funcionarioToDTO(matriz.getFuncionarios().get(i)));
-            }
-        matrizDTO.setFuncionarios(listaFuncinariosDTO);
-
-        List<DepositoDTO> listaDepositosDTO = new ArrayList<>();
-        if (matriz.getDepositos() != null)
-            for (int i = 0; i < matriz.getDepositos().size(); i++) {
-                listaDepositosDTO.add(depositoToDTO(matriz.getDepositos().get(i)));
-            }
-        matrizDTO.setDepositos(listaDepositosDTO);
-
-        List<EstoqueDTO> listaEstoquesDTO = new ArrayList<>();
-        if (matriz.getEstoques() != null)
-            for (int i = 0; i < matriz.getEstoques().size(); i++) {
-                listaEstoquesDTO.add(estoqueToDTO(matriz.getEstoques().get(i)));
-            }
-        matrizDTO.setEstoques(listaEstoquesDTO);
-
-        List<MateriaDTO> listaMateriasDTO = new ArrayList<>();
-        if (matriz.getMaterias() != null)
-            for (int i = 0; i < matriz.getMaterias().size(); i++) {
-                listaMateriasDTO.add(materiaToDTO(matriz.getMaterias().get(i)));
-            }
-        matrizDTO.setMaterias(listaMateriasDTO);
-
-        List<ProdutoDTO> listaProdutosDTO = new ArrayList<>();
-        if (matriz.getProdutos() != null)
-            for (int i = 0; i < matriz.getProdutos().size(); i++) {
-                listaProdutosDTO.add(produtoToDTO(matriz.getProdutos().get(i)));
-            }
-        matrizDTO.setProdutos(listaProdutosDTO);
-
-        List<CategoriaDTO> listaCategoriasDTO = new ArrayList<>();
-        if (matriz.getCategorias() != null)
-            for (int i = 0; i < matriz.getCategorias().size(); i++) {
-                listaCategoriasDTO.add(categoriaToDTO(matriz.getCategorias().get(i)));
-            }
-        matrizDTO.setCategorias(listaCategoriasDTO);
-
-        List<ClienteDTO> listaClientesDTO = new ArrayList<>();
-        if (matriz.getClientes() != null)
-            for (int i = 0; i < matriz.getClientes().size(); i++) {
-                listaClientesDTO.add(clienteToDTO(matriz.getClientes().get(i)));
-            }
-        matrizDTO.setClientes(listaClientesDTO);
-
-        List<VendaDTO> listaVendasDTO = new ArrayList<>();
-        if (matriz.getVendas() != null)
-            for (int i = 0; i < matriz.getVendas().size(); i++) {
-                listaVendasDTO.add(vendaToDTO(matriz.getVendas().get(i)));
-            }
-        matrizDTO.setVendas(listaVendasDTO);
-
-        List<GestaoCaixaDTO> listaGestaoCaixasDTO = new ArrayList<>();
-        if (matriz.getGestaoCaixas() != null)
-            for (int i = 0; i < matriz.getGestaoCaixas().size(); i++) {
-                listaGestaoCaixasDTO.add(gestaoCaixaToDTO(matriz.getGestaoCaixas().get(i)));
-            }
-        matrizDTO.setGestaoCaixas(listaGestaoCaixasDTO);
-
-        List<ImpressoraDTO> listaImpressoraDTO = new ArrayList<>();
-        if (matriz.getImpressoras() != null)
-            for (int i = 0; i < matriz.getImpressoras().size(); i++) {
-                listaImpressoraDTO.add(impressoraToDTO(matriz.getImpressoras().get(i)));
-            }
-        matrizDTO.setImpressoras(listaImpressoraDTO);
-
-        List<IdentificadorDTO> listaIdentificadorDTO = new ArrayList<>();
-        if (matriz.getIdentificador() != null)
-            for (int i = 0; i < matriz.getIdentificador().size(); i++) {
-                listaIdentificadorDTO.add(identificadorToDTO(matriz.getIdentificador().get(i)));
-            }
-        matrizDTO.setIdentificador(listaIdentificadorDTO);
-
-        List<TaxaEntregaKmDTO> listaTaxaEntregaKmDTO = new ArrayList<>();
-        if (matriz.getTaxasEntregaKm() != null)
-            for (int i = 0; i < matriz.getTaxasEntregaKm().size(); i++) {
-                listaTaxaEntregaKmDTO.add(taxaEntregaKmToDTO(matriz.getTaxasEntregaKm().get(i)));
-            }
-        matrizDTO.setTaxasEntregaKm(listaTaxaEntregaKmDTO);
-
         if (matriz.getPermissao() != null) {
             PermissaoDTO permissaoDTO = permissaoToDTO(matriz.getPermissao());
-
             matrizDTO.setPermissao(permissaoDTO);
         }
 
         return matrizDTO;
+    }
+
+    public ConfiguracaoTaxaServicoDTO configuracaoTaxaServicioToDTO(ConfiguracaoTaxaServico configuracaoTaxaServico) {
+        ConfiguracaoTaxaServicoDTO configuracaoTaxaServicoDTO = new ConfiguracaoTaxaServicoDTO();
+
+        configuracaoTaxaServicoDTO.setId(configuracaoTaxaServico.getId());
+        configuracaoTaxaServicoDTO.setAplicar(configuracaoTaxaServico.getAplicar());
+        configuracaoTaxaServicoDTO.setPercentual(configuracaoTaxaServico.getPercentual());
+        configuracaoTaxaServicoDTO.setValorFixo(configuracaoTaxaServico.getValorFixo());
+        configuracaoTaxaServicoDTO.setTipo(configuracaoTaxaServico.getTipo());
+
+        if (configuracaoTaxaServico.getMatriz() != null) {
+            MatrizDTO matrizDTO = new MatrizDTO();
+            matrizDTO.setId(configuracaoTaxaServico.getMatriz().getId());
+            configuracaoTaxaServicoDTO.setMatriz(matrizDTO);
+        }
+        return configuracaoTaxaServicoDTO;
+    }
+
+    public ConfiguracaoImpressaoDTO configuracaoImpressaoToDTO(ConfiguracaoImpressao configuracaoImpressao) {
+        ConfiguracaoImpressaoDTO configuracaoImpressaoDTO = new ConfiguracaoImpressaoDTO();
+
+        configuracaoImpressaoDTO.setId(configuracaoImpressao.getId());
+        configuracaoImpressaoDTO.setUsarImpressora(configuracaoImpressao.getUsarImpressora());
+        configuracaoImpressaoDTO.setImprimirComprovanteRecebementoBalcao(configuracaoImpressao.getImprimirComprovanteRecebementoBalcao());
+        configuracaoImpressaoDTO.setImprimirComprovanteRecebementoEntrega(configuracaoImpressao.getImprimirComprovanteRecebementoEntrega());
+        configuracaoImpressaoDTO.setImprimirComprovanteRecebementoMesa(configuracaoImpressao.getImprimirComprovanteRecebementoMesa());
+        configuracaoImpressaoDTO.setImprimirComprovanteRecebementoRetirada(configuracaoImpressao.getImprimirComprovanteRecebementoRetirada());
+        configuracaoImpressaoDTO.setImprimirNotaFiscal(configuracaoImpressao.getImprimirNotaFiscal());
+        configuracaoImpressaoDTO.setImprimirCadastrar(configuracaoImpressao.getImprimirCadastrar());
+        configuracaoImpressaoDTO.setImprimirDeletar(configuracaoImpressao.getImprimirDeletar());
+        configuracaoImpressaoDTO.setImprimirComprovanteDeletarVenda(configuracaoImpressao.getImprimirComprovanteDeletarVenda());
+        configuracaoImpressaoDTO.setImprimirComprovanteDeletarProduto(configuracaoImpressao.getImprimirComprovanteDeletarProduto());
+        configuracaoImpressaoDTO.setImprimirConferenciaEntrega(configuracaoImpressao.getImprimirConferenciaEntrega());
+        configuracaoImpressaoDTO.setImprimirConferenciaRetirada(configuracaoImpressao.getImprimirConferenciaRetirada());
+        configuracaoImpressaoDTO.setImprimirAberturaCaixa(configuracaoImpressao.getImprimirAberturaCaixa());
+        configuracaoImpressaoDTO.setImprimirConferenciaCaixa(configuracaoImpressao.getImprimirConferenciaCaixa());
+        configuracaoImpressaoDTO.setImprimirSangria(configuracaoImpressao.getImprimirSangria());
+        configuracaoImpressaoDTO.setImprimirSuprimento(configuracaoImpressao.getImprimirSuprimento());
+        configuracaoImpressaoDTO.setMostarMotivoDeletarVenda(configuracaoImpressao.getMostarMotivoDeletarVenda());
+        configuracaoImpressaoDTO.setMostarMotivoDeletarProduto(configuracaoImpressao.getMostarMotivoDeletarProduto());
+
+        if (configuracaoImpressao.getMatriz() != null) {
+            MatrizDTO matrizDTO = new MatrizDTO();
+            matrizDTO.setId(configuracaoImpressao.getMatriz().getId());
+            configuracaoImpressaoDTO.setMatriz(matrizDTO);
+        }
+
+        List<ImpressoraDTO> listaImpressoras = new ArrayList<>();
+        if (configuracaoImpressao.getImpressoras() != null)
+            for (int i = 0; i < configuracaoImpressao.getImpressoras().size(); i++) {
+                listaImpressoras.add(impressoraToDTO(configuracaoImpressao.getImpressoras().get(i)));
+            }
+        configuracaoImpressaoDTO.setImpressoras(listaImpressoras);
+
+        List<IdentificadorDTO> listaIdentificadores = new ArrayList<>();
+        if (configuracaoImpressao.getIdentificador() != null)
+            for (int i = 0; i < configuracaoImpressao.getIdentificador().size(); i++) {
+                listaIdentificadores.add(identificadorToDTO(configuracaoImpressao.getIdentificador().get(i)));
+            }
+        configuracaoImpressaoDTO.setIdentificador(listaIdentificadores);
+
+        return configuracaoImpressaoDTO;
+    }
+
+    public ConfiguracaoRetiradaDTO configuracaoRetiradaToDTO(ConfiguracaoRetirada configuracaoRetirada) {
+        ConfiguracaoRetiradaDTO configuracaoRetiradaDTO = new ConfiguracaoRetiradaDTO();
+
+        configuracaoRetiradaDTO.setId(configuracaoRetirada.getId());
+        configuracaoRetiradaDTO.setTempoEstimadoRetidara(configuracaoRetirada.getTempoEstimadoRetidara());
+
+        if (configuracaoRetirada.getMatriz() != null) {
+            MatrizDTO matrizDTO = new MatrizDTO();
+            matrizDTO.setId(configuracaoRetirada.getMatriz().getId());
+            configuracaoRetiradaDTO.setMatriz(matrizDTO);
+        }
+        return configuracaoRetiradaDTO;
+    }
+
+    public ConfiguracaoEntregaDTO configuracaoEntregaToDTO(ConfiguracaoEntrega configuracaoEntrega) {
+        ConfiguracaoEntregaDTO configuracaoEntregaDTO = new ConfiguracaoEntregaDTO();
+
+        configuracaoEntregaDTO.setId(configuracaoEntrega.getId());
+        configuracaoEntregaDTO.setCalcular(configuracaoEntrega.getCalcular());
+
+        if (configuracaoEntrega.getMatriz() != null) {
+            MatrizDTO matrizDTO = new MatrizDTO();
+            matrizDTO.setId(configuracaoEntrega.getMatriz().getId());
+            configuracaoEntregaDTO.setMatriz(matrizDTO);
+        }
+
+        List<TaxaEntregaKmDTO> listaTaxasEntregas = new ArrayList<>();
+        if (configuracaoEntrega.getTaxasEntregaKm() != null)
+            for (int i = 0; i < configuracaoEntrega.getTaxasEntregaKm().size(); i++) {
+                listaTaxasEntregas.add(taxaEntregaKmToDTO(configuracaoEntrega.getTaxasEntregaKm().get(i)));
+            }
+        configuracaoEntregaDTO.setTaxasEntregaKm(listaTaxasEntregas);
+
+        return configuracaoEntregaDTO;
     }
 
     public TaxaEntregaKmDTO taxaEntregaKmToDTO(TaxaEntregaKm taxaEntregaKm) {
@@ -184,56 +202,13 @@ public class EntityToDTO {
         taxaEntregaKmDTO.setValor(taxaEntregaKm.getValor());
         taxaEntregaKmDTO.setTempo(taxaEntregaKm.getTempo());
 
-        if (taxaEntregaKmDTO.getMatriz() != null) {
-            MatrizDTO matrizDTO = new MatrizDTO();
-            matrizDTO.setId(taxaEntregaKmDTO.getMatriz().getId());
-            taxaEntregaKmDTO.setMatriz(matrizDTO);
+        if (taxaEntregaKm.getConfiguracaoEntrega() != null) {
+            ConfiguracaoEntregaDTO configuracaoEntregaDTO = new ConfiguracaoEntregaDTO();
+            configuracaoEntregaDTO.setId(taxaEntregaKm.getConfiguracaoEntrega().getId());
+            taxaEntregaKmDTO.setConfiguracaoEntrega(configuracaoEntregaDTO);
         }
 
         return taxaEntregaKmDTO;
-    }
-
-    public MatrizDTO filhoToDTO(Matriz filho) {
-        MatrizDTO filhoDTO = new MatrizDTO();
-
-        filhoDTO.setId(filho.getId());
-        filhoDTO.setAtivo(filho.getAtivo());
-        filhoDTO.setDeletado(filho.getDeletado());
-        filhoDTO.setNome(filho.getNome());
-        filhoDTO.setCnpj(filho.getCnpj());
-        filhoDTO.setUsername(filho.getUsername());
-        filhoDTO.setCelular(filho.getCelular());
-        filhoDTO.setEmail(filho.getEmail());
-        filhoDTO.setRole(filho.getRole());
-
-        List<FuncionarioDTO> listaFuncionarios = new ArrayList<>();
-        if (filho.getFuncionarios() != null)
-            for (int i = 0; i < filho.getFuncionarios().size(); i++) {
-                listaFuncionarios.add(funcionarioToDTO(filho.getFuncionarios().get(i)));
-            }
-        filhoDTO.setFuncionarios(listaFuncionarios);
-
-        List<ProdutoDTO> listaProdutos = new ArrayList<>();
-        if (filho.getProdutos() != null)
-            for (int i = 0; i < filho.getProdutos().size(); i++) {
-                listaProdutos.add(produtoToDTO(filho.getProdutos().get(i)));
-            }
-        filhoDTO.setProdutos(listaProdutos);
-
-        List<EstoqueDTO> listaEstoquesFilho = new ArrayList<>();
-        if (filho.getEstoques() != null)
-            for (int i = 0; i < filho.getEstoques().size(); i++) {
-                listaEstoquesFilho.add(estoqueToDTO(filho.getEstoques().get(i)));
-            }
-        filhoDTO.setEstoques(listaEstoquesFilho);
-
-        MatrizDTO matrizDTO = new MatrizDTO();
-        if (filho.getMatriz() != null) {
-            matrizDTO.setId(filho.getMatriz().getId());
-            filhoDTO.setMatriz(matrizDTO);
-        }
-
-        return filhoDTO;
     }
 
     public GestaoCaixaDTO gestaoCaixaToDTO(GestaoCaixa gestaoCaixa) {
@@ -263,10 +238,10 @@ public class EntityToDTO {
         impressoraDTO.setApelidoImpressora(impressora.getApelidoImpressora());
         impressoraDTO.setNomeImpressora(impressora.getNomeImpressora());
 
-        if (impressora.getMatriz() != null) {
-            MatrizDTO matrizDTO = new MatrizDTO();
-            matrizDTO.setId(impressora.getMatriz().getId());
-            impressoraDTO.setMatriz(matrizDTO);
+        if (impressora.getConfiguracaoImpressao() != null) {
+            ConfiguracaoImpressaoDTO configuracaoImpressaoDTO = new ConfiguracaoImpressaoDTO();
+            configuracaoImpressaoDTO.setId(impressora.getConfiguracaoImpressao().getId());
+            impressoraDTO.setConfiguracaoImpressao(configuracaoImpressaoDTO);
         }
 
         return impressoraDTO;
@@ -279,10 +254,10 @@ public class EntityToDTO {
         identificadorDTO.setImpressoraNome(identificador.getImpressoraNome());
         identificadorDTO.setIdentificadorNome(identificador.getIdentificadorNome());
 
-        if (identificador.getMatriz() != null) {
-            MatrizDTO matrizDTO = new MatrizDTO();
-            matrizDTO.setId(identificador.getMatriz().getId());
-            identificadorDTO.setMatriz(matrizDTO);
+        if (identificador.getConfiguracaoImpressao() != null) {
+            ConfiguracaoImpressaoDTO configuracaoImpressaoDTO = new ConfiguracaoImpressaoDTO();
+            configuracaoImpressaoDTO.setId(identificador.getConfiguracaoImpressao().getId());
+            identificadorDTO.setConfiguracaoImpressao(configuracaoImpressaoDTO);
         }
 
         return identificadorDTO;
@@ -674,6 +649,9 @@ public class EntityToDTO {
         vendaDTO.setNomeImpressora(venda.getNomeImpressora());
         vendaDTO.setTaxaEntrega(venda.getTaxaEntrega());
         vendaDTO.setTempoEstimado(venda.getTempoEstimado());
+        vendaDTO.setValorServico(venda.getValorServico());
+        vendaDTO.setValorBruto(venda.getValorBruto());
+        vendaDTO.setDesconto(venda.getDesconto());
 
         if (venda.getCliente() != null) {
             vendaDTO.setCliente(clienteToDTO(venda.getCliente()));
@@ -778,6 +756,7 @@ public class EntityToDTO {
         produtoVendaDTO.setData(produtoVenda.getData());
         produtoVendaDTO.setObservacaoProdutoVenda(produtoVenda.getObservacaoProdutoVenda());
         produtoVendaDTO.setMotivoExclusao(produtoVenda.getMotivoExclusao());
+        produtoVendaDTO.setOrigemTransferenciaNumero(produtoVenda.getOrigemTransferenciaNumero());
 
         if (produtoVenda.getProduto() != null) {
             produtoVendaDTO.setProduto(produtoToDTO(produtoVenda.getProduto()));

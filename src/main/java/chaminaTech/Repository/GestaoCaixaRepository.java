@@ -16,13 +16,6 @@ public interface GestaoCaixaRepository extends JpaRepository<GestaoCaixa, Long> 
     @Query("SELECT gc FROM GestaoCaixa gc WHERE gc.venda.id = :vendaId")
     Optional<GestaoCaixa> findByVendaId(@Param("vendaId") Long vendaId);
 
-    //    @Query("""
-//                SELECT g FROM GestaoCaixa g
-//                WHERE g.matriz.id = :matrizId AND g.cupom = (
-//                    SELECT MAX(gc.cupom) FROM GestaoCaixa gc WHERE gc.matriz.id = :matrizId
-//                )
-//            """)
-//    Optional<GestaoCaixa> findUltimoCupomByMatrizId(@Param("matrizId") Long matrizId);
     Optional<GestaoCaixa> findTopByMatrizIdOrderByIdDesc(Long matrizId);
 
     @Query("SELECT g FROM GestaoCaixa g " +
@@ -57,8 +50,6 @@ public interface GestaoCaixaRepository extends JpaRepository<GestaoCaixa, Long> 
                 SELECT g FROM GestaoCaixa g
                 WHERE g.ativo = false
                   AND g.matriz.id = :matrizId
-                  AND g.venda.vendaPagamento IS NOT NULL
-                  AND g.venda.deletado = false
                   AND (:tipo IS NULL OR
                       (:tipo = 'mesa' AND g.venda.mesa IS NOT NULL) OR
                       (:tipo = 'retirada' AND g.venda.retirada = true) OR

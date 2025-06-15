@@ -8,7 +8,6 @@ import chaminaTech.DTOService.PermissaoUtil;
 import chaminaTech.Entity.Caixa;
 import chaminaTech.Entity.Venda;
 import chaminaTech.Repository.CaixaRepository;
-import chaminaTech.Repository.ImpressaoRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,8 +26,6 @@ public class CaixaService {
     private DTOToEntity dtoToEntity;
     @Autowired
     private CaixaRepository caixaRepository;
-    @Autowired
-    private ImpressaoRepository impressaoRepository;
     @Autowired
     private ProcessarImpressaoService processarImpressaoService;
     @Autowired
