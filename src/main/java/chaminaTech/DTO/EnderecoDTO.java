@@ -1,8 +1,9 @@
 package chaminaTech.DTO;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.math.BigDecimal;
 
 @Getter
 @Setter
@@ -27,10 +28,9 @@ public class EnderecoDTO {
 
     private String referencia;
 
-    private Double latitude;
+    private BigDecimal latitude;
 
-    private Double longitude;
+    private BigDecimal longitude;
 
-    @JsonIgnoreProperties(value = {"enderecos","matriz"})
     private ClienteDTO cliente;
 }

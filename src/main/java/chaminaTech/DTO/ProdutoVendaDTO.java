@@ -1,6 +1,5 @@
 package chaminaTech.DTO;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,7 +16,7 @@ public class ProdutoVendaDTO {
 
     private BigDecimal quantidade;
 
-    private Double valor;
+    private BigDecimal valor;
 
     private Timestamp data;
 
@@ -29,12 +28,12 @@ public class ProdutoVendaDTO {
 
     private List<ObservacoesDTO> observacoesProdutoVenda;
 
-    @JsonIgnoreProperties(value = {"cliente","endereco","produtoVendas","funcionario","caixa","matriz","vendaPagamentos"})
+//    @JsonIgnoreProperties(value = {"cliente","endereco","produtoVendas","funcionario","caixa","matriz","vendaPagamentos"})
     private VendaDTO venda;
 
-    @JsonIgnoreProperties(value = {"matriz"})
+//    @JsonIgnoreProperties(value = {"matriz"})
     private ProdutoDTO produto;
 
-    @JsonIgnoreProperties(value = {"matriz","caixas"})
+//    @JsonIgnoreProperties(value = {"matriz","caixas"})
     private FuncionarioDTO funcionario;
 }

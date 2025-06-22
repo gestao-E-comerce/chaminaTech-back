@@ -63,7 +63,7 @@ public class MatrizService {
             throw new IllegalStateException("Password obrigatório!");
         }
         if (loginRepository.existsByUsername(matriz.getUsername())) {
-            throw new IllegalStateException("Username já está em uso.");
+            throw new IllegalStateException("Username inválido! Tente outro!");
         }
         matriz.setPassword(passwordEncoder.encode(matriz.getPassword()));
         if (matrizRepository.existsByNome(matriz.getNome())) {
@@ -177,43 +177,30 @@ public class MatrizService {
             matriz.setPassword(passwordEncoder.encode(matriz.getPassword()));
         }
 
-        if (matriz.getPermissao() != null) {
-            Permissao permissaoMatriz = matriz.getPermissao();
-            List<Funcionario> funcionarios = funcionarioRepository.buscarFuncionarios(matriz.getId(), null, null);
-
-            if (funcionarios != null && !funcionarios.isEmpty()) {
-                for (Funcionario funcionario : funcionarios) {
-                    Permissao p = funcionario.getPermissao();
-                    if (p != null) {
-                        if (!Boolean.TRUE.equals(permissaoMatriz.getVendaBalcao())) p.setVendaBalcao(false);
-                        if (!Boolean.TRUE.equals(permissaoMatriz.getVendaEntrega())) p.setVendaEntrega(false);
-                        if (!Boolean.TRUE.equals(permissaoMatriz.getVendaMesa())) p.setVendaMesa(false);
-                        if (!Boolean.TRUE.equals(permissaoMatriz.getVendaRetirada())) p.setVendaRetirada(false);
-                        if (!Boolean.TRUE.equals(permissaoMatriz.getEstoque())) p.setEstoque(false);
-                        if (!Boolean.TRUE.equals(permissaoMatriz.getDeposito())) p.setDeposito(false);
-                        if (!Boolean.TRUE.equals(permissaoMatriz.getMateria())) p.setMateria(false);
-                        if (!Boolean.TRUE.equals(permissaoMatriz.getFilho())) p.setFilho(false);
-                        if (!Boolean.TRUE.equals(permissaoMatriz.getMatrizPermissao())) p.setMatrizPermissao(false);
-                    }
-                }
-
-                // 🔐 persistir alterações
-                funcionarioRepository.saveAll(funcionarios);
-            }
-        }
-
-        if (matriz.getConfiguracaoEntrega() != null) {
-            matriz.getConfiguracaoEntrega().setMatriz(matriz);
-        }
-        if (matriz.getConfiguracaoRetirada() != null) {
-            matriz.getConfiguracaoRetirada().setMatriz(matriz);
-        }
-        if (matriz.getConfiguracaoTaxaServico() != null) {
-            matriz.getConfiguracaoTaxaServico().setMatriz(matriz);
-        }
-        if (matriz.getConfiguracaoImpressao() != null) {
-            matriz.getConfiguracaoImpressao().setMatriz(matriz);
-        }
+//        if (matriz.getPermissao() != null) {
+//            Permissao permissaoMatriz = matriz.getPermissao();
+//            List<Funcionario> funcionarios = funcionarioRepository.buscarFuncionarios(matriz.getId(), null, null);
+//
+//            if (funcionarios != null && !funcionarios.isEmpty()) {
+//                for (Funcionario funcionario : funcionarios) {
+//                    Permissao p = funcionario.getPermissao();
+//                    if (p != null) {
+//                        if (!Boolean.TRUE.equals(permissaoMatriz.getVendaBalcao())) p.setVendaBalcao(false);
+//                        if (!Boolean.TRUE.equals(permissaoMatriz.getVendaEntrega())) p.setVendaEntrega(false);
+//                        if (!Boolean.TRUE.equals(permissaoMatriz.getVendaMesa())) p.setVendaMesa(false);
+//                        if (!Boolean.TRUE.equals(permissaoMatriz.getVendaRetirada())) p.setVendaRetirada(false);
+//                        if (!Boolean.TRUE.equals(permissaoMatriz.getEstoque())) p.setEstoque(false);
+//                        if (!Boolean.TRUE.equals(permissaoMatriz.getDeposito())) p.setDeposito(false);
+//                        if (!Boolean.TRUE.equals(permissaoMatriz.getMateria())) p.setMateria(false);
+//                        if (!Boolean.TRUE.equals(permissaoMatriz.getFilho())) p.setFilho(false);
+//                        if (!Boolean.TRUE.equals(permissaoMatriz.getMatrizPermissao())) p.setMatrizPermissao(false);
+//                    }
+//                }
+//
+//                // 🔐 persistir alterações
+//                funcionarioRepository.saveAll(funcionarios);
+//            }
+//        }
         matrizRepository.save(matriz);
 
         Usuario usuarioLogado = PermissaoUtil.getUsuarioLogado();

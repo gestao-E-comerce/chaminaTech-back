@@ -69,8 +69,7 @@ public class FuncionarioController {
         try {
             return ResponseEntity.ok(funcionarioService.ativarOuDesativarFuncionario(id, funcionarioDTO));
         } catch (Exception e) {
-            MensagemDTO mensagem = new MensagemDTO(e.getMessage(), HttpStatus.BAD_REQUEST);
-            return ResponseEntity.badRequest().body(mensagem);
+            return ResponseEntity.badRequest().body(new MensagemDTO(e.getMessage(), org.springframework.http.HttpStatus.BAD_REQUEST));
         }
     }
 

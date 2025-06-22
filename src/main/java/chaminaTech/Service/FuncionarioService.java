@@ -54,7 +54,7 @@ public class FuncionarioService {
                     .map(entityToDTO::funcionarioToDTO)
                     .collect(Collectors.toList());
 
-        }  finally {
+        } finally {
             PermissaoUtil.limparUsuarioLogado();
         }
     }
@@ -76,17 +76,26 @@ public class FuncionarioService {
     public MensagemDTO cadastrarFuncionario(FuncionarioDTO funcionarioDTO) {
         PermissaoUtil.validarOuLancar("cadastrarFuncionario");
         Funcionario funcionario = dtoToEntity.DTOToFuncionario(funcionarioDTO);
+//        Long matrizId = funcionario.getMatriz().getId();
+//        int totalFuncionarios = funcionarioRepository.contarFuncionariosAtivosPorMatriz(matrizId);
+//        int limiteFuncionarios = funcionario.getMatriz().getLimiteFuncionarios();
+//
+//        if (totalFuncionarios == limiteFuncionarios) {
+//            throw new IllegalStateException("Limite máximo de funcionários já foi atingido para esta matriz.");
+//        }
+
         if (funcionario.getPassword() == null) {
             throw new IllegalStateException("Password obrigatório!");
         }
         if (loginRepository.existsByUsername(funcionario.getUsername())) {
-            throw new IllegalStateException("Username já está em uso.");
+            throw new IllegalStateException("Username inválido! Tente outro!");
         }
         funcionario.setRole("FUNCIONARIO");
         funcionario.setPassword(passwordEncoder.encode(funcionario.getPassword()));
         if (funcionarioRepository.existsByNomeAndMatrizIdAndDeletado(funcionario.getMatriz().getId(), funcionario.getNome(), false)) {
             throw new IllegalStateException("Já existe um funcionario com esse nome!");
         }
+        funcionario.setAtivo(false);
 
         funcionarioRepository.save(funcionario);
         auditoriaService.salvarAuditoria(
@@ -117,6 +126,7 @@ public class FuncionarioService {
             throw new IllegalStateException("Já existe um funcionario com esse nome!");
         }
 
+        funcionario.setAtivo(false);
         funcionarioRepository.save(funcionario);
         auditoriaService.salvarAuditoria(
                 "EDITAR",
@@ -133,15 +143,28 @@ public class FuncionarioService {
         funcionarioDTO.setId(id);
         Funcionario funcionario = dtoToEntity.DTOToFuncionario(funcionarioDTO);
 
-        // Recupera a senha atual do banco, já que você não edita ela aqui
+        // Recupera a senha atual
         String senha = loginRepository.findSenhaById(funcionario.getId());
         funcionario.setPassword(senha);
 
-        // Inverte o status atual
+        // Descobre qual será o novo status sem ainda setar
         boolean novoStatus = !Boolean.TRUE.equals(funcionarioDTO.getAtivo());
+
+        if (novoStatus) { // Só se for ativar, verifica limite
+            Long matrizId = funcionario.getMatriz().getId();
+            int totalAtivos = funcionarioRepository.contarFuncionariosAtivosPorMatriz(matrizId);
+            int limite = funcionario.getMatriz().getLimiteFuncionarios();
+
+            if (totalAtivos == limite) {
+                throw new IllegalStateException("Limite máximo de funcionários já foi atingido para esta matriz.");
+            }
+        }
+
+        // Agora sim aplica o novo status
         funcionario.setAtivo(novoStatus);
 
         funcionarioRepository.save(funcionario);
+
         auditoriaService.salvarAuditoria(
                 novoStatus ? "ATIVAR" : "DESATIVAR",
                 "FUNCIONARIO",
@@ -149,8 +172,8 @@ public class FuncionarioService {
                 PermissaoUtil.getUsuarioLogado().getNome(),
                 funcionario.getMatriz().getId()
         );
-        String mensagem = novoStatus ? "Funcionário ativado com sucesso!" : "Funcionário desativado com sucesso!";
 
+        String mensagem = novoStatus ? "Funcionário ativado com sucesso!" : "Funcionário desativado com sucesso!";
         return new MensagemDTO(mensagem, HttpStatus.CREATED);
     }
 

@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -42,7 +43,7 @@ public class ConfiguracaoEntregaService {
         ConfiguracaoEntrega configuracaoEntrega = dtoToEntity.DTOToConfiguracaoEntrega(configuracaoEntregaDTO);
 
         // ✅ Remove duplicados e associa à configuração
-        Set<Integer> kmsVistos = new HashSet<>();
+        Set<BigDecimal> kmsVistos = new HashSet<>();
         List<TaxaEntregaKm> taxasFiltradas = new ArrayList<>();
 
         for (TaxaEntregaKm taxa : configuracaoEntrega.getTaxasEntregaKm()) {

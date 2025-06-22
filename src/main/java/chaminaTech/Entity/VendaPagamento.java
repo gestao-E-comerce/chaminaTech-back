@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 @Entity
 @Getter @Setter
 public class VendaPagamento {
@@ -12,13 +14,20 @@ public class VendaPagamento {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Double dinheiro;
+    private BigDecimal dinheiro;
+    private BigDecimal debito;
+    private BigDecimal credito;
+    private BigDecimal pix;
 
-    private Double debito;
+    private BigDecimal descontoDinheiro;
+    private BigDecimal descontoDebito;
+    private BigDecimal descontoCredito;
+    private BigDecimal descontoPix;
 
-    private Double credito;
-
-    private Double pix;
+    private BigDecimal servicoDinheiro;
+    private BigDecimal servicoDebito;
+    private BigDecimal servicoCredito;
+    private BigDecimal servicoPix;
 
     @OneToOne
     @JoinColumn(name = "venda_id", nullable = false, unique = true)

@@ -1,9 +1,10 @@
 package chaminaTech.DTO;
 
 import chaminaTech.DTO.ConfiguracaoDTO.ConfiguracaoEntregaDTO;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.math.BigDecimal;
 
 @Getter
 @Setter
@@ -11,12 +12,11 @@ import lombok.Setter;
 public class TaxaEntregaKmDTO {
     private Long id;
 
-    private Integer km;
+    private BigDecimal km;
 
-    private Double valor;
+    private BigDecimal valor;
 
     private Integer tempo;
 
-    @JsonIgnoreProperties("taxasEntregaKm")
     private ConfiguracaoEntregaDTO configuracaoEntrega;
 }

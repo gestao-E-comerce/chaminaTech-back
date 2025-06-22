@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Getter @Setter
@@ -17,7 +18,7 @@ public class ObservacoesDTO {
 
     private String observacao;
 
-    private Double valor;
+    private BigDecimal valor;
 
     private Boolean validarExestencia = false;
 

@@ -1,9 +1,9 @@
 package chaminaTech.DTO;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -16,17 +16,17 @@ public class CaixaDTO {
 
     private Boolean deletado = false;
 
-    private Double valorAbertura;
+    private BigDecimal valorAbertura;
 
-    private Double saldoDinheiro;
+    private BigDecimal saldoDinheiro;
 
-    private Double saldoCredito;
+    private BigDecimal saldoCredito;
 
-    private Double saldoDebito;
+    private BigDecimal saldoDebito;
 
-    private Double saldoPix;
+    private BigDecimal saldoPix;
 
-    private Double saldo;
+    private BigDecimal saldo;
 
     private Timestamp dataAbertura;
 
@@ -34,18 +34,15 @@ public class CaixaDTO {
 
     private String nomeImpressora;
 
-    @JsonIgnoreProperties(value = {"matriz","caixas"})
     private FuncionarioDTO funcionario;
 
-    @JsonIgnoreProperties(value = {"configuracaoEntrega", "configuracaoRetirada", "configuracaoImpressao", "configuracaoTaxaServico", }, allowSetters = true)
     private MatrizDTO matriz;
 
-    @JsonIgnoreProperties(value = {"caixa"}, allowSetters = true)
     private List<VendaDTO> vendas;
 
-    @JsonIgnoreProperties(value = {"caixa"}, allowSetters = true)
+    private List<GorjetaDTO> gorjetas;
+
     private List<SangriaDTO> sangrias;
 
-    @JsonIgnoreProperties(value = {"caixa"}, allowSetters = true)
     private List<SuprimentoDTO> suprimentos;
 }

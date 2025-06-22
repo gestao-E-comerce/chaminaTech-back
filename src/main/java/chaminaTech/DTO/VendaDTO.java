@@ -1,6 +1,5 @@
 package chaminaTech.DTO;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -36,7 +35,7 @@ public class VendaDTO {
 
     private Boolean statusEmPagamento = false;
 
-    private Double valorTotal;
+    private BigDecimal valorTotal;
 
     private Timestamp dataVenda ;
 
@@ -44,38 +43,40 @@ public class VendaDTO {
 
     private Integer mesa;
 
-    private String motivo;
+    private String motivoDeletar;
 
     private String nomeImpressora;
 
-    private Double taxaEntrega;
+    private BigDecimal taxaEntrega;
 
     private Integer tempoEstimado;
 
     private BigDecimal valorServico;
 
-    private Double valorBruto;
+    private BigDecimal valorBruto;
 
     private BigDecimal desconto;
 
-    @JsonIgnoreProperties(value = {"matriz","enderecos"})
+    private String motivoDesconto;
+
+//    @JsonIgnoreProperties(value = {"matriz","enderecos"})
     private ClienteDTO cliente;
 
-    @JsonIgnoreProperties("cliente")
+//    @JsonIgnoreProperties("cliente")
     private EnderecoDTO endereco;
 
-    @JsonIgnoreProperties(value = {"venda"}, allowSetters = true)
+//    @JsonIgnoreProperties(value = {"venda"}, allowSetters = true)
     private List<ProdutoVendaDTO> produtoVendas;
 
-    @JsonIgnoreProperties(value = {"matriz","caixas"})
+//    @JsonIgnoreProperties(value = {"matriz","caixas"})
     private FuncionarioDTO funcionario;
 
-    @JsonIgnoreProperties(value = {"vendas","matriz","funcionario","sangrias","suprimentos"})
+//    @JsonIgnoreProperties(value = {"vendas","matriz","funcionario","sangrias","suprimentos"})
     private CaixaDTO caixa;
 
-    @JsonIgnoreProperties(value = {"configuracaoEntrega", "configuracaoRetirada", "configuracaoImpressao", "configuracaoTaxaServico", }, allowSetters = true)
+//    @JsonIgnoreProperties(value = {"configuracaoEntrega", "configuracaoRetirada", "configuracaoImpressao", "configuracaoTaxaServico", }, allowSetters = true)
     private MatrizDTO matriz;
 
-    @JsonIgnoreProperties(value = {"venda"}, allowSetters = true)
+//    @JsonIgnoreProperties(value = {"venda"}, allowSetters = true)
     private VendaPagamentoDTO vendaPagamento;
 }

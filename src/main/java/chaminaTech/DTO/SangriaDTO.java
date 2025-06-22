@@ -1,9 +1,9 @@
 package chaminaTech.DTO;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 
 @Getter
@@ -13,7 +13,7 @@ public class SangriaDTO {
 
     private Boolean ativo = true;
 
-    private Double valor;
+    private BigDecimal valor;
 
     private String motivo;
 
@@ -21,9 +21,11 @@ public class SangriaDTO {
 
     private String nomeImpressora;
 
-    @JsonIgnoreProperties(value = {"vendas","funcionario","sangrias","suprimentos"})
+    private String tipo;
+
+    private String nomeFuncionario;
+
     private CaixaDTO caixa;
 
-    @JsonIgnoreProperties(value = {"matriz","caixas"})
     private FuncionarioDTO funcionario;
 }

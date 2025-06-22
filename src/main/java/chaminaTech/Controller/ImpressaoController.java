@@ -1,7 +1,7 @@
 package chaminaTech.Controller;
 
-import chaminaTech.Service.ImpressaoService;
 import chaminaTech.DTO.*;
+import chaminaTech.Service.ImpressaoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 public class ImpressaoController {
     @Autowired
     private ImpressaoService impressaoService;
+
     @PostMapping("/produtos")
     public ResponseEntity<MensagemDTO> imprimirProdutos(@RequestBody ImpressaoDTO impressaoDTO) {
         try {
@@ -21,6 +22,7 @@ public class ImpressaoController {
             return ResponseEntity.badRequest().body(new MensagemDTO(e.getMessage(), HttpStatus.BAD_REQUEST));
         }
     }
+
     @PostMapping("/conta")
     public ResponseEntity<MensagemDTO> imprimirConta(@RequestBody ImpressaoDTO impressaoDTO) {
         try {
@@ -29,6 +31,7 @@ public class ImpressaoController {
             return ResponseEntity.badRequest().body(new MensagemDTO(e.getMessage(), HttpStatus.BAD_REQUEST));
         }
     }
+
     @PostMapping("/conferencia")
     public ResponseEntity<MensagemDTO> imprimirConferencia(@RequestBody VendaDTO vendaDTO) {
         try {
@@ -57,9 +60,18 @@ public class ImpressaoController {
     }
 
     @PostMapping("/suprimento")
-    public ResponseEntity<MensagemDTO> imprimirSangria(@RequestBody SuprimentoDTO suprimentoDTO) {
+    public ResponseEntity<MensagemDTO> imprimirSubrimento(@RequestBody SuprimentoDTO suprimentoDTO) {
         try {
             return ResponseEntity.ok(impressaoService.imprimirSuprimento(suprimentoDTO));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(new MensagemDTO(e.getMessage(), HttpStatus.BAD_REQUEST));
+        }
+    }
+
+    @PostMapping("/gorjeta")
+    public ResponseEntity<MensagemDTO> imprimirGorjeta(@RequestBody GorjetaDTO gorjetaDTO) {
+        try {
+            return ResponseEntity.ok(impressaoService.imprimirGorjeta(gorjetaDTO));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(new MensagemDTO(e.getMessage(), HttpStatus.BAD_REQUEST));
         }

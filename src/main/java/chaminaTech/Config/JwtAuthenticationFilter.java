@@ -36,7 +36,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         final String userName;
 
         String requestURI = request.getRequestURI();
-        if (requestURI.contains("/api/login") || requestURI.contains("/api/ws")) {
+        if (requestURI.contains("/api/login") || requestURI.contains("/api/ws") || requestURI.contains("/api/app/impressao")) {
             filterChain.doFilter(request, response);
             return;
         }

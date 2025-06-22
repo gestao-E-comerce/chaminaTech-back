@@ -34,7 +34,7 @@ public class Estoque {
     private BigDecimal quantidadeVendido = BigDecimal.ZERO;
 
     @Column(name = "valor_total", nullable = false)
-    private Double valorTotal = 0.0;
+    private BigDecimal valorTotal;
 
     @Column(name = "data_cadastrar")
     private Timestamp dataCadastrar;

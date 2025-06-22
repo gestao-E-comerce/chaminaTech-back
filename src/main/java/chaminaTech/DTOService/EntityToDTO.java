@@ -60,6 +60,7 @@ public class EntityToDTO {
         matrizDTO.setNumero(matriz.getNumero());
         matrizDTO.setLatitude(matriz.getLatitude());
         matrizDTO.setLongitude(matriz.getLongitude());
+        matrizDTO.setLimiteFuncionarios(matriz.getLimiteFuncionarios());
 
         if (matriz.getConfiguracaoEntrega() != null) {
             ConfiguracaoEntregaDTO configuracaoEntregaDTO = configuracaoEntregaToDTO(matriz.getConfiguracaoEntrega());
@@ -132,6 +133,7 @@ public class EntityToDTO {
         configuracaoImpressaoDTO.setImprimirConferenciaCaixa(configuracaoImpressao.getImprimirConferenciaCaixa());
         configuracaoImpressaoDTO.setImprimirSangria(configuracaoImpressao.getImprimirSangria());
         configuracaoImpressaoDTO.setImprimirSuprimento(configuracaoImpressao.getImprimirSuprimento());
+        configuracaoImpressaoDTO.setImprimirGorjeta(configuracaoImpressao.getImprimirGorjeta());
         configuracaoImpressaoDTO.setMostarMotivoDeletarVenda(configuracaoImpressao.getMostarMotivoDeletarVenda());
         configuracaoImpressaoDTO.setMostarMotivoDeletarProduto(configuracaoImpressao.getMostarMotivoDeletarProduto());
 
@@ -332,6 +334,10 @@ public class EntityToDTO {
         permissaoDTO.setCadastrarSuprimento(permissao.getCadastrarSuprimento());
         permissaoDTO.setEditarSuprimento(permissao.getEditarSuprimento());
         permissaoDTO.setDeletarSuprimento(permissao.getDeletarSuprimento());
+
+        permissaoDTO.setCadastrarGorjeta(permissao.getCadastrarGorjeta());
+        permissaoDTO.setEditarGorjeta(permissao.getEditarGorjeta());
+        permissaoDTO.setDeletarGorjeta(permissao.getDeletarGorjeta());
 
         permissaoDTO.setCategoria(permissao.getCategoria());
         permissaoDTO.setCadastrarCategoria(permissao.getCadastrarCategoria());
@@ -570,6 +576,15 @@ public class EntityToDTO {
             }
         caixaDTO.setSuprimentos(listaSuprimentos);
 
+        List<GorjetaDTO> listaGorjetas = new ArrayList<>();
+        if (caixa.getGorjetas() != null)
+            for (Gorjeta gorjeta : caixa.getGorjetas()) {
+                if (Boolean.TRUE.equals(gorjeta.getAtivo())) {
+                    listaGorjetas.add(gorjetaToDTO(gorjeta));
+                }
+            }
+        caixaDTO.setGorjetas(listaGorjetas);
+
         return caixaDTO;
     }
 
@@ -599,6 +614,34 @@ public class EntityToDTO {
         return suprimentoDTO;
     }
 
+    private GorjetaDTO gorjetaToDTO(Gorjeta gorjeta) {
+        GorjetaDTO gorjetaDTO = new GorjetaDTO();
+
+        gorjetaDTO.setId(gorjeta.getId());
+        gorjetaDTO.setAtivo(gorjeta.getAtivo());
+        gorjetaDTO.setDataGorjeta(gorjeta.getDataGorjeta());
+        gorjetaDTO.setDinheiro(gorjeta.getDinheiro());
+        gorjetaDTO.setDebito(gorjeta.getDebito());
+        gorjetaDTO.setCredito(gorjeta.getCredito());
+        gorjetaDTO.setPix(gorjeta.getPix());
+        gorjetaDTO.setNomeImpressora(gorjeta.getNomeImpressora());
+
+        if (gorjetaDTO.getFuncionario() != null) {
+            FuncionarioDTO funcionarioDTO = new FuncionarioDTO();
+            funcionarioDTO.setId(gorjeta.getFuncionario().getId());
+            funcionarioDTO.setNome(gorjeta.getFuncionario().getNome());
+            gorjetaDTO.setFuncionario(funcionarioDTO);
+        }
+
+        if (gorjetaDTO.getCaixa() != null) {
+            CaixaDTO caixaDTO = new CaixaDTO();
+            caixaDTO.setId(gorjeta.getCaixa().getId());
+            gorjetaDTO.setCaixa(caixaDTO);
+        }
+
+        return gorjetaDTO;
+    }
+
     private SangriaDTO sangriaToDTO(Sangria sangria) {
         SangriaDTO sangriaDTO = new SangriaDTO();
 
@@ -608,6 +651,8 @@ public class EntityToDTO {
         sangriaDTO.setMotivo(sangria.getMotivo());
         sangriaDTO.setValor(sangria.getValor());
         sangriaDTO.setNomeImpressora(sangria.getNomeImpressora());
+        sangriaDTO.setTipo(sangria.getTipo());
+        sangriaDTO.setNomeFuncionario(sangria.getNomeFuncionario());
 
         if (sangriaDTO.getFuncionario() != null) {
             FuncionarioDTO funcionarioDTO = new FuncionarioDTO();
@@ -645,13 +690,14 @@ public class EntityToDTO {
         vendaDTO.setDataVenda(venda.getDataVenda());
         vendaDTO.setDataEdicao(venda.getDataEdicao());
         vendaDTO.setMesa(venda.getMesa());
-        vendaDTO.setMotivo(venda.getMotivo());
+        vendaDTO.setMotivoDeletar(venda.getMotivoDeletar());
         vendaDTO.setNomeImpressora(venda.getNomeImpressora());
         vendaDTO.setTaxaEntrega(venda.getTaxaEntrega());
         vendaDTO.setTempoEstimado(venda.getTempoEstimado());
         vendaDTO.setValorServico(venda.getValorServico());
         vendaDTO.setValorBruto(venda.getValorBruto());
         vendaDTO.setDesconto(venda.getDesconto());
+        vendaDTO.setMotivoDesconto(venda.getMotivoDesconto());
 
         if (venda.getCliente() != null) {
             vendaDTO.setCliente(clienteToDTO(venda.getCliente()));
@@ -695,6 +741,17 @@ public class EntityToDTO {
             vendaPagamentoDTO.setPix(venda.getVendaPagamento().getPix());
             vendaPagamentoDTO.setDebito(venda.getVendaPagamento().getDebito());
             vendaPagamentoDTO.setCredito(venda.getVendaPagamento().getCredito());
+
+            vendaPagamentoDTO.setDescontoDinheiro(venda.getVendaPagamento().getDescontoDinheiro());
+            vendaPagamentoDTO.setDescontoCredito(venda.getVendaPagamento().getDescontoCredito());
+            vendaPagamentoDTO.setDescontoDebito(venda.getVendaPagamento().getDescontoDebito());
+            vendaPagamentoDTO.setDescontoPix(venda.getVendaPagamento().getDescontoPix());
+
+            vendaPagamentoDTO.setServicoDinheiro(venda.getVendaPagamento().getServicoDinheiro());
+            vendaPagamentoDTO.setServicoCredito(venda.getVendaPagamento().getServicoCredito());
+            vendaPagamentoDTO.setServicoDebito(venda.getVendaPagamento().getServicoDebito());
+            vendaPagamentoDTO.setServicoPix(venda.getVendaPagamento().getServicoPix());
+
 
             vendaDTO.setVendaPagamento(vendaPagamentoDTO);
         }

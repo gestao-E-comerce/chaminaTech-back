@@ -45,6 +45,10 @@ public class Permissao {
     private Boolean editarSuprimento = false;
     private Boolean deletarSuprimento = false;
 
+    private Boolean cadastrarGorjeta = false;
+    private Boolean editarGorjeta = false;
+    private Boolean deletarGorjeta = false;
+
     private Boolean categoria = false;
     private Boolean cadastrarCategoria = false;
     private Boolean editarCategoria = false;

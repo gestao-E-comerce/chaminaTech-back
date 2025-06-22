@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -91,32 +92,45 @@ public class CaixaController {
     }
 
     @GetMapping("/{caixaId}/totalPix")
-    public Double getTotalPixByCaixaId(@PathVariable Long caixaId) {
+    public BigDecimal getTotalPixByCaixaId(@PathVariable Long caixaId) {
         return caixaService.getTotalPixByCaixaId(caixaId);
     }
 
     @GetMapping("/{caixaId}/totalDinheiro")
-    public Double getTotalDinheiroByCaixaId(@PathVariable Long caixaId) {
+    public BigDecimal getTotalDinheiroByCaixaId(@PathVariable Long caixaId) {
         return caixaService.getTotalDinheiroByCaixaId(caixaId);
     }
 
     @GetMapping("/{caixaId}/totalDebito")
-    public Double getTotalDebitoByCaixaId(@PathVariable Long caixaId) {
+    public BigDecimal getTotalDebitoByCaixaId(@PathVariable Long caixaId) {
         return caixaService.getTotalDebitoByCaixaId(caixaId);
     }
 
     @GetMapping("/{caixaId}/totalCredito")
-    public Double getTotalCreditoByCaixaId(@PathVariable Long caixaId) {
+    public BigDecimal getTotalCreditoByCaixaId(@PathVariable Long caixaId) {
         return caixaService.getTotalCreditoByCaixaId(caixaId);
     }
 
+    @GetMapping("/{caixaId}/totalDescontos")
+    public BigDecimal getTotalDescontosByCaixaId(@PathVariable Long caixaId) {
+        return caixaService.getTotalDescontosByCaixaId(caixaId);
+    }
+
     @GetMapping("/{caixaId}/totalSangrias")
-    public Double getTotalSangriasByCaixaId(@PathVariable Long caixaId) {
+    public BigDecimal getTotalSangriasByCaixaId(@PathVariable Long caixaId) {
         return caixaService.getTotalSangriasByCaixaId(caixaId);
     }
 
     @GetMapping("/{caixaId}/totalSuprimentos")
-    public Double getTotalSuprimentosByCaixaId(@PathVariable Long caixaId) {
+    public BigDecimal getTotalSuprimentosByCaixaId(@PathVariable Long caixaId) {
         return caixaService.getTotalSuprimentosByCaixaId(caixaId);
+    }
+    @GetMapping("/{caixaId}/totalGorjetas")
+    public BigDecimal getTotalGorjetasByCaixaId(@PathVariable Long caixaId) {
+        return caixaService.getTotalGorjetasByCaixaId(caixaId);
+    }
+    @GetMapping("/{caixaId}/totalServicios")
+    public BigDecimal getTotalServiciosByCaixaId(@PathVariable Long caixaId) {
+        return caixaService.getTotalServiciosByCaixaId(caixaId);
     }
 }

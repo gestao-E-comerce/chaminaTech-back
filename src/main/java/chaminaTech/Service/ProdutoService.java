@@ -50,7 +50,7 @@ public class ProdutoService {
         List<Object[]> resultados = produtoRepository.listarProdutosEstoques(matrizId, termoPesquisa);
         return resultados.stream().map(obj -> {
             Produto produto = (Produto) obj[0];
-            Double quantidade = obj[1] != null ? ((BigDecimal) obj[1]).doubleValue() : 0.0;
+            BigDecimal quantidade = obj[1] != null ? (BigDecimal) obj[1] : BigDecimal.ZERO;
 
             ProdutoDTO dto = entityToDTO.produtoToDTO(produto);
             dto.setQuantidadeDisponivel(quantidade);
@@ -62,7 +62,7 @@ public class ProdutoService {
         List<Object[]> resultados = produtoRepository.listarProdutosEstoquesDescartados(matrizId, termoPesquisa);
         return resultados.stream().map(obj -> {
             Produto produto = (Produto) obj[0];
-            Double quantidade = obj[1] != null ? ((BigDecimal) obj[1]).doubleValue() : 0.0;
+            BigDecimal quantidade = obj[1] != null ? (BigDecimal) obj[1] : BigDecimal.ZERO;
 
             ProdutoDTO dto = entityToDTO.produtoToDTO(produto);
             dto.setQuantidadeDescartada(quantidade);

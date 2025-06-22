@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 @Getter @Setter
 public class MateriaDTO {
     private Long id;
@@ -17,7 +19,7 @@ public class MateriaDTO {
     @JsonIgnoreProperties(value = {"configuracaoEntrega", "configuracaoRetirada", "configuracaoImpressao", "configuracaoTaxaServico", }, allowSetters = true)
     private MatrizDTO matriz;
 
-    private Double quantidadeDisponivel;
+    private BigDecimal quantidadeDisponivel;
 
-    private Double quantidadeDescartada;
+    private BigDecimal quantidadeDescartada;
 }

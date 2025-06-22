@@ -1,5 +1,6 @@
 package chaminaTech.Controller;
 
+import chaminaTech.DTO.ParcialDTO;
 import chaminaTech.DTO.TransferenciaDTO;
 import chaminaTech.DTO.VendaDTO;
 import chaminaTech.DTO.MensagemDTO;
@@ -10,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -21,12 +23,12 @@ public class VendaController {
     private VendaService vendaService;
 
     @GetMapping("/totalVenda/{matrizId}/{tipoVenda}")
-    public ResponseEntity<Double> buscarTotalVendaPorMatriz(@PathVariable Long matrizId, @PathVariable String tipoVenda) {
+    public ResponseEntity<BigDecimal> buscarTotalVendaPorMatriz(@PathVariable Long matrizId, @PathVariable String tipoVenda) {
         try {
-            Double total = vendaService.buscarTotalVendaPorMatriz(matrizId, tipoVenda);
+            BigDecimal total = vendaService.buscarTotalVendaPorMatriz(matrizId, tipoVenda);
             return ResponseEntity.ok(total);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(0.0);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(BigDecimal.ZERO);
         }
     }
 
@@ -70,19 +72,14 @@ public class VendaController {
     public ResponseEntity<MensagemDTO> transferirProdutos(@RequestBody TransferenciaDTO transferenciaDTO) {
         return ResponseEntity.ok(vendaService.transferirProdutos(transferenciaDTO));
     }
+
+    @PostMapping("/parcial")
+    public ResponseEntity<MensagemDTO> pagamentoParcial(@RequestBody ParcialDTO parcialDTO) {
+        return ResponseEntity.ok(vendaService.pagamentoParcial(parcialDTO));
+    }
     @PostMapping("/cadastrarSimples")
     public VendaDTO cadastrarVendaSimples(@RequestBody VendaDTO vendaDTO) {
         return vendaService.salvarMesaApenasExistir(vendaDTO);
-    }
-
-    @PostMapping("/cadastrarParcial")
-    public ResponseEntity<MensagemDTO> cadastrarVendaParcial(@RequestBody VendaDTO vendaDTO) {
-        try {
-            return ResponseEntity.ok(vendaService.salvarMesaParcial(vendaDTO));
-        } catch (Exception e) {
-            MensagemDTO mensagem = new MensagemDTO(e.getMessage(), HttpStatus.BAD_REQUEST);
-            return ResponseEntity.badRequest().body(mensagem);
-        }
     }
 
     @PutMapping("/{id}")

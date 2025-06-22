@@ -21,6 +21,10 @@ COPY --from=build /app/target/*.jar app.jar
 
 # Copia o keystore.p12 para o container
 COPY keystore.p12 /app/keystore.p12
+
+# 🔥 Copia a pasta installer corretamente
+COPY installer /app/installer
+
 # Expõe porta usada pela aplicação
 EXPOSE 8443
 

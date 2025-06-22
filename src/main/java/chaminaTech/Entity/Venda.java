@@ -46,26 +46,28 @@ public class Venda {
 
     private Boolean statusEmPagamento = false;
 
-    private Double valorTotal;
+    private BigDecimal valorTotal;
 
-    private Double valorBruto;
+    private BigDecimal valorBruto;
 
     @Column(nullable = false)
     private Timestamp dataVenda;
 
     private Timestamp dataEdicao;
 
-    private String motivo;
+    private String motivoDeletar;
 
     private String nomeImpressora;
 
-    private Double taxaEntrega;
+    private BigDecimal taxaEntrega;
 
     private Integer tempoEstimado;
 
     private BigDecimal valorServico;
 
     private BigDecimal desconto;
+
+    private String motivoDesconto;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "venda_cliente")

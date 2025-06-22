@@ -35,7 +35,7 @@ public class SecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/api/login", "/api/ws/**", "/sockjs/**").permitAll()
+                        .requestMatchers("/api/login", "/api/app/impressao/**", "/api/ws/**", "/sockjs/**").permitAll()
                         .anyRequest().authenticated())
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
@@ -45,18 +45,29 @@ public class SecurityConfiguration {
     }
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowCredentials(true);
-       configuration.setAllowedOrigins(List.of("http://localhost:4200", "https://chaminatech.com",
-               "https://www.chaminatech.com"));
-        configuration.setAllowedMethods(Arrays.asList(HttpMethod.GET.name(), HttpMethod.POST.name(),
-                HttpMethod.PUT.name(), HttpMethod.DELETE.name(), HttpMethod.PATCH.name(), HttpMethod.OPTIONS.name()));
-        configuration.setAllowedHeaders(Arrays.asList(HttpHeaders.AUTHORIZATION, HttpHeaders.CONTENT_TYPE,
-                HttpHeaders.ACCEPT, "chaveUnico", "Authorization"));
-        configuration.setExposedHeaders(List.of(HttpHeaders.AUTHORIZATION));
-        configuration.setMaxAge(3600L);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
+
+        // Configuração específica para o /api/impressao/**
+        CorsConfiguration impressaoConfig = new CorsConfiguration();
+        impressaoConfig.setAllowCredentials(true);
+        impressaoConfig.addAllowedOriginPattern("*");  // Permite qualquer origem (IP/porta) para impressão
+        impressaoConfig.setAllowedMethods(Arrays.asList("GET", "DELETE"));
+        impressaoConfig.setAllowedHeaders(Arrays.asList(HttpHeaders.AUTHORIZATION, HttpHeaders.CONTENT_TYPE));
+        source.registerCorsConfiguration("/api/app/impressao/**", impressaoConfig);
+
+        // Configuração padrão para os outros endpoints
+        CorsConfiguration defaultConfig = new CorsConfiguration();
+        defaultConfig.setAllowCredentials(true);
+//        defaultConfig.setAllowedOrigins(List.of("http://localhost:4200", "https://chaminatech.com",
+//                "https://www.chaminatech.com", "http://192.168.0.104:4200"));
+        defaultConfig.addAllowedOriginPattern("*");
+        defaultConfig.setAllowedMethods(Arrays.asList(HttpMethod.GET.name(), HttpMethod.POST.name(),
+                HttpMethod.PUT.name(), HttpMethod.DELETE.name(), HttpMethod.PATCH.name(), HttpMethod.OPTIONS.name()));
+        defaultConfig.setAllowedHeaders(Arrays.asList(HttpHeaders.AUTHORIZATION, HttpHeaders.CONTENT_TYPE,
+                HttpHeaders.ACCEPT, "chaveUnico", "Authorization"));
+        defaultConfig.setExposedHeaders(List.of(HttpHeaders.AUTHORIZATION));
+        defaultConfig.setMaxAge(3600L);
+        source.registerCorsConfiguration("/**", defaultConfig);
         return source;
     }
 }

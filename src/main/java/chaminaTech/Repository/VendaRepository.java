@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,7 +32,7 @@ public interface VendaRepository extends JpaRepository<Venda, Long> {
             "  OR (:tipoVenda = 'entrega' AND v.entrega = true) " +  // Para 'entrega', verificar se 'v.entrega' é true
             "  OR (:tipoVenda = 'retirada' AND v.retirada = true) " +  // Para 'retirada', verificar se 'v.retirada' é true
             ")")
-    Double buscarTotalVendaPorMatriz(@Param("matrizId") Long matrizId, @Param("tipoVenda") String tipoVenda);
+    BigDecimal buscarTotalVendaPorMatriz(@Param("matrizId") Long matrizId, @Param("tipoVenda") String tipoVenda);
 
     @Query("""
                 SELECT v FROM Venda v

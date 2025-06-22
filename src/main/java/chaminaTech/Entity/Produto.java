@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Entity
@@ -29,7 +30,7 @@ public class Produto {
     private String nome;
 
     @Column(nullable = false)
-    private Double valor;
+    private BigDecimal valor;
 
     @Column(nullable = false)
     private Boolean tipo;
@@ -71,7 +72,7 @@ public class Produto {
     @JsonIgnoreProperties("matriz")
     private List<Impressora> impressoras;
 
-    private Double quantidadeDisponivel;
+    private BigDecimal quantidadeDisponivel;
 
-    private Double quantidadeDescartada;
+    private BigDecimal quantidadeDescartada;
 }

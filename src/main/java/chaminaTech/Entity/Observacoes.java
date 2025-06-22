@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Entity
@@ -27,7 +28,7 @@ public class Observacoes {
     @Column(nullable = false)
     private String observacao;
 
-    private Double valor;
+    private BigDecimal valor;
 
     private Boolean validarExestencia = false;
 

@@ -11,23 +11,25 @@ import java.sql.Timestamp;
 @Getter
 @Setter
 @Entity
-public class Suprimento {
+public class Gorjeta {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private Boolean ativo = true;
 
-    @Column(nullable = false)
-    private BigDecimal valor;
+    private BigDecimal dinheiro;
 
-    @Column(nullable = false)
-    private String motivo;
+    private BigDecimal debito;
 
-    @Column(nullable = false)
-    private Timestamp dataSuprimento;
+    private BigDecimal credito;
+
+    private BigDecimal pix;
 
     private String nomeImpressora;
+
+    @Column(nullable = false)
+    private Timestamp dataGorjeta;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sangria_caixa", nullable = false)

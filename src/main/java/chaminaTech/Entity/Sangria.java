@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 
 @Getter
@@ -18,7 +19,7 @@ public class Sangria {
     private Boolean ativo = true;
 
     @Column(nullable = false)
-    private Double valor;
+    private BigDecimal valor;
 
     @Column(nullable = false)
     private String motivo;
@@ -28,9 +29,14 @@ public class Sangria {
 
     private String nomeImpressora;
 
+    @Column(nullable = false)
+    private String tipo;
+
+    private String nomeFuncionario;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sangria_caixa", nullable = false)
-    @JsonIgnoreProperties(value = {"vendas","funcionario","sangrias","suprimentos"})
+    @JsonIgnoreProperties(value = {"vendas","funcionario","sangrias","suprimentos","gorjetas"})
     private Caixa caixa;
 
     @ManyToOne(fetch = FetchType.LAZY)

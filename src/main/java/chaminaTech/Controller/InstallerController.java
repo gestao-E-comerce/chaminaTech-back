@@ -14,13 +14,13 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 @RestController
-@RequestMapping("/installer")
+@RequestMapping("/api/installer")
 @CrossOrigin(origins = "*")
 public class InstallerController {
 
     @GetMapping("/download")
     public ResponseEntity<Resource> downloadInstaller(@RequestParam("matrizId") Long matrizId) throws IOException {
-        Path baseDir = Paths.get("src/main/resources/installer/");
+        Path baseDir = Paths.get("").toAbsolutePath().resolve("installer");
         Path scriptTemplatePath = baseDir.resolve("installer-template.bat");
         Path scriptPath = baseDir.resolve("installer.bat");
         Path jarPath = baseDir.resolve("app.jar");

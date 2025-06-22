@@ -16,7 +16,7 @@ public class ConfiguracaoRetirada {
 
     private Integer tempoEstimadoRetidara;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "matriz_id", nullable = false)
     @JsonIgnoreProperties(value = {"configuracaoEntrega", "configuracaoRetirada", "configuracaoImpressao", "configuracaoTaxaServico"})
     private Matriz matriz;

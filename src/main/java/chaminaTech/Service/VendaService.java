@@ -1,14 +1,8 @@
 package chaminaTech.Service;
 
-import chaminaTech.DTO.MensagemDTO;
-import chaminaTech.DTO.ProdutoVendaDTO;
-import chaminaTech.DTO.TransferenciaDTO;
-import chaminaTech.DTO.VendaDTO;
+import chaminaTech.DTO.*;
 import chaminaTech.DTOService.*;
-import chaminaTech.Entity.GestaoCaixa;
-import chaminaTech.Entity.Matriz;
-import chaminaTech.Entity.ProdutoVenda;
-import chaminaTech.Entity.Venda;
+import chaminaTech.Entity.*;
 import chaminaTech.Repository.*;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
@@ -17,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -89,7 +85,7 @@ public class VendaService {
         return mesas;
     }
 
-    public Double buscarTotalVendaPorMatriz(Long matrizId, String tipoVenda) {
+    public BigDecimal buscarTotalVendaPorMatriz(Long matrizId, String tipoVenda) {
         return vendaRepository.buscarTotalVendaPorMatriz(matrizId, tipoVenda);
     }
 
@@ -111,6 +107,7 @@ public class VendaService {
 
         if (venda.getVendaPagamento() != null) {
             venda.getVendaPagamento().setVenda(venda);
+            calcularPercentuaisPorFormaPagamento(venda);
         }
 
         if (venda.getBalcao()) {
@@ -244,6 +241,7 @@ public class VendaService {
         }
         if (vendaAtualizada.getVendaPagamento() != null) {
             vendaAtualizada.getVendaPagamento().setVenda(vendaAtualizada);
+            calcularPercentuaisPorFormaPagamento(vendaAtualizada);
         }
 
         ComparacaoVendaResultado comparacao = tratarEstoqueDeposito.compararVendas(vendaOriginal, vendaAtualizada);
@@ -456,9 +454,6 @@ public class VendaService {
         VendaDTO vendaOriginalDTO = transferenciaDTO.getVendaOriginal();
         int totalTransferido = 0;
 
-//        int totalTransferido = vendaDestinoDTO.getProdutoVendas() != null
-//                ? vendaDestinoDTO.getProdutoVendas().size()
-//                : 0;
         if (vendaDestinoDTO.getProdutoVendas() != null) {
             List<ProdutoVendaDTO> produtosDestinoAtuais = vendaDestinoDTO.getProdutoVendas();
             for (ProdutoVendaDTO produto : produtosDestinoAtuais) {
@@ -467,8 +462,6 @@ public class VendaService {
                     totalTransferido++;
                 }
             }
-//            transferenciaDTO.getVendaDestino().getProdutoVendas().clear();
-//            transferenciaDTO.getVendaDestino().setProdutoVendas(produtosDestinoAtuais);
         }
         Venda vendaDestinoEntity = dtoToEntity.DTOToVenda(vendaDestinoDTO);
         Venda vendaOriginalEntity = dtoToEntity.DTOToVenda(vendaOriginalDTO);
@@ -513,6 +506,28 @@ public class VendaService {
                 vendaDestinoEntity.getMatriz().getId()
         );
         return new MensagemDTO("Produtos transferidos para a mesa destino!", HttpStatus.OK);
+    }
+
+    @Transactional
+    public MensagemDTO pagamentoParcial(ParcialDTO parcialDTO) {
+        PermissaoUtil.validarOuLancar("cadastrarVenda");
+
+        VendaDTO vendaOriginalDTO = parcialDTO.getVendaOriginal();
+        VendaDTO vendaParcialDTO = parcialDTO.getVendaParcial();
+        String chaveUnico = parcialDTO.getChaveUnico();
+
+        editarVenda(vendaOriginalDTO.getId(), vendaOriginalDTO, chaveUnico);
+        cadastrarVenda(vendaParcialDTO);
+
+        auditoriaService.salvarAuditoria(
+                "PAGAMENTO_PARCIAL",
+                "VENDA",
+                "Realizou pagamento parcial da mesa nº " + vendaOriginalDTO.getMesa(),
+                PermissaoUtil.getUsuarioLogado().getNome(),
+                vendaOriginalDTO.getMatriz().getId()
+        );
+
+        return new MensagemDTO("Pagamento parcial realizado com sucesso!", HttpStatus.CREATED);
     }
 
     @Transactional
@@ -575,71 +590,6 @@ public class VendaService {
         Venda vendaSalva = vendaRepository.save(venda);
         notificarVenda(venda, "alterar");
         return entityToDTO.vendaToDTO(vendaSalva);
-    }
-
-    @Transactional
-    public MensagemDTO salvarMesaParcial(VendaDTO vendaDTO) {
-        PermissaoUtil.validarOuLancar("cadastrarVenda");
-        Timestamp agora = new Timestamp(System.currentTimeMillis());
-        Venda venda = dtoToEntity.DTOToVenda(vendaDTO);
-        venda.setDataVenda(agora);
-        venda.setDataEdicao(agora);
-
-        if (venda.getProdutoVendas() != null) {
-            for (ProdutoVenda pv : venda.getProdutoVendas()) {
-                pv.setVenda(venda);
-                if (pv.getId() == null) {
-                    pv.setData(agora);
-                }
-            }
-        }
-
-        if (venda.getVendaPagamento() != null) {
-            venda.getVendaPagamento().setVenda(venda);
-        }
-
-        Integer cupomExistente = 0;
-        GestaoCaixa gestaoCaixa = null;
-        // se a venda e tipo mesa e tem pagamento e tem caixa entao finalizada cria um cupom desativado e desativa a venda
-        if (venda.getMesa() != null && venda.getVendaPagamento() != null) {
-            if (venda.getCaixa() == null) throw new IllegalStateException("Caixa indefinida");
-            Optional<GestaoCaixa> ultimoCupomOpt = gestaoCaixaRepository.findTopByMatrizIdOrderByIdDesc(venda.getMatriz().getId());
-
-            if (ultimoCupomOpt.isPresent()) {
-                GestaoCaixa ultimoCupom = ultimoCupomOpt.get();
-
-                Integer numeroAnterior = ultimoCupom.getCupom() != null ? ultimoCupom.getCupom() : 0;
-                cupomExistente = numeroAnterior + 1;
-
-                if (ultimoCupom.getAtivo() == null) {
-                    gestaoCaixaRepository.delete(ultimoCupom);
-                }
-
-            } else {
-                cupomExistente = 1;
-            }
-            gestaoCaixa = new GestaoCaixa();
-            gestaoCaixa.setMatriz(venda.getMatriz());
-            gestaoCaixa.setVenda(venda);
-            gestaoCaixa.setCupom(cupomExistente);
-            gestaoCaixa.setAtivo(false);
-            gestaoCaixaRepository.save(gestaoCaixa);
-            venda.setAtivo(false);
-        }
-        if (venda.getNomeImpressora() != null) {
-            if (venda.getMatriz().getConfiguracaoImpressao().getImprimirComprovanteRecebementoMesa()) {
-                processarImpressaoService.processarImpressaoComprovanteEnotaFiscal(venda, cupomExistente, venda.getMatriz());
-            }
-        }
-        Venda vendaSalva = vendaRepository.save(venda);
-        auditoriaService.salvarAuditoria(
-                "CADASTRAR",
-                "VENDA",
-                "Cadastrou venda parcial da mesa nº " + venda.getMesa(),
-                PermissaoUtil.getUsuarioLogado().getNome(),
-                venda.getMatriz().getId()
-        );
-        return new MensagemDTO("Pagamento parcial realizado com sucesso!", HttpStatus.CREATED);
     }
 
     @Transactional
@@ -749,4 +699,43 @@ public class VendaService {
             }
         }
     }
+
+    private void calcularPercentuaisPorFormaPagamento(Venda venda) {
+        VendaPagamento pagamento = venda.getVendaPagamento();
+        if (pagamento == null) return;
+
+        BigDecimal valorServico = Optional.ofNullable(venda.getValorServico()).orElse(BigDecimal.ZERO);
+        BigDecimal valorDesconto = Optional.ofNullable(venda.getDesconto()).orElse(BigDecimal.ZERO);
+        BigDecimal valorTotal = venda.getValorTotal();
+
+        if (valorTotal == null || valorTotal.compareTo(BigDecimal.ZERO) == 0) return;
+
+        BigDecimal pctServicoTotal = valorServico.divide(valorTotal, 6, RoundingMode.HALF_UP);
+        BigDecimal pctDescontoTotal = valorDesconto.divide(valorTotal, 6, RoundingMode.HALF_UP);
+
+        if (pagamento.getDinheiro() != null && pagamento.getDinheiro().compareTo(BigDecimal.ZERO) > 0) {
+            BigDecimal pctPagamento = pagamento.getDinheiro().divide(valorTotal, 6, RoundingMode.HALF_UP);
+            pagamento.setServicoDinheiro(pctServicoTotal.multiply(pctPagamento));
+            pagamento.setDescontoDinheiro(pctDescontoTotal.multiply(pctPagamento));
+        }
+
+        if (pagamento.getDebito() != null && pagamento.getDebito().compareTo(BigDecimal.ZERO) > 0) {
+            BigDecimal pctPagamento = pagamento.getDebito().divide(valorTotal, 6, RoundingMode.HALF_UP);
+            pagamento.setServicoDebito(pctServicoTotal.multiply(pctPagamento));
+            pagamento.setDescontoDebito(pctDescontoTotal.multiply(pctPagamento));
+        }
+
+        if (pagamento.getCredito() != null && pagamento.getCredito().compareTo(BigDecimal.ZERO) > 0) {
+            BigDecimal pctPagamento = pagamento.getCredito().divide(valorTotal, 6, RoundingMode.HALF_UP);
+            pagamento.setServicoCredito(pctServicoTotal.multiply(pctPagamento));
+            pagamento.setDescontoCredito(pctDescontoTotal.multiply(pctPagamento));
+        }
+
+        if (pagamento.getPix() != null && pagamento.getPix().compareTo(BigDecimal.ZERO) > 0) {
+            BigDecimal pctPagamento = pagamento.getPix().divide(valorTotal, 6, RoundingMode.HALF_UP);
+            pagamento.setServicoPix(pctServicoTotal.multiply(pctPagamento));
+            pagamento.setDescontoPix(pctDescontoTotal.multiply(pctPagamento));
+        }
+    }
+
 }

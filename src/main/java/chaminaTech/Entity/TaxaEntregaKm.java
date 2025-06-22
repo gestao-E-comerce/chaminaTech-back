@@ -6,6 +6,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 @Getter @Setter
 @Entity
 public class TaxaEntregaKm {
@@ -13,14 +15,14 @@ public class TaxaEntregaKm {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Integer km;
+    private BigDecimal km;
 
-    private Double valor;
+    private BigDecimal valor;
 
     private Integer tempo;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "configuracao_entrega_id", nullable = false)
-    @JsonIgnoreProperties("taxasEntregaKm")
+    @JsonIgnoreProperties(value = {"taxasEntregaKm", "matriz"})
     private ConfiguracaoEntrega configuracaoEntrega;
 }

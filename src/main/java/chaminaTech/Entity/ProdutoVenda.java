@@ -22,7 +22,7 @@ public class ProdutoVenda {
     @Column(nullable = false)
     private BigDecimal quantidade = BigDecimal.ZERO;
 
-    private Double valor;
+    private BigDecimal valor;
 
     @Column(nullable = false)
     private Timestamp data;

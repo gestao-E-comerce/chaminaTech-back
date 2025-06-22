@@ -1,6 +1,5 @@
 package chaminaTech.DTO;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,9 +18,9 @@ public class ClienteDTO {
 
     private String celular;
 
-    @JsonIgnoreProperties(value = {"cliente"}, allowSetters = true)
+//    @JsonIgnoreProperties(value = {"cliente"}, allowSetters = true)
     private List<EnderecoDTO> enderecos;
 
-    @JsonIgnoreProperties(value = {"configuracaoEntrega", "configuracaoRetirada", "configuracaoImpressao", "configuracaoTaxaServico", }, allowSetters = true)
+//    @JsonIgnoreProperties(value = {"configuracaoEntrega", "configuracaoRetirada", "configuracaoImpressao", "configuracaoTaxaServico", }, allowSetters = true)
     private MatrizDTO matriz;
 }

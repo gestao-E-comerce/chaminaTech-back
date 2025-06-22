@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Getter @Setter
@@ -18,7 +19,7 @@ public class ProdutoDTO {
 
     private String nome;
 
-    private Double valor;
+    private BigDecimal valor;
 
     private Boolean tipo;
 
@@ -45,7 +46,7 @@ public class ProdutoDTO {
     @JsonIgnoreProperties("matriz")
     private List<ImpressoraDTO> impressoras;
 
-    private Double quantidadeDisponivel;
+    private BigDecimal quantidadeDisponivel;
 
-    private Double quantidadeDescartada;
+    private BigDecimal quantidadeDescartada;
 }

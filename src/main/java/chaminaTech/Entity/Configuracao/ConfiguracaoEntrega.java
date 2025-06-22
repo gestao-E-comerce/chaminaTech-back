@@ -20,11 +20,11 @@ public class ConfiguracaoEntrega {
     private Integer calcular = 0;
 
     @OneToMany(mappedBy = "configuracaoEntrega", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnoreProperties("configuracaoEntrega")
+//    @JsonIgnoreProperties("configuracaoEntrega")
     @OrderBy("km")
     private List<TaxaEntregaKm> taxasEntregaKm;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "matriz_id", nullable = false)
     @JsonIgnoreProperties(value = {"configuracaoEntrega", "configuracaoRetirada", "configuracaoImpressao", "configuracaoTaxaServico"})
     private Matriz matriz;

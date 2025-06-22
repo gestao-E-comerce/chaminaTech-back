@@ -46,6 +46,10 @@ public class PermissaoUtil {
             case "editarSuprimento" -> permissao.getEditarSuprimento();
             case "deletarSuprimento" -> permissao.getDeletarSuprimento();
 
+            case "cadastrarGorjeta" -> permissao.getCadastrarGorjeta();
+            case "editarGorjeta" -> permissao.getEditarGorjeta();
+            case "deletarGorjeta" -> permissao.getDeletarGorjeta();
+
             case "categoria" -> permissao.getCategoria();
             case "cadastrarCategoria" -> permissao.getCadastrarCategoria();
             case "editarCategoria" -> permissao.getEditarCategoria();

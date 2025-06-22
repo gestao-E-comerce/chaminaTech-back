@@ -52,4 +52,11 @@ public interface FuncionarioRepository extends JpaRepository<Funcionario, Long> 
             "AND c.deletado = false")
     boolean existsCaixaAtivoPorFuncionario(@Param("funcionarioId") Long funcionarioId);
 
+    @Query("""
+                SELECT COUNT(f) FROM Funcionario f
+                WHERE f.matriz.id = :matrizId
+                AND f.deletado = false
+                AND f.ativo = true
+            """)
+    int contarFuncionariosAtivosPorMatriz(@Param("matrizId") Long matrizId);
 }

@@ -18,7 +18,7 @@ public class ConfiguracaoImpressao {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "matriz_id", nullable = false)
     @JsonIgnoreProperties(value = {"configuracaoEntrega", "configuracaoRetirada", "configuracaoImpressao", "configuracaoTaxaServico"})
     private Matriz matriz;
@@ -56,6 +56,8 @@ public class ConfiguracaoImpressao {
     private Boolean imprimirSangria = true;
     @Column(nullable = false)
     private Boolean imprimirSuprimento = true;
+    @Column(nullable = false)
+    private Boolean imprimirGorjeta = true;
     @Column(nullable = false)
     private Boolean mostarMotivoDeletarVenda = true;
     @Column(nullable = false)

@@ -8,18 +8,22 @@ import java.sql.Timestamp;
 
 @Getter
 @Setter
-public class SuprimentoDTO {
+public class GorjetaDTO {
     private Long id;
 
     private Boolean ativo = true;
 
-    private BigDecimal valor;
+    private BigDecimal dinheiro;
 
-    private String motivo;
+    private BigDecimal debito;
 
-    private Timestamp dataSuprimento;
+    private BigDecimal credito;
+
+    private BigDecimal pix;
 
     private String nomeImpressora;
+
+    private Timestamp dataGorjeta;
 
     private CaixaDTO caixa;
 

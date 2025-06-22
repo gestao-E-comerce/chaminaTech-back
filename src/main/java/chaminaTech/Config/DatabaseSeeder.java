@@ -56,6 +56,9 @@ public class DatabaseSeeder implements CommandLineRunner {
             permissao.setCadastrarSuprimento(true);
             permissao.setEditarSuprimento(true);
             permissao.setDeletarSuprimento(true);
+            permissao.setCadastrarGorjeta(true);
+            permissao.setEditarGorjeta(true);
+            permissao.setDeletarGorjeta(true);
             permissao.setCategoria(true);
             permissao.setCadastrarCategoria(true);
             permissao.setEditarCategoria(true);

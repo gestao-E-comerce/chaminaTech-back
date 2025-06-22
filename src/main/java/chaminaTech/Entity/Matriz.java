@@ -6,6 +6,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 @Entity
 @PrimaryKeyJoinColumn(name = "id_matriz")
 @Getter @Setter
@@ -34,24 +36,27 @@ public class Matriz extends Usuario{
     private Integer numero;
 
     @Column(nullable = false)
-    private Double latitude;
+    private BigDecimal latitude;
 
     @Column(nullable = false)
-    private Double longitude;
+    private BigDecimal longitude;
+
+    @Column(nullable = false)
+    private int limiteFuncionarios;
 
     @OneToOne(mappedBy = "matriz", cascade = CascadeType.ALL)
-    @JsonIgnoreProperties(value = {"matriz"}, allowSetters = true)
+    @JsonIgnoreProperties(value = {"matriz"})
     private ConfiguracaoEntrega configuracaoEntrega;
 
     @OneToOne(mappedBy = "matriz", cascade = CascadeType.ALL)
-    @JsonIgnoreProperties(value = {"matriz"}, allowSetters = true)
+    @JsonIgnoreProperties(value = {"matriz"})
     private ConfiguracaoRetirada configuracaoRetirada;
 
     @OneToOne(mappedBy = "matriz", cascade = CascadeType.ALL)
-    @JsonIgnoreProperties(value = {"matriz"}, allowSetters = true)
+    @JsonIgnoreProperties(value = {"matriz"})
     private ConfiguracaoImpressao configuracaoImpressao;
 
     @OneToOne(mappedBy = "matriz", cascade = CascadeType.ALL)
-    @JsonIgnoreProperties(value = {"matriz"}, allowSetters = true)
+    @JsonIgnoreProperties(value = {"matriz"})
     private ConfiguracaoTaxaServico configuracaoTaxaServico;
 }

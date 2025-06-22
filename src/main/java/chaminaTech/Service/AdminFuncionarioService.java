@@ -65,7 +65,7 @@ public class AdminFuncionarioService {
             throw new IllegalStateException("Password obrigatório!");
         }
         if (loginRepository.existsByUsername(adminFuncionario.getUsername())) {
-            throw new IllegalStateException("Username já está em uso.");
+            throw new IllegalStateException("Username inválido! Tente outro!");
         }
 
         adminFuncionario.setRole("ADMINFUNCIONARIO");

@@ -22,7 +22,7 @@ public class EstoqueDTO {
 
     private BigDecimal quantidadeVendido;
 
-    private Double valorTotal = 0.0;
+    private BigDecimal valorTotal;
 
     private Timestamp dataCadastrar;
 

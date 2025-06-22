@@ -37,7 +37,7 @@ public class MateriaService {
         List<Object[]> resultados = materiaRepository.listarMateriasDepositos(matrizId, termoPesquisa);
         return resultados.stream().map(obj -> {
             Materia materia = (Materia) obj[0];
-            Double quantidade = obj[1] != null ? ((BigDecimal) obj[1]).doubleValue() : 0.0;
+            BigDecimal quantidade = obj[1] != null ? (BigDecimal) obj[1] : BigDecimal.ZERO;
 
             MateriaDTO dto = entityToDTO.materiaToDTO(materia);
             dto.setQuantidadeDisponivel(quantidade);
@@ -49,7 +49,7 @@ public class MateriaService {
         List<Object[]> resultados = materiaRepository.listarMateriasDepositosDescartados(matrizId, termoPesquisa);
         return resultados.stream().map(obj -> {
             Materia materia = (Materia) obj[0];
-            Double quantidade = obj[1] != null ? ((BigDecimal) obj[1]).doubleValue() : 0.0;
+            BigDecimal quantidade = obj[1] != null ? (BigDecimal) obj[1] : BigDecimal.ZERO;
 
             MateriaDTO dto = entityToDTO.materiaToDTO(materia);
             dto.setQuantidadeDescartada(quantidade);

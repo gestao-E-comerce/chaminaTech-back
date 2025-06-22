@@ -6,6 +6,7 @@ import chaminaTech.Repository.ImpressaoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -25,28 +26,16 @@ public class ProcessarImpressaoService {
         List<ProdutoVenda> produtosCadastrados = new ArrayList<>();
 
         // Agrupar produtos da venda original
-        Map<String, ProdutoVenda> mapaProdutosOriginais = vendaOriginal.getProdutoVendas().stream()
-                .filter(ProdutoVenda::getAtivo)
-                .collect(Collectors.toMap(
-                        this::criarChaveAgrupamento,
-                        this::criarCopiaProdutoVenda,
-                        (pv1, pv2) -> {
-                            pv1.setQuantidade(pv1.getQuantidade().add(pv2.getQuantidade()));
-                            return pv1;
-                        }
-                ));
+        Map<String, ProdutoVenda> mapaProdutosOriginais = vendaOriginal.getProdutoVendas().stream().filter(ProdutoVenda::getAtivo).collect(Collectors.toMap(this::criarChaveAgrupamento, this::criarCopiaProdutoVenda, (pv1, pv2) -> {
+            pv1.setQuantidade(pv1.getQuantidade().add(pv2.getQuantidade()));
+            return pv1;
+        }));
 
         // Agrupar produtos da venda atualizada
-        Map<String, ProdutoVenda> mapaProdutosAtualizados = vendaAtualizada.getProdutoVendas().stream()
-                .filter(ProdutoVenda::getAtivo)
-                .collect(Collectors.toMap(
-                        this::criarChaveAgrupamento,
-                        this::criarCopiaProdutoVenda,
-                        (pv1, pv2) -> {
-                            pv1.setQuantidade(pv1.getQuantidade().add(pv2.getQuantidade()));
-                            return pv1;
-                        }
-                ));
+        Map<String, ProdutoVenda> mapaProdutosAtualizados = vendaAtualizada.getProdutoVendas().stream().filter(ProdutoVenda::getAtivo).collect(Collectors.toMap(this::criarChaveAgrupamento, this::criarCopiaProdutoVenda, (pv1, pv2) -> {
+            pv1.setQuantidade(pv1.getQuantidade().add(pv2.getQuantidade()));
+            return pv1;
+        }));
 
         // Verificar produtos removidos ou com quantidade reduzida
         for (Map.Entry<String, ProdutoVenda> entry : mapaProdutosOriginais.entrySet()) {
@@ -114,9 +103,7 @@ public class ProcessarImpressaoService {
 
             // Preparar o conteúdo consolidado para a impressora
 //            String conteudoStr = prepararConteudoImpressaoProdutosNovos(venda, produtosAgrupados, numeroCupom);
-            String conteudoStr = removido
-                    ? prepararConteudoImpressaoProdutosDeletados(venda, produtosAgrupados, numeroCupom)
-                    : prepararConteudoImpressaoProdutosNovos(venda, produtosAgrupados, numeroCupom);
+            String conteudoStr = removido ? prepararConteudoImpressaoProdutosDeletados(venda, produtosAgrupados, numeroCupom) : prepararConteudoImpressaoProdutosNovos(venda, produtosAgrupados, numeroCupom);
 
             byte[] conteudoBytes = conteudoStr.getBytes(StandardCharsets.UTF_8); // Converter para byte[]
 
@@ -190,9 +177,7 @@ public class ProcessarImpressaoService {
 
             definirTamanhoFonte(conteudo, 1, 1);
             definirEspacamentoCaracteres(conteudo, 5);
-            conteudo.append("Operador: ").append(venda.getFuncionario().getNome())
-                    .append("  ").append(new SimpleDateFormat("dd/MM/yy HH:mm").format(venda.getDataEdicao()))
-                    .append("\n");
+            conteudo.append("Operador: ").append(venda.getFuncionario().getNome()).append("  ").append(new SimpleDateFormat("dd/MM/yy HH:mm").format(venda.getDataEdicao())).append("\n");
 
             definirTamanhoFonte(conteudo, 1, 1); // Resetar tamanho da fonte para padrão
             conteudo.append("=".repeat(48)).append("\n");
@@ -278,9 +263,7 @@ public class ProcessarImpressaoService {
 
             definirTamanhoFonte(conteudo, 1, 1);
             definirEspacamentoCaracteres(conteudo, 5);
-            conteudo.append("Operador: ").append(venda.getFuncionario().getNome())
-                    .append("  ").append(new SimpleDateFormat("dd/MM/yy HH:mm").format(venda.getDataEdicao()))
-                    .append("\n");
+            conteudo.append("Operador: ").append(venda.getFuncionario().getNome()).append("  ").append(new SimpleDateFormat("dd/MM/yy HH:mm").format(venda.getDataEdicao())).append("\n");
 
             definirTamanhoFonte(conteudo, 1, 1); // Resetar tamanho da fonte para padrão
             conteudo.append("=".repeat(48)).append("\n");
@@ -362,8 +345,7 @@ public class ProcessarImpressaoService {
             definirTamanhoFonte(conteudo, 1, 1);
             conteudo.append("=".repeat(48)).append("\n");
 
-            definirTamanhoFonte(conteudo, 3, 3); // Fonte maior
-
+            definirTamanhoFonte(conteudo, 3, 3);
             if (venda.getMesa() != null) {
                 ativarNegrito(conteudo);
                 conteudo.append("Mesa: ").append(venda.getMesa()).append("\n");
@@ -373,17 +355,15 @@ public class ProcessarImpressaoService {
                 conteudo.append("Cupom: ").append(numeroCupom).append("\n");
                 desativarNegrito(conteudo);
             }
+
             definirTamanhoFonte(conteudo, 1, 1);
             definirEspacamentoCaracteres(conteudo, 5);
-            conteudo.append("Operador: ").append(venda.getFuncionario().getNome())
-                    .append("  ").append(new SimpleDateFormat("dd/MM/yy HH:mm").format(venda.getDataEdicao()))
-                    .append("\n");
+            conteudo.append("Operador: ").append(venda.getFuncionario().getNome()).append("  ").append(new SimpleDateFormat("dd/MM/yy HH:mm").format(venda.getDataEdicao())).append("\n");
 
             conteudo.append("=".repeat(48)).append("\n");
 
-            definirTamanhoFonte(conteudo, 1, 1); // Cabeçalho da tabela de produtos
+            definirTamanhoFonte(conteudo, 1, 1);
             conteudo.append(String.format("%-26s %4s %7s %8s\n", "PRODUTO", "QTDE", "VAL.UN", "VAL.TOT"));
-            definirTamanhoFonte(conteudo, 1, 1); // Resetar para padrão
             conteudo.append("=".repeat(48)).append("\n");
 
             for (ProdutoVenda produtoVenda : venda.getProdutoVendas()) {
@@ -393,17 +373,16 @@ public class ProcessarImpressaoService {
                 }
 
                 int quantidade = produtoVenda.getQuantidade().intValue();
-                double valorUnitario = produtoVenda.getProduto().getValor();
-                double valorTotal = valorUnitario * quantidade;
+                BigDecimal valorUnitario = produtoVenda.getProduto().getValor();
+                BigDecimal valorTotal = valorUnitario.multiply(BigDecimal.valueOf(quantidade));
                 List<Observacoes> observacoes = produtoVenda.getObservacoesProdutoVenda();
 
                 conteudo.append(String.format("%-26s %4d %7.2f %8.2f\n", nomeProduto, quantidade, valorUnitario, valorTotal));
 
                 if (observacoes != null && !observacoes.isEmpty()) {
-                    definirTamanhoFonte(conteudo, 1, 1); // Fonte menor para observações
                     for (Observacoes observacao1 : observacoes) {
-                        Double valorObs = observacao1.getValor();
-                        if (valorObs != null && valorObs > 0) {
+                        BigDecimal valorObs = observacao1.getValor();
+                        if (valorObs != null && valorObs.compareTo(BigDecimal.ZERO) > 0) {
                             adicionarTextoAlinhado(conteudo, ("    -" + observacao1.getObservacao()), String.format("%.2f", valorObs), 48);
                         }
                     }
@@ -411,29 +390,38 @@ public class ProcessarImpressaoService {
             }
 
             conteudo.append("=".repeat(48)).append("\n");
-
             conteudo.append("FORMAS DE PAGAMENTO").append("\n");
 
             if (venda.getVendaPagamento() != null) {
                 VendaPagamento pagamento = venda.getVendaPagamento();
-                if (pagamento.getDinheiro() > 0) {
+                if (pagamento.getDinheiro() != null && pagamento.getDinheiro().compareTo(BigDecimal.ZERO) > 0) {
                     adicionarTextoAlinhado(conteudo, "DINHEIRO", String.format("%.2f", pagamento.getDinheiro()), 48);
                 }
-                if (pagamento.getDebito() > 0) {
+                if (pagamento.getDebito() != null && pagamento.getDebito().compareTo(BigDecimal.ZERO) > 0) {
                     adicionarTextoAlinhado(conteudo, "CARTAO DE DEBITO", String.format("%.2f", pagamento.getDebito()), 48);
                 }
-                if (pagamento.getCredito() > 0) {
+                if (pagamento.getCredito() != null && pagamento.getCredito().compareTo(BigDecimal.ZERO) > 0) {
                     adicionarTextoAlinhado(conteudo, "CARTAO DE CREDITO", String.format("%.2f", pagamento.getCredito()), 48);
                 }
-                if (pagamento.getPix() > 0) {
+                if (pagamento.getPix() != null && pagamento.getPix().compareTo(BigDecimal.ZERO) > 0) {
                     adicionarTextoAlinhado(conteudo, "PIX", String.format("%.2f", pagamento.getPix()), 48);
                 }
             }
 
             conteudo.append("=".repeat(48)).append("\n");
 
-            definirEspacamentoCaracteres(conteudo, 1);
-            adicionarTextoAlinhado(conteudo, "Subtotal", String.format("%.2f", venda.getValorTotal()), 48);
+            // Desconto
+            if (venda.getDesconto() != null && venda.getDesconto().compareTo(BigDecimal.ZERO) > 0) {
+                adicionarTextoAlinhado(conteudo, "Desconto", String.format("%.2f", venda.getDesconto()), 48);
+            }
+
+            // Serviço
+            if (venda.getValorServico() != null && venda.getValorServico().compareTo(BigDecimal.ZERO) > 0) {
+                adicionarTextoAlinhado(conteudo, "Servico", String.format("%.2f", venda.getValorServico()), 48);
+            }
+
+            // Subtotal e total
+            adicionarTextoAlinhado(conteudo, "Subtotal", String.format("%.2f", venda.getValorBruto()), 48);
             adicionarTextoAlinhado(conteudo, "Total Recebido", String.format("%.2f", venda.getValorTotal()), 48);
 
             conteudo.append("\n\n\n\n");
@@ -485,7 +473,7 @@ public class ProcessarImpressaoService {
             definirTamanhoFonte(conteudo, 1, 1);
             conteudo.append("=".repeat(48)).append("\n");
 
-            definirTamanhoFonte(conteudo, 3, 3); // Fonte maior
+            definirTamanhoFonte(conteudo, 3, 3);
 
             if (venda.getMesa() != null) {
                 ativarNegrito(conteudo);
@@ -499,22 +487,19 @@ public class ProcessarImpressaoService {
 
             definirTamanhoFonte(conteudo, 1, 1);
             definirEspacamentoCaracteres(conteudo, 5);
-            conteudo.append("Operador: ").append(venda.getFuncionario().getNome())
-                    .append("  ").append(new SimpleDateFormat("dd/MM/yy HH:mm").format(venda.getDataEdicao()))
-                    .append("\n");
+            conteudo.append("Operador: ").append(venda.getFuncionario().getNome()).append("  ").append(new SimpleDateFormat("dd/MM/yy HH:mm").format(venda.getDataEdicao())).append("\n");
 
-            definirTamanhoFonte(conteudo, 1, 1);
-            String motivo = venda.getMotivo();
+            String motivo = venda.getMotivoDeletar();
             if (motivo == null || motivo.trim().isEmpty()) {
                 motivo = "";
             }
             conteudo.append("Motivo: ").append(motivo).append("\n");
             conteudo.append("=".repeat(48)).append("\n");
 
-            definirTamanhoFonte(conteudo, 1, 1); // Cabeçalho da tabela de produtos
             conteudo.append(String.format("%-26s %4s %7s %8s\n", "PRODUTO", "QTDE", "VAL.UN", "VAL.TOT"));
-            definirTamanhoFonte(conteudo, 1, 1); // Resetar para padrão
             conteudo.append("=".repeat(48)).append("\n");
+
+            BigDecimal totalProdutos = BigDecimal.ZERO;
 
             for (ProdutoVenda produtoVenda : produtosAgrupados) {
                 String nomeProduto = produtoVenda.getProduto().getNome();
@@ -523,14 +508,15 @@ public class ProcessarImpressaoService {
                 }
 
                 int quantidade = produtoVenda.getQuantidade().intValue();
-                double valorUnitario = produtoVenda.getProduto().getValor();
-                double valorTotal = valorUnitario * quantidade;
+                BigDecimal valorUnitario = produtoVenda.getProduto().getValor();
+                BigDecimal valorTotal = valorUnitario.multiply(BigDecimal.valueOf(quantidade));
+
+                totalProdutos = totalProdutos.add(valorTotal);
 
                 conteudo.append(String.format("%-26s %4d %7.2f %8.2f\n", nomeProduto, quantidade, valorUnitario, valorTotal));
             }
 
             conteudo.append("=".repeat(48)).append("\n");
-
             definirEspacamentoCaracteres(conteudo, 1);
             adicionarTextoAlinhado(conteudo, "Total De Produtos", String.format("%.2f", venda.getValorTotal()), 48);
 
@@ -542,6 +528,7 @@ public class ProcessarImpressaoService {
 
         return conteudo.toString();
     }
+
 
     ///////////// comprovante deletar produto
     public void processarImpressaoComprovanteProdutoDeletado(Venda venda, List<ProdutoVenda> produtosRemovidos, int numeroCupom) {
@@ -587,7 +574,7 @@ public class ProcessarImpressaoService {
             definirTamanhoFonte(conteudo, 1, 1);
             conteudo.append("=".repeat(48)).append("\n");
 
-            definirTamanhoFonte(conteudo, 3, 3); // Fonte maior
+            definirTamanhoFonte(conteudo, 3, 3);
 
             if (venda.getMesa() != null) {
                 ativarNegrito(conteudo);
@@ -601,12 +588,8 @@ public class ProcessarImpressaoService {
 
             definirTamanhoFonte(conteudo, 1, 1);
             definirEspacamentoCaracteres(conteudo, 5);
-            conteudo.append("Operador: ").append(venda.getFuncionario().getNome())
-                    .append("  ").append(new SimpleDateFormat("dd/MM/yy HH:mm").format(venda.getDataEdicao()))
-                    .append("\n");
+            conteudo.append("Operador: ").append(venda.getFuncionario().getNome()).append("  ").append(new SimpleDateFormat("dd/MM/yy HH:mm").format(venda.getDataEdicao())).append("\n");
 
-
-            definirTamanhoFonte(conteudo, 1, 1);
             for (ProdutoVenda produtoVenda : produtosAgrupados) {
                 String motivo = produtoVenda.getMotivoExclusao();
                 if (motivo == null || motivo.trim().isEmpty()) {
@@ -616,25 +599,28 @@ public class ProcessarImpressaoService {
             }
 
             conteudo.append("=".repeat(48)).append("\n");
-
-            definirTamanhoFonte(conteudo, 1, 1); // Cabeçalho da tabela de produtos
             conteudo.append(String.format("%-26s %4s %7s %8s\n", "PRODUTO", "QTDE", "VAL.UN", "VAL.TOT"));
-            definirTamanhoFonte(conteudo, 1, 1); // Resetar para padrão
             conteudo.append("=".repeat(48)).append("\n");
+
+            BigDecimal totalProdutos = BigDecimal.ZERO;
 
             for (ProdutoVenda produtoVenda : produtosAgrupados) {
                 String nomeProduto = produtoVenda.getProduto().getNome();
                 if (nomeProduto.length() > 26) {
                     nomeProduto = nomeProduto.substring(0, 26);
                 }
+
                 int quantidade = produtoVenda.getQuantidade().intValue();
-                double valorUnitario = produtoVenda.getProduto().getValor();
-                double valorTotal = valorUnitario * quantidade;
+                BigDecimal valorUnitario = produtoVenda.getProduto().getValor();
+                BigDecimal valorTotal = valorUnitario.multiply(BigDecimal.valueOf(quantidade));
+
+                totalProdutos = totalProdutos.add(valorTotal);
 
                 conteudo.append(String.format("%-26s %4d %7.2f %8.2f\n", nomeProduto, quantidade, valorUnitario, valorTotal));
             }
 
             conteudo.append("=".repeat(48)).append("\n");
+            adicionarTextoAlinhado(conteudo, "Total De Produtos", String.format("%.2f", totalProdutos), 48);
 
             conteudo.append("\n\n\n\n");
 
@@ -693,7 +679,7 @@ public class ProcessarImpressaoService {
             definirTamanhoFonte(conteudo, 1, 1);
             conteudo.append("=".repeat(48)).append("\n");
 
-            definirTamanhoFonte(conteudo, 3, 3); // Fonte maior
+            definirTamanhoFonte(conteudo, 3, 3);
             if (venda.getMesa() != null) {
                 ativarNegrito(conteudo);
                 conteudo.append("Mesa: ").append(venda.getMesa()).append("\n");
@@ -705,10 +691,11 @@ public class ProcessarImpressaoService {
 
             conteudo.append("=".repeat(48)).append("\n");
 
-            definirTamanhoFonte(conteudo, 1, 1); // Cabeçalho da tabela de produtos
+            definirTamanhoFonte(conteudo, 1, 1);
             conteudo.append(String.format("%-26s %4s %7s %8s\n", "PRODUTO", "QTDE", "VAL.UN", "VAL.TOT"));
-            definirTamanhoFonte(conteudo, 1, 1); // Resetar para padrão
             conteudo.append("=".repeat(48)).append("\n");
+
+            BigDecimal totalProdutos = BigDecimal.ZERO;
 
             for (ProdutoVenda produtoVenda : venda.getProdutoVendas()) {
                 String nomeProduto = produtoVenda.getProduto().getNome();
@@ -717,18 +704,18 @@ public class ProcessarImpressaoService {
                 }
 
                 int quantidade = produtoVenda.getQuantidade().intValue();
-                double valorUnitario = produtoVenda.getProduto().getValor();
-                double valorTotal = valorUnitario * quantidade;
+                BigDecimal valorUnitario = produtoVenda.getProduto().getValor();
+                BigDecimal valorTotal = valorUnitario.multiply(BigDecimal.valueOf(quantidade));
                 List<Observacoes> observacoes = produtoVenda.getObservacoesProdutoVenda();
 
-                conteudo.append(String.format("%-26s %4d %7.2f %8.2f\n", nomeProduto, quantidade, valorUnitario, valorTotal));
+                conteudo.append(String.format("%-26s %4d %7.2f %8.2f\n", nomeProduto, quantidade, valorUnitario.doubleValue(), valorTotal.doubleValue()));
 
                 if (observacoes != null && !observacoes.isEmpty()) {
                     definirTamanhoFonte(conteudo, 1, 1); // Fonte menor para observações
                     for (Observacoes observacao1 : observacoes) {
-                        Double valorObs = observacao1.getValor();
-                        if (valorObs != null && valorObs > 0) {
-                            adicionarTextoAlinhado(conteudo, ("    -" + observacao1.getObservacao()), String.format("%.2f", valorObs), 48);
+                        BigDecimal valorObs = observacao1.getValor();
+                        if (valorObs != null && valorObs.compareTo(BigDecimal.ZERO) > 0) {
+                            adicionarTextoAlinhado(conteudo, "    -" + observacao1.getObservacao(), String.format("%.2f", valorObs), 48);
                         }
                     }
                 }
@@ -736,24 +723,34 @@ public class ProcessarImpressaoService {
 
             conteudo.append("=".repeat(48)).append("\n");
 
-            definirEspacamentoCaracteres(conteudo, 1);
             ativarNegrito(conteudo);
-            adicionarTextoAlinhado(conteudo, "TOTAL A PAGAR", String.format("%.2f", venda.getValorTotal()), 48);
-            conteudo.append("\n");
+            adicionarTextoAlinhado(conteudo, "TOTAL PRODUTOS", String.format("%.2f", totalProdutos), 48);
+            if (venda.getValorServico() != null && venda.getValorServico().compareTo(BigDecimal.ZERO) > 0) {
+                adicionarTextoAlinhado(conteudo, "SERVICO", String.format("%.2f", venda.getValorServico()), 48);
+                totalProdutos = totalProdutos.add(venda.getValorServico());
+            }
+            // Se quiser exibir desconto, descomente:
+        /*
+        if (venda.getDesconto() != null && venda.getDesconto().compareTo(BigDecimal.ZERO) > 0) {
+            adicionarTextoAlinhado(conteudo, "DESCONTO", "-" + venda.getDesconto()), 48);
+            totalProdutos = totalProdutos.subtract(venda.getDesconto());
+        }
+        */
+            adicionarTextoAlinhado(conteudo, "TOTAL A PAGAR", String.format("%.2f", totalProdutos), 48);
             desativarNegrito(conteudo);
 
-            definirTamanhoFonte(conteudo, 1, 1);
+            conteudo.append("\n");
+
             conteudo.append("Numero de pessoas: ").append(quantedade).append("\n");
-            double valorCada = venda.getValorTotal() / quantedade;
-            conteudo.append("Valor por cada: ").append(String.format("%.2f", valorCada)).append("\n");
+            BigDecimal valorCada = totalProdutos.divide(BigDecimal.valueOf(quantedade), 2, java.math.RoundingMode.HALF_UP);
+            conteudo.append("Valor por cada: R$ ").append(valorCada.setScale(2, java.math.RoundingMode.HALF_UP)).append("\n");
             conteudo.append("Primeiro Pedido: ").append(new SimpleDateFormat("HH:mm").format(venda.getDataVenda())).append(" hs").append("\n");
 
             Duration duration = Duration.between(venda.getDataVenda().toInstant(), new Timestamp(System.currentTimeMillis()).toInstant());
             long hours = duration.toHours();
             long minutes = duration.toMinutes() % 60;
             long seconds = duration.getSeconds() % 60;
-            String tempoPermanencia = String.format("%02d:%02d:%02d", hours, minutes, seconds);
-            conteudo.append("Tempo De Permanencia: ").append(tempoPermanencia).append("\n\n");
+            conteudo.append("Tempo De Permanencia: ").append(String.format("%02d:%02d:%02d", hours, minutes, seconds)).append("\n");
 
             conteudo.append("\n\n\n\n");
 
@@ -796,9 +793,7 @@ public class ProcessarImpressaoService {
 
             definirTamanhoFonte(conteudo, 1, 1);
             definirEspacamentoCaracteres(conteudo, 5);
-            conteudo.append("Operador: ").append(sangria.getFuncionario().getNome())
-                    .append("  ").append(new SimpleDateFormat("dd/MM/yy HH:mm").format(sangria.getDataSangria()))
-                    .append("\n");
+            conteudo.append("Operador: ").append(sangria.getFuncionario().getNome()).append("  ").append(new SimpleDateFormat("dd/MM/yy HH:mm").format(sangria.getDataSangria())).append("\n");
 
 
             definirTamanhoFonte(conteudo, 1, 1);
@@ -811,7 +806,7 @@ public class ProcessarImpressaoService {
 
             definirTamanhoFonte(conteudo, 3, 3);
             ativarNegrito(conteudo);
-            conteudo.append("Valor: ").append(sangria.getValor()).append("\n");
+            conteudo.append("Valor: R$ ").append(sangria.getValor()).append("\n");
             desativarNegrito(conteudo);
 
             conteudo.append("\n\n");
@@ -854,13 +849,9 @@ public class ProcessarImpressaoService {
             definirTamanhoFonte(conteudo, 1, 1);
             conteudo.append("=".repeat(48)).append("\n");
 
-            definirTamanhoFonte(conteudo, 3, 3); // Fonte maior
-
             definirTamanhoFonte(conteudo, 1, 1);
             definirEspacamentoCaracteres(conteudo, 5);
-            conteudo.append("Operador: ").append(suprimento.getFuncionario().getNome())
-                    .append("  ").append(new SimpleDateFormat("dd/MM/yy HH:mm").format(suprimento.getDataSuprimento()))
-                    .append("\n");
+            conteudo.append("Operador: ").append(suprimento.getFuncionario().getNome()).append("  ").append(new SimpleDateFormat("dd/MM/yy HH:mm").format(suprimento.getDataSuprimento())).append("\n");
 
 
             definirTamanhoFonte(conteudo, 1, 1);
@@ -873,7 +864,7 @@ public class ProcessarImpressaoService {
 
             definirTamanhoFonte(conteudo, 3, 3);
             ativarNegrito(conteudo);
-            conteudo.append("Valor: ").append(suprimento.getValor()).append("\n");
+            conteudo.append("Valor: R$ ").append(suprimento.getValor()).append("\n");
             desativarNegrito(conteudo);
 
             conteudo.append("\n\n");
@@ -889,6 +880,66 @@ public class ProcessarImpressaoService {
 
         return conteudo.toString();
     }
+
+    public void processarConteudoGorjeta(Gorjeta gorjeta) {
+        String conteudoGorjeta = prepararConteudoGorjeta(gorjeta);
+        byte[] conteudoBytes = conteudoGorjeta.getBytes(StandardCharsets.UTF_8);
+
+        Impressao impressao = new Impressao();
+        impressao.setMatrizId(gorjeta.getCaixa().getMatriz().getId());
+        impressao.setNomeImpressora(gorjeta.getNomeImpressora());
+        impressao.setConteudoImpressao(conteudoBytes);
+        impressao.setStatus(true);
+        impressaoRepository.save(impressao);
+    }
+
+    public String prepararConteudoGorjeta(Gorjeta gorjeta) {
+        StringBuilder conteudo = new StringBuilder();
+
+        try {
+            conteudo.append((char) 27).append((char) 51).append((char) 0);
+            conteudo.append("\n");
+            definirTamanhoFonte(conteudo, 1, 1);
+            conteudo.append("=".repeat(48)).append("\n");
+
+            definirTamanhoFonte(conteudo, 4, 4);
+            centralizarTexto(conteudo, "GORJETA");
+            definirTamanhoFonte(conteudo, 1, 1);
+            conteudo.append("=".repeat(48)).append("\n");
+
+            definirEspacamentoCaracteres(conteudo, 5);
+            conteudo.append("Operador: ").append(gorjeta.getFuncionario().getNome()).append("  ").append(new SimpleDateFormat("dd/MM/yy HH:mm").format(gorjeta.getDataGorjeta())).append("\n");
+
+            definirTamanhoFonte(conteudo, 3, 3);
+            ativarNegrito(conteudo);
+
+            if (gorjeta.getDinheiro() != null && gorjeta.getDinheiro().compareTo(BigDecimal.ZERO) > 0) {
+                conteudo.append("Dinheiro: R$ ").append(gorjeta.getDinheiro().setScale(2, java.math.RoundingMode.HALF_UP)).append("\n");
+            }
+            if (gorjeta.getDebito() != null && gorjeta.getDebito().compareTo(BigDecimal.ZERO) > 0) {
+                conteudo.append("Débito: R$ ").append(gorjeta.getDebito().setScale(2, java.math.RoundingMode.HALF_UP)).append("\n");
+            }
+            if (gorjeta.getCredito() != null && gorjeta.getCredito().compareTo(BigDecimal.ZERO) > 0) {
+                conteudo.append("Crédito: R$ ").append(gorjeta.getCredito().setScale(2, java.math.RoundingMode.HALF_UP)).append("\n");
+            }
+            if (gorjeta.getPix() != null && gorjeta.getPix().compareTo(BigDecimal.ZERO) > 0) {
+                conteudo.append("Pix: R$ ").append(gorjeta.getPix().setScale(2, java.math.RoundingMode.HALF_UP)).append("\n");
+            }
+
+            desativarNegrito(conteudo);
+
+            conteudo.append("\n\n");
+            definirTamanhoFonte(conteudo, 1, 1);
+            conteudo.append("=".repeat(48)).append("\n");
+            conteudo.append("\n\n\n\n");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return conteudo.toString();
+    }
+
     public void processarConteudoCaixaAbertura(Caixa caixa) {
         String conteudoCaixa = prepararConteudoCaixaAbertura(caixa);
 
@@ -920,14 +971,12 @@ public class ProcessarImpressaoService {
 
             definirTamanhoFonte(conteudo, 1, 1);
             definirEspacamentoCaracteres(conteudo, 5);
-            conteudo.append("Operador: ").append(caixa.getFuncionario().getNome())
-                    .append("  ").append(new SimpleDateFormat("dd/MM/yy HH:mm").format(caixa.getDataAbertura()))
-                    .append("\n\n\n");
+            conteudo.append("Operador: ").append(caixa.getFuncionario().getNome()).append("  ").append(new SimpleDateFormat("dd/MM/yy HH:mm").format(caixa.getDataAbertura())).append("\n\n\n");
 
 
             definirTamanhoFonte(conteudo, 3, 3);
             ativarNegrito(conteudo);
-            conteudo.append("Valor: ").append(caixa.getValorAbertura()).append("\n");
+            conteudo.append("Valor: R$ ").append(caixa.getValorAbertura()).append("\n");
             desativarNegrito(conteudo);
 
             conteudo.append("\n\n");
@@ -960,88 +1009,75 @@ public class ProcessarImpressaoService {
         StringBuilder conteudo = new StringBuilder();
 
         try {
-            Double saldoDinheiroOrginal = caixaRepository.findTotalDinheiroByCaixaId(caixa.getId());
-            if (saldoDinheiroOrginal == null) {
-                saldoDinheiroOrginal = 0.0;  // Atribui 0.0 se o valor for null
-            }
+            BigDecimal saldoDinheiroOrginal = Optional.ofNullable(caixaRepository.findTotalDinheiroByCaixaId(caixa.getId())).orElse(BigDecimal.ZERO);
+            BigDecimal saldoDebitoOrginal = Optional.ofNullable(caixaRepository.findTotalDebitoByCaixaId(caixa.getId())).orElse(BigDecimal.ZERO);
+            BigDecimal saldoCreditoOrginal = Optional.ofNullable(caixaRepository.findTotalCreditoByCaixaId(caixa.getId())).orElse(BigDecimal.ZERO);
+            BigDecimal saldoPixOrginal = Optional.ofNullable(caixaRepository.findTotalPixByCaixaId(caixa.getId())).orElse(BigDecimal.ZERO);
 
-            Double saldoDebitoOrginal = caixaRepository.findTotalDebitoByCaixaId(caixa.getId());
-            if (saldoDebitoOrginal == null) {
-                saldoDebitoOrginal = 0.0;  // Atribui 0.0 se o valor for null
-            }
-
-            Double saldoCreditoOrginal = caixaRepository.findTotalCreditoByCaixaId(caixa.getId());
-            if (saldoCreditoOrginal == null) {
-                saldoCreditoOrginal = 0.0;  // Atribui 0.0 se o valor for null
-            }
-
-            Double saldoPixOrginal = caixaRepository.findTotalPixByCaixaId(caixa.getId());
-            if (saldoPixOrginal == null) {
-                saldoPixOrginal = 0.0;  // Atribui 0.0 se o valor for null
-            }
-
-            Double totalSuprimentos = 0.0;
-
-            Double totalSangrais = 0.0;
-
-            Double saldoDinheiro = caixa.getSaldoDinheiro() != null ? caixa.getSaldoDinheiro() : 0.0;
-            Double saldoDebito = caixa.getSaldoDebito() != null ? caixa.getSaldoDebito() : 0.0;
-            Double saldoCredito = caixa.getSaldoCredito() != null ? caixa.getSaldoCredito() : 0.0;
-            Double saldoPix = caixa.getSaldoPix() != null ? caixa.getSaldoPix() : 0.0;
+            BigDecimal totalSuprimentos = BigDecimal.ZERO;
+            BigDecimal totalSangrias = BigDecimal.ZERO;
+            BigDecimal totalGorjetas = BigDecimal.ZERO;
+            BigDecimal totalDescontos = Optional.ofNullable(caixaRepository.findTotalDescontosByCaixaId(caixa.getId())).orElse(BigDecimal.ZERO);
+            BigDecimal totalServicos = Optional.ofNullable(caixaRepository.findTotalServiciosByCaixaId(caixa.getId())).orElse(BigDecimal.ZERO);
 
 
-            conteudo.append((char) 27).append((char) 51).append((char) 0);
-            conteudo.append("\n");
+            BigDecimal saldoDinheiro = Optional.ofNullable(caixa.getSaldoDinheiro()).orElse(BigDecimal.ZERO);
+            BigDecimal saldoDebito = Optional.ofNullable(caixa.getSaldoDebito()).orElse(BigDecimal.ZERO);
+            BigDecimal saldoCredito = Optional.ofNullable(caixa.getSaldoCredito()).orElse(BigDecimal.ZERO);
+            BigDecimal saldoPix = Optional.ofNullable(caixa.getSaldoPix()).orElse(BigDecimal.ZERO);
+            BigDecimal valorAbertura = Optional.ofNullable(caixa.getValorAbertura()).orElse(BigDecimal.ZERO);
+
+            conteudo.append((char) 27).append((char) 51).append((char) 0).append("\n");
             definirTamanhoFonte(conteudo, 1, 1);
             conteudo.append("=".repeat(48)).append("\n");
-
             definirTamanhoFonte(conteudo, 4, 4);
             centralizarTexto(conteudo, "CONFERENCIA DE CAIXA");
             definirTamanhoFonte(conteudo, 1, 1);
             conteudo.append("=".repeat(48)).append("\n");
 
-            definirTamanhoFonte(conteudo, 3, 3); // Fonte maior
-
-            definirTamanhoFonte(conteudo, 1, 1);
             definirEspacamentoCaracteres(conteudo, 5);
-            conteudo.append("Data De Abertura: ").append("  ").append(new SimpleDateFormat("dd/MM/yy HH:mm:ss").format(caixa.getDataAbertura()))
-                    .append("\n");
+            conteudo.append("Data De Abertura: ").append(new SimpleDateFormat("dd/MM/yy HH:mm:ss").format(caixa.getDataAbertura())).append("\n");
             if (caixa.getDataFechamento() != null) {
-                conteudo.append("Data De Fechamento: ").append("  ").append(new SimpleDateFormat("dd/MM/yy HH:mm:ss").format(caixa.getDataFechamento()))
-                        .append("\n");
+                conteudo.append("Data De Fechamento: ").append(new SimpleDateFormat("dd/MM/yy HH:mm:ss").format(caixa.getDataFechamento())).append("\n");
             }
             conteudo.append("Operador: ").append(caixa.getFuncionario().getNome()).append("\n");
+
+            // Saldos informados no fechamento
+            conteudo.append("=".repeat(48)).append("\n");
+            definirTamanhoFonte(conteudo, 3, 3);
+            centralizarTexto(conteudo, "SALDOS INFORMADOS");
             definirTamanhoFonte(conteudo, 1, 1);
+            conteudo.append("=".repeat(48)).append("\n");
+            adicionarTextoAlinhado(conteudo, "DINHEIRO", String.format("%.2f", saldoDinheiro), 48);
+            adicionarTextoAlinhado(conteudo, "CARTAO DEBITO", String.format("%.2f", saldoDebito), 48);
+            adicionarTextoAlinhado(conteudo, "CARTAO CREDITO", String.format("%.2f", saldoCredito), 48);
+            adicionarTextoAlinhado(conteudo, "PIX", String.format("%.2f", saldoPix), 48);
+            conteudo.append(" ".repeat(38)).append("-".repeat(10)).append("\n");
+            BigDecimal totalInformado = saldoDinheiro.add(saldoDebito).add(saldoCredito).add(saldoPix);
+            adicionarTextoAlinhado(conteudo, "TOTAL INFORMADO", String.format("%.2f", totalInformado), 48);
+
             conteudo.append("=".repeat(48)).append("\n");
 
             definirTamanhoFonte(conteudo, 3, 3);
-            centralizarTexto(conteudo, "ENTRADAS");
+            centralizarTexto(conteudo, "ENTRADAS (VENDAS)");
             definirTamanhoFonte(conteudo, 1, 1);
             conteudo.append("=".repeat(48)).append("\n");
 
+            adicionarTextoAlinhado(conteudo, "DINHEIRO", String.format("%.2f", saldoDinheiroOrginal) + " +", 48);
+            adicionarTextoAlinhado(conteudo, "CARTAO DEBITO", String.format("%.2f", saldoDebitoOrginal) + " +", 48);
+            adicionarTextoAlinhado(conteudo, "CARTAO CREDITO", String.format("%.2f", saldoCreditoOrginal) + " +", 48);
+            adicionarTextoAlinhado(conteudo, "PIX", String.format("%.2f", saldoPixOrginal), 48);
 
-            if (saldoDinheiroOrginal > 0) {
-                adicionarTextoAlinhado(conteudo, "DINHEIRO", String.format("%.2f", saldoDinheiroOrginal) + " +", 48);
-            }
-            if (saldoDebitoOrginal > 0) {
-                adicionarTextoAlinhado(conteudo, "CARTAO DEBITO", String.format("%.2f", saldoDebitoOrginal) + " +", 48);
-            }
-            if (saldoCreditoOrginal > 0) {
-                adicionarTextoAlinhado(conteudo, "CARTAO CREDITO", String.format("%.2f", saldoCreditoOrginal) + " +", 48);
-            }
-            if (saldoPixOrginal > 0) {
-                adicionarTextoAlinhado(conteudo, "PIX", String.format("%.2f", saldoPixOrginal), 48);
-            }
             conteudo.append(" ".repeat(38)).append("-".repeat(10)).append("\n");
-
-            double totalEntradas = saldoDinheiroOrginal + saldoDebitoOrginal + saldoCreditoOrginal + saldoPixOrginal;
-
+            BigDecimal totalEntradas = saldoDinheiroOrginal.add(saldoDebitoOrginal).add(saldoCreditoOrginal).add(saldoPixOrginal);
             adicionarTextoAlinhado(conteudo, "TOTAL", String.format("%.2f", totalEntradas) + " =", 48);
-            double valorAbertura = caixa.getValorAbertura();
-            adicionarTextoAlinhado(conteudo, "Valor Abertura", String.format("%.2f", valorAbertura) + " +", 48);
+            adicionarTextoAlinhado(conteudo, "Valor Abertura: R$ ", String.format("%.2f", valorAbertura) + " +", 48);
             conteudo.append(" ".repeat(38)).append("-".repeat(10)).append("\n");
-            double totalFinal = totalEntradas + valorAbertura;
+            BigDecimal totalFinal = totalEntradas.add(valorAbertura);
             adicionarTextoAlinhado(conteudo, "Total Final", String.format("%.2f", totalFinal), 48);
+            adicionarTextoAlinhado(conteudo, "SERVICO (INCLUSO NAS VENDAS):", String.format("%.2f", totalServicos), 48);
+            conteudo.append("OBS: O servico ja esta incluso nos valores acima.");
+            conteudo.append("\n");
 
             if (!caixa.getSuprimentos().isEmpty()) {
                 definirTamanhoFonte(conteudo, 3, 3);
@@ -1050,22 +1086,16 @@ public class ProcessarImpressaoService {
                 conteudo.append("=".repeat(48)).append("\n");
 
                 for (Suprimento suprimento : caixa.getSuprimentos()) {
-                    String motivo = suprimento.getMotivo();
-                    double valor = suprimento.getValor();
-                    Timestamp data = suprimento.getDataSuprimento();
-
-                    String dataFormatada = new SimpleDateFormat("dd/MM/yy HH:mm:ss").format(data);
-
+                    BigDecimal valor = suprimento.getValor();
+                    String dataFormatada = new SimpleDateFormat("dd/MM/yy HH:mm:ss").format(suprimento.getDataSuprimento());
                     adicionarTextoAlinhado(conteudo, "Data: " + dataFormatada, String.format("%.2f", valor), 48);
-                    conteudo.append("Motivo: ").append(motivo).append("\n\n");
-
-                    totalSuprimentos += valor;
+                    conteudo.append("Motivo: ").append(suprimento.getMotivo()).append("\n\n");
+                    totalSuprimentos = totalSuprimentos.add(valor);
                 }
 
                 conteudo.append(" ".repeat(38)).append("-".repeat(10)).append("\n");
                 adicionarTextoAlinhado(conteudo, "Total", String.format("%.2f", totalSuprimentos), 48);
             }
-
             if (!caixa.getSangrias().isEmpty()) {
                 definirTamanhoFonte(conteudo, 3, 3);
                 centralizarTexto(conteudo, "SANGRIAS");
@@ -1073,80 +1103,56 @@ public class ProcessarImpressaoService {
                 conteudo.append("=".repeat(48)).append("\n");
 
                 for (Sangria sangria : caixa.getSangrias()) {
-                    String motivo = sangria.getMotivo();
-                    double valor = sangria.getValor();
-                    Timestamp data = sangria.getDataSangria();
-
-                    String dataFormatada = new SimpleDateFormat("dd/MM/yy HH:mm:ss").format(data);
-
+                    BigDecimal valor = sangria.getValor();
+                    String dataFormatada = new SimpleDateFormat("dd/MM/yy HH:mm:ss").format(sangria.getDataSangria());
                     adicionarTextoAlinhado(conteudo, "Data: " + dataFormatada, String.format("%.2f", valor), 48);
-                    conteudo.append("Motivo: ").append(motivo).append("\n\n");
-
-                    totalSangrais += valor;
+                    conteudo.append("Motivo: ").append(sangria.getMotivo()).append("\n\n");
+                    totalSangrias = totalSangrias.add(valor);
                 }
 
                 conteudo.append(" ".repeat(38)).append("-".repeat(10)).append("\n");
-                adicionarTextoAlinhado(conteudo, "Total", String.format("%.2f", totalSangrais), 48);
+                adicionarTextoAlinhado(conteudo, "Total", String.format("%.2f", totalSangrias), 48);
             }
-
+            if (!caixa.getGorjetas().isEmpty()) {
+                definirTamanhoFonte(conteudo, 3, 3);
+                centralizarTexto(conteudo, "GORJETAS");
+                definirTamanhoFonte(conteudo, 1, 1);
+                conteudo.append("=".repeat(48)).append("\n");
+                for (Gorjeta gorjeta : caixa.getGorjetas()) {
+                    BigDecimal valor = Optional.ofNullable(gorjeta.getDinheiro()).orElse(BigDecimal.ZERO)
+                            .add(Optional.ofNullable(gorjeta.getDebito()).orElse(BigDecimal.ZERO))
+                            .add(Optional.ofNullable(gorjeta.getCredito()).orElse(BigDecimal.ZERO))
+                            .add(Optional.ofNullable(gorjeta.getPix()).orElse(BigDecimal.ZERO));
+                    String dataFormatada = new SimpleDateFormat("dd/MM/yy HH:mm:ss").format(gorjeta.getDataGorjeta());
+                    adicionarTextoAlinhado(conteudo, "Data: " + dataFormatada, String.format("%.2f", valor), 48);
+                    totalGorjetas = totalGorjetas.add(valor);
+                }
+                conteudo.append(" ".repeat(38)).append("-".repeat(10)).append("\n");
+                adicionarTextoAlinhado(conteudo, "Total", String.format("%.2f", totalGorjetas), 48);
+            }
             conteudo.append("\n");
-
+            conteudo.append("=".repeat(48)).append("\n");
             definirTamanhoFonte(conteudo, 3, 3);
             centralizarTexto(conteudo, "TOTAL FINAL");
             definirTamanhoFonte(conteudo, 1, 1);
             conteudo.append("=".repeat(48)).append("\n");
 
             adicionarTextoAlinhado(conteudo, "Valor Abertura", String.format("%.2f", valorAbertura) + " +", 48);
-            if (saldoDinheiroOrginal > 0) {
-                adicionarTextoAlinhado(conteudo, "DINHEIRO", String.format("%.2f", saldoDinheiroOrginal) + " +", 48);
-            }
-            if (saldoDebitoOrginal > 0) {
-                adicionarTextoAlinhado(conteudo, "CARTAO DEBITO", String.format("%.2f", saldoDebitoOrginal) + " +", 48);
-            }
-            if (saldoCreditoOrginal > 0) {
-                adicionarTextoAlinhado(conteudo, "CARTAO CREDITO", String.format("%.2f", saldoCreditoOrginal) + " +", 48);
-            }
-            if (saldoPixOrginal > 0) {
-                adicionarTextoAlinhado(conteudo, "PIX", String.format("%.2f", saldoPixOrginal) + " +", 48);
-            }
-            if (totalSuprimentos > 0) {
-                adicionarTextoAlinhado(conteudo, "SUPRIMENTOS", String.format("%.2f", totalSuprimentos) + " +", 48);
-            }
-            if (totalSangrais > 0) {
-                adicionarTextoAlinhado(conteudo, "SANGRIAS", String.format("%.2f", totalSangrais) + " -", 48);
-            }
+            adicionarTextoAlinhado(conteudo, "DINHEIRO", String.format("%.2f", saldoDinheiroOrginal) + " +", 48);
+            adicionarTextoAlinhado(conteudo, "CARTAO DEBITO", String.format("%.2f", saldoDebitoOrginal) + " +", 48);
+            adicionarTextoAlinhado(conteudo, "CARTAO CREDITO", String.format("%.2f", saldoCreditoOrginal) + " +", 48);
+            adicionarTextoAlinhado(conteudo, "PIX", String.format("%.2f", saldoPixOrginal) + " +", 48);
+            adicionarTextoAlinhado(conteudo, "SUPRIMENTOS", String.format("%.2f", totalSuprimentos) + " +", 48);
+            adicionarTextoAlinhado(conteudo, "GORJETAS", String.format("%.2f", totalGorjetas) + " +", 48);
+            adicionarTextoAlinhado(conteudo, "SANGRIAS", String.format("%.2f", totalSangrias) + " -", 48);
+            adicionarTextoAlinhado(conteudo, "DESCONTOS", String.format("%.2f", totalDescontos) + " -", 48);
 
             conteudo.append(" ".repeat(38)).append("-".repeat(10)).append("\n");
-
-            double totalFinalFinal = saldoDinheiroOrginal + saldoDebitoOrginal + saldoCreditoOrginal + saldoPixOrginal + totalSuprimentos + valorAbertura - totalSangrais;
-
+            BigDecimal totalFinalFinal = totalEntradas.add(totalSuprimentos).add(valorAbertura).add(totalGorjetas).subtract(totalSangrias).subtract(totalDescontos);
             adicionarTextoAlinhado(conteudo, "Total Final", String.format("%.2f", totalFinalFinal), 48);
+            adicionarTextoAlinhado(conteudo, "SERVICO (INCLUSO NAS VENDAS):", String.format("%.2f", totalServicos), 48);
+            conteudo.append("OBS: O servico ja esta incluso nos valores acima.");
             conteudo.append("=".repeat(48)).append("\n");
-
-            if (caixa.getDataFechamento() != null) {
-                definirTamanhoFonte(conteudo, 3, 3);
-                centralizarTexto(conteudo, "SALDOS DEFENIDOS");
-                definirTamanhoFonte(conteudo, 1, 1);
-                conteudo.append("=".repeat(48)).append("\n");
-
-                if (saldoDinheiro > 0) {
-                    adicionarTextoAlinhado(conteudo, "DINHEIRO", String.format("%.2f", caixa.getSaldoDinheiro()) + " +", 48);
-                }
-                if (saldoDebito > 0) {
-                    adicionarTextoAlinhado(conteudo, "CARTAO DEBITO", String.format("%.2f", caixa.getSaldoDebito()) + " +", 48);
-                }
-                if (saldoCredito > 0) {
-                    adicionarTextoAlinhado(conteudo, "CARTAO CREDITO", String.format("%.2f", caixa.getSaldoCredito()) + " +", 48);
-                }
-                if (saldoPix > 0) {
-                    adicionarTextoAlinhado(conteudo, "PIX", String.format("%.2f", caixa.getSaldoPix()), 48);
-                }
-                conteudo.append("".repeat(38)).append("-".repeat(10)).append("\n");
-
-                double totalEntradasDefenidos = saldoDinheiro + saldoDebito + saldoCredito + saldoPix;
-
-                adicionarTextoAlinhado(conteudo, "TOTAL", String.format("%.2f", totalEntradasDefenidos) + " =", 48);
-            }
 
             conteudo.append("\n\n\n\n");
 
@@ -1175,8 +1181,7 @@ public class ProcessarImpressaoService {
         StringBuilder conteudo = new StringBuilder();
 
         try {
-            conteudo.append((char) 27).append((char) 51).append((char) 0);
-            conteudo.append("\n");
+            conteudo.append((char) 27).append((char) 51).append((char) 0).append("\n");
             definirTamanhoFonte(conteudo, 1, 1);
             conteudo.append("=".repeat(48)).append("\n");
 
@@ -1215,27 +1220,24 @@ public class ProcessarImpressaoService {
                     conteudo.append("Ref: ").append(venda.getEndereco().getReferencia()).append("\n\n");
                 }
             }
-            definirTamanhoFonte(conteudo, 1, 1);
             conteudo.append("=".repeat(48)).append("\n");
 
-            definirTamanhoFonte(conteudo, 1, 1); // Cabeçalho da tabela de produtos
             conteudo.append(String.format("%-26s %4s %7s %8s\n", "PRODUTO", "QTDE", "VAL.UN", "VAL.TOT"));
-            definirTamanhoFonte(conteudo, 1, 1); // Resetar para padrão
             conteudo.append("=".repeat(48)).append("\n");
 
-            double valorTotalProdutos = 0;
+            BigDecimal valorTotalProdutos = BigDecimal.ZERO;
             for (ProdutoVenda produtoVenda : produtosAgrupados) {
                 String nomeProduto = produtoVenda.getProduto().getNome();
                 if (nomeProduto.length() > 26) {
                     nomeProduto = nomeProduto.substring(0, 26);
                 }
 
-                int quantidade = produtoVenda.getQuantidade().intValue();
-                double valorUnitario = produtoVenda.getProduto().getValor();
-                double valorTotal = valorUnitario * quantidade;
+                BigDecimal quantidade = produtoVenda.getQuantidade();
+                BigDecimal valorUnitario = produtoVenda.getProduto().getValor();
+                BigDecimal valorTotal = valorUnitario.multiply(quantidade);
 
-                conteudo.append(String.format("%-26s %4d %7.2f %8.2f\n", nomeProduto, quantidade, valorUnitario, valorTotal));
-                valorTotalProdutos += valorTotal;
+                conteudo.append(String.format("%-26s %4d %7.2f %8.2f\n", nomeProduto, quantidade.intValue(), valorUnitario, valorTotal));
+                valorTotalProdutos = valorTotalProdutos.add(valorTotal);
             }
 
             conteudo.append("=".repeat(48)).append("\n");
@@ -1246,32 +1248,27 @@ public class ProcessarImpressaoService {
                 adicionarTextoAlinhado(conteudo, "Taxa De Entrega", String.format("%.2f", venda.getTaxaEntrega()), 48);
             }
             conteudo.append("=".repeat(48)).append("\n");
-
-
             conteudo.append("FORMAS DE PAGAMENTO").append("\n");
 
             if (venda.getVendaPagamento() != null) {
                 VendaPagamento pagamento = venda.getVendaPagamento();
-                if (pagamento.getDinheiro() > 0) {
+                if (pagamento.getDinheiro() != null && pagamento.getDinheiro().compareTo(BigDecimal.ZERO) > 0) {
                     adicionarTextoAlinhado(conteudo, "DINHEIRO", String.format("%.2f", pagamento.getDinheiro()), 48);
                 }
-                if (pagamento.getDebito() > 0) {
+                if (pagamento.getDebito() != null && pagamento.getDebito().compareTo(BigDecimal.ZERO) > 0) {
                     adicionarTextoAlinhado(conteudo, "CARTAO DE DEBITO", String.format("%.2f", pagamento.getDebito()), 48);
                 }
-                if (pagamento.getCredito() > 0) {
+                if (pagamento.getCredito() != null && pagamento.getCredito().compareTo(BigDecimal.ZERO) > 0) {
                     adicionarTextoAlinhado(conteudo, "CARTAO DE CREDITO", String.format("%.2f", pagamento.getCredito()), 48);
                 }
-                if (pagamento.getPix() > 0) {
+                if (pagamento.getPix() != null && pagamento.getPix().compareTo(BigDecimal.ZERO) > 0) {
                     adicionarTextoAlinhado(conteudo, "PIX", String.format("%.2f", pagamento.getPix()), 48);
                 }
             }
 
             conteudo.append("=".repeat(48)).append("\n");
-
-            definirEspacamentoCaracteres(conteudo, 1);
             adicionarTextoAlinhado(conteudo, "Subtotal", String.format("%.2f", venda.getValorTotal()), 48);
-            adicionarTextoAlinhado(conteudo, "Total", String.format("%.2f", venda.getValorTotal()), 48);
-
+            adicionarTextoAlinhado(conteudo, "Total Recebido", String.format("%.2f", venda.getValorTotal()), 48);
             conteudo.append("\n\n\n\n");
 
         } catch (Exception e) {

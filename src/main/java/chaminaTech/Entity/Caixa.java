@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -21,22 +22,22 @@ public class Caixa {
     private Boolean deletado = false;
 
     @Column(nullable = false)
-    private Double valorAbertura;
+    private BigDecimal valorAbertura;
 
-    private Double saldoDinheiro;
+    private BigDecimal saldoDinheiro;
 
-    private Double saldoCredito;
+    private BigDecimal saldoCredito;
 
-    private Double saldoDebito;
+    private BigDecimal saldoDebito;
 
-    private Double saldoPix;
+    private BigDecimal saldoPix;
 
     @Column(nullable = false)
     private Timestamp dataAbertura;
 
     private Timestamp dataFechamento;
 
-    private Double saldo;
+    private BigDecimal saldo;
 
     private String nomeImpressora;
 
@@ -53,6 +54,11 @@ public class Caixa {
     @OneToMany(mappedBy = "caixa", cascade = CascadeType.ALL)
     @JsonIgnoreProperties(value = {"caixa"}, allowSetters = true)
     private List<Venda> vendas;
+
+    @OneToMany(mappedBy = "caixa", cascade = CascadeType.ALL)
+    @JsonIgnoreProperties(value = {"caixa"}, allowSetters = true)
+    @OrderBy("id")
+    private List<Gorjeta> gorjetas;
 
     @OneToMany(mappedBy = "caixa", cascade = CascadeType.ALL)
     @JsonIgnoreProperties(value = {"caixa"}, allowSetters = true)

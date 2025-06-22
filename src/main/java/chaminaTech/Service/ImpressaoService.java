@@ -4,10 +4,7 @@ import chaminaTech.DTO.*;
 import chaminaTech.DTOService.DTOToEntity;
 import chaminaTech.DTOService.PermissaoUtil;
 import chaminaTech.Entity.*;
-import chaminaTech.Repository.CaixaRepository;
-import chaminaTech.Repository.GestaoCaixaRepository;
-import chaminaTech.Repository.SangriaRepository;
-import chaminaTech.Repository.SuprimentoRepository;
+import chaminaTech.Repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -18,6 +15,8 @@ import java.util.List;
 public class ImpressaoService {
     @Autowired
     private ProcessarImpressaoService processarImpressaoService;
+    @Autowired
+    private ImpressaoRepository impressaoRepository;
     @Autowired
     private GestaoCaixaRepository gestaoCaixaRepository;
     @Autowired
@@ -30,6 +29,8 @@ public class ImpressaoService {
     private CaixaRepository caixaRepository;
     @Autowired
     private AuditoriaService auditoriaService;
+    @Autowired
+    private GorjetaRepository gorjetaRepository;
 
     public MensagemDTO imprimirProdutos(ImpressaoDTO impressaoDTO) {
         PermissaoUtil.validarOuLancar("imprimir");
@@ -165,6 +166,27 @@ public class ImpressaoService {
         }
     }
 
+    public MensagemDTO imprimirGorjeta(GorjetaDTO gorjetaDTO) {
+        PermissaoUtil.validarOuLancar("imprimir");
+        Gorjeta gorjeta = gorjetaRepository.findById(gorjetaDTO.getId()).orElse(null);
+        if (gorjeta != null) {
+            gorjeta.setNomeImpressora(gorjetaDTO.getNomeImpressora());
+        }
+        try {
+            processarImpressaoService.processarConteudoGorjeta(gorjeta);
+            auditoriaService.salvarAuditoria(
+                    "IMPRIMIR",
+                    "IMPRESSAO",
+                    "Imprimiu comprovante de gorjeta",
+                    PermissaoUtil.getUsuarioLogado().getNome(),
+                    gorjeta.getCaixa().getMatriz().getId()
+            );
+            return new MensagemDTO("Impressão enviada com sucesso!", HttpStatus.OK);
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao processar imprimir gorjeta", e);
+        }
+    }
+
     public MensagemDTO imprimirAbertura(CaixaDTO caixaDTO) {
         PermissaoUtil.validarOuLancar("imprimir");
         Caixa caixa = caixaRepository.findById(caixaDTO.getId()).orElse(null);
@@ -231,5 +253,13 @@ public class ImpressaoService {
 //
 //        return new MensagemDTO("Impressão enviada com sucesso!", HttpStatus.OK);
 //    }
+
+    public List<Impressao> listarPendentes(Long matrizId) {
+        return impressaoRepository.findByMatrizIdAndStatus(matrizId, true);
+    }
+
+    public void deletar(Long id) {
+        impressaoRepository.deleteById(id);
+    }
 }
 
