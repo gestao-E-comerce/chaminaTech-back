@@ -61,7 +61,7 @@ public class DTOToEntity {
         return novoMatriz;
     }
 
-    public ConfiguracaoTaxaServico DTOToConfiguracaoTaxaServicio(ConfiguracaoTaxaServicoDTO configuracaoTaxaServicoDTO) {
+    public ConfiguracaoTaxaServico DTOToConfiguracaoTaxaServico(ConfiguracaoTaxaServicoDTO configuracaoTaxaServicoDTO) {
         ConfiguracaoTaxaServico configuracaoTaxaServico = new ConfiguracaoTaxaServico();
 
         configuracaoTaxaServico.setId(configuracaoTaxaServicoDTO.getId());
@@ -101,6 +101,7 @@ public class DTOToEntity {
         configuracaoImpressao.setImprimirGorjeta(configuracaoImpressaoDTO.getImprimirGorjeta());
         configuracaoImpressao.setMostarMotivoDeletarVenda(configuracaoImpressaoDTO.getMostarMotivoDeletarVenda());
         configuracaoImpressao.setMostarMotivoDeletarProduto(configuracaoImpressaoDTO.getMostarMotivoDeletarProduto());
+        configuracaoImpressao.setImprimirComprovanteConsumo(configuracaoImpressaoDTO.getImprimirComprovanteConsumo());
 
         if (configuracaoImpressaoDTO.getMatriz() != null) {
             Matriz matriz = new Matriz();
@@ -399,6 +400,8 @@ public class DTOToEntity {
         novaVenda.setRetirada(vendaDTO.getRetirada());
         novaVenda.setEntrega(vendaDTO.getEntrega());
         novaVenda.setBalcao(vendaDTO.getBalcao());
+        novaVenda.setConsumoInterno(vendaDTO.getConsumoInterno());
+        novaVenda.setMotivoConsumo(vendaDTO.getMotivoConsumo());
         novaVenda.setDeletado(vendaDTO.getDeletado());
         novaVenda.setChaveUnico(vendaDTO.getChaveUnico());
         novaVenda.setImprimirDeletar(vendaDTO.getImprimirDeletar());
@@ -473,6 +476,7 @@ public class DTOToEntity {
             vendaPagamento.setPix(vendaDTO.getVendaPagamento().getPix());
             vendaPagamento.setDebito(vendaDTO.getVendaPagamento().getDebito());
             vendaPagamento.setCredito(vendaDTO.getVendaPagamento().getCredito());
+            vendaPagamento.setConsumoInterno(vendaDTO.getVendaPagamento().getConsumoInterno());
 
             vendaPagamento.setDescontoDinheiro(vendaDTO.getVendaPagamento().getDescontoDinheiro());
             vendaPagamento.setDescontoCredito(vendaDTO.getVendaPagamento().getDescontoCredito());
@@ -498,6 +502,8 @@ public class DTOToEntity {
         novaVenda.setRetirada(vendaDTO.getRetirada());
         novaVenda.setEntrega(vendaDTO.getEntrega());
         novaVenda.setBalcao(vendaDTO.getBalcao());
+        novaVenda.setConsumoInterno(vendaDTO.getConsumoInterno());
+        novaVenda.setMotivoConsumo(vendaDTO.getMotivoConsumo());
         novaVenda.setDeletado(vendaDTO.getDeletado());
         novaVenda.setChaveUnico(vendaDTO.getChaveUnico());
         novaVenda.setImprimirDeletar(vendaDTO.getImprimirDeletar());
@@ -579,7 +585,7 @@ public class DTOToEntity {
             );
 
             matriz.setConfiguracaoTaxaServico(
-                    DTOToConfiguracaoTaxaServicio(vendaDTO.getMatriz().getConfiguracaoTaxaServicio())
+                    DTOToConfiguracaoTaxaServico(vendaDTO.getMatriz().getConfiguracaoTaxaServico())
             );
 
             novaVenda.setMatriz(matriz);
@@ -602,6 +608,7 @@ public class DTOToEntity {
             vendaPagamento.setPix(vendaDTO.getVendaPagamento().getPix());
             vendaPagamento.setDebito(vendaDTO.getVendaPagamento().getDebito());
             vendaPagamento.setCredito(vendaDTO.getVendaPagamento().getCredito());
+            vendaPagamento.setConsumoInterno(vendaDTO.getVendaPagamento().getConsumoInterno());
 
             vendaPagamento.setDescontoDinheiro(vendaDTO.getVendaPagamento().getDescontoDinheiro());
             vendaPagamento.setDescontoCredito(vendaDTO.getVendaPagamento().getDescontoCredito());
@@ -1053,6 +1060,11 @@ public class DTOToEntity {
         permissao.setEditarConfiguracoes(permissaoDTO.getEditarConfiguracoes());
         permissao.setAuditoria(permissaoDTO.getAuditoria());
 
+        permissao.setRelatorio(permissaoDTO.getRelatorio());
+        permissao.setCadastrarRelatorio(permissaoDTO.getCadastrarRelatorio());
+        permissao.setEditarRelatorio(permissaoDTO.getEditarRelatorio());
+        permissao.setDeletarRelatorio(permissaoDTO.getDeletarRelatorio());
+
         // Conversão de Matriz (do Permissao)
         Usuario usuario = new Usuario();
         if (permissaoDTO.getUsuario() != null) {
@@ -1314,5 +1326,32 @@ public class DTOToEntity {
             novoAdminFuncionario.setPermissao(permissao);
         }
         return novoAdminFuncionario;
+    }
+
+    public Relatorio DTOToRelatorio(RelatorioDTO relatorioDTO) {
+        Relatorio novoRelatorio = new Relatorio();
+
+        novoRelatorio.setId(relatorioDTO.getId());
+        novoRelatorio.setNome(relatorioDTO.getNome());
+        if (relatorioDTO.getMatriz() != null) {
+            Matriz matriz = new Matriz();
+            matriz.setId(relatorioDTO.getMatriz().getId());
+            novoRelatorio.setMatriz(matriz);
+        }
+        novoRelatorio.setTipoConsulta(relatorioDTO.getTipoConsulta());
+        novoRelatorio.setDeletado(relatorioDTO.getDeletado());
+        novoRelatorio.setFuncionarioId(relatorioDTO.getFuncionarioId());
+        novoRelatorio.setTiposVenda(relatorioDTO.getTiposVenda());
+        novoRelatorio.setDataInicio(relatorioDTO.getDataInicio());
+        novoRelatorio.setDataFim(relatorioDTO.getDataFim());
+        novoRelatorio.setTaxaEntrega(relatorioDTO.getTaxaEntrega());
+        novoRelatorio.setTaxaServico(relatorioDTO.getTaxaServico());
+        novoRelatorio.setDesconto(relatorioDTO.getDesconto());
+        novoRelatorio.setFormasPagamento(relatorioDTO.getFormasPagamento());
+        novoRelatorio.setOrdenacao(relatorioDTO.getOrdenacao());
+        novoRelatorio.setPagina(relatorioDTO.getPagina());
+        novoRelatorio.setTamanho(relatorioDTO.getTamanho());
+
+        return novoRelatorio;
     }
 }

@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/confTaxaServicio")
+@RequestMapping("/api/confTaxaServico")
 @CrossOrigin(origins = "*")
 public class ConfiguracaoTaxaServicoController {
     @Autowired
@@ -17,14 +17,14 @@ public class ConfiguracaoTaxaServicoController {
 
     @GetMapping("/{matrizId}")
     public ResponseEntity<ConfiguracaoTaxaServicoDTO> listarPorMatriz(@PathVariable Long matrizId) {
-        ConfiguracaoTaxaServicoDTO configuracaoTaxaServicoDTO = configuracaoTaxaServicoService.buscarConfiguracaoTaxaServicio(matrizId);
+        ConfiguracaoTaxaServicoDTO configuracaoTaxaServicoDTO = configuracaoTaxaServicoService.buscarConfiguracaoTaxaServico(matrizId);
         return ResponseEntity.ok(configuracaoTaxaServicoDTO);
     }
 
     @PostMapping
     public ResponseEntity<MensagemDTO> salvar(@RequestBody ConfiguracaoTaxaServicoDTO configuracaoTaxaServicoDTO) {
         try {
-            MensagemDTO resposta = configuracaoTaxaServicoService.salvarConfiguracaoTaxaServicio(configuracaoTaxaServicoDTO);
+            MensagemDTO resposta = configuracaoTaxaServicoService.salvarConfiguracaoTaxaServico(configuracaoTaxaServicoDTO);
             return ResponseEntity.ok(resposta);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(new MensagemDTO(e.getMessage(), HttpStatus.BAD_REQUEST));

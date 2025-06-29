@@ -23,15 +23,15 @@ public class ConfiguracaoTaxaServicoService {
     @Autowired
     private AuditoriaService auditoriaService;
 
-    public ConfiguracaoTaxaServicoDTO buscarConfiguracaoTaxaServicio(Long matrizId) {
+    public ConfiguracaoTaxaServicoDTO buscarConfiguracaoTaxaServico(Long matrizId) {
         ConfiguracaoTaxaServico configuracaoTaxaServico = configuracaoTaxaServicoRepository.findByMatrizId(matrizId);
-        return configuracaoTaxaServico != null ?entityToDTO.configuracaoTaxaServicioToDTO(configuracaoTaxaServico) : null;
+        return configuracaoTaxaServico != null ?entityToDTO.configuracaoTaxaServicoToDTO(configuracaoTaxaServico) : null;
     }
 
     @Transactional
-    public MensagemDTO salvarConfiguracaoTaxaServicio(ConfiguracaoTaxaServicoDTO configuracaoTaxaServicoDTO) {
+    public MensagemDTO salvarConfiguracaoTaxaServico(ConfiguracaoTaxaServicoDTO configuracaoTaxaServicoDTO) {
         PermissaoUtil.validarOuLancar("editarConfiguracoes");
-        ConfiguracaoTaxaServico configuracaoTaxaServico = dtoToEntity.DTOToConfiguracaoTaxaServicio(configuracaoTaxaServicoDTO);
+        ConfiguracaoTaxaServico configuracaoTaxaServico = dtoToEntity.DTOToConfiguracaoTaxaServico(configuracaoTaxaServicoDTO);
 
         configuracaoTaxaServicoRepository.save(configuracaoTaxaServico);
 

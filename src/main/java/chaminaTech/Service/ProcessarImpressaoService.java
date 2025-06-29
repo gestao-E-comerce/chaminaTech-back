@@ -333,10 +333,12 @@ public class ProcessarImpressaoService {
             conteudo.append("=".repeat(48)).append("\n");
 
             definirTamanhoFonte(conteudo, 4, 4);
-            if (venda.getBalcao()) {
-                centralizarTexto(conteudo, "RECEBIMENTO BALCAO");
+            if (venda.getConsumoInterno()) {
+                centralizarTexto(conteudo, "COMPROVANTE CONSUMO");
             } else if (venda.getRetirada()) {
                 centralizarTexto(conteudo, "RECEBIMENTO RETIRADA");
+            } else if (venda.getBalcao()) {
+                centralizarTexto(conteudo, "RECEBIMENTO BALCAO");
             } else if (venda.getEntrega()) {
                 centralizarTexto(conteudo, "RECEBIMENTO ENTREGA");
             } else if (venda.getMesa() != null) {
@@ -359,6 +361,9 @@ public class ProcessarImpressaoService {
             definirTamanhoFonte(conteudo, 1, 1);
             definirEspacamentoCaracteres(conteudo, 5);
             conteudo.append("Operador: ").append(venda.getFuncionario().getNome()).append("  ").append(new SimpleDateFormat("dd/MM/yy HH:mm").format(venda.getDataEdicao())).append("\n");
+            if (venda.getConsumoInterno()) {
+                conteudo.append("Motivo: ").append(venda.getMotivoConsumo()).append("\n");
+            }
 
             conteudo.append("=".repeat(48)).append("\n");
 
@@ -410,18 +415,10 @@ public class ProcessarImpressaoService {
 
             conteudo.append("=".repeat(48)).append("\n");
 
-            // Desconto
-            if (venda.getDesconto() != null && venda.getDesconto().compareTo(BigDecimal.ZERO) > 0) {
-                adicionarTextoAlinhado(conteudo, "Desconto", String.format("%.2f", venda.getDesconto()), 48);
-            }
-
-            // Serviço
-            if (venda.getValorServico() != null && venda.getValorServico().compareTo(BigDecimal.ZERO) > 0) {
-                adicionarTextoAlinhado(conteudo, "Servico", String.format("%.2f", venda.getValorServico()), 48);
-            }
-
             // Subtotal e total
             adicionarTextoAlinhado(conteudo, "Subtotal", String.format("%.2f", venda.getValorBruto()), 48);
+            adicionarTextoAlinhado(conteudo, "Desconto", String.format("%.2f", venda.getDesconto() != null ? venda.getDesconto() : BigDecimal.ZERO), 48);
+            adicionarTextoAlinhado(conteudo, "Servico", String.format("%.2f", venda.getValorServico() != null ? venda.getValorServico() : BigDecimal.ZERO), 48);
             adicionarTextoAlinhado(conteudo, "Total Recebido", String.format("%.2f", venda.getValorTotal()), 48);
 
             conteudo.append("\n\n\n\n");
@@ -1018,7 +1015,7 @@ public class ProcessarImpressaoService {
             BigDecimal totalSangrias = BigDecimal.ZERO;
             BigDecimal totalGorjetas = BigDecimal.ZERO;
             BigDecimal totalDescontos = Optional.ofNullable(caixaRepository.findTotalDescontosByCaixaId(caixa.getId())).orElse(BigDecimal.ZERO);
-            BigDecimal totalServicos = Optional.ofNullable(caixaRepository.findTotalServiciosByCaixaId(caixa.getId())).orElse(BigDecimal.ZERO);
+            BigDecimal totalServicos = Optional.ofNullable(caixaRepository.findTotalServicosByCaixaId(caixa.getId())).orElse(BigDecimal.ZERO);
 
 
             BigDecimal saldoDinheiro = Optional.ofNullable(caixa.getSaldoDinheiro()).orElse(BigDecimal.ZERO);
@@ -1268,6 +1265,7 @@ public class ProcessarImpressaoService {
 
             conteudo.append("=".repeat(48)).append("\n");
             adicionarTextoAlinhado(conteudo, "Subtotal", String.format("%.2f", venda.getValorTotal()), 48);
+            adicionarTextoAlinhado(conteudo, "Desconto", String.format("%.2f", venda.getDesconto() != null ? venda.getDesconto() : BigDecimal.ZERO), 48);
             adicionarTextoAlinhado(conteudo, "Total Recebido", String.format("%.2f", venda.getValorTotal()), 48);
             conteudo.append("\n\n\n\n");
 

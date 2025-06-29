@@ -164,7 +164,7 @@ public class VendaService {
             gestaoCaixa.setMatriz(venda.getMatriz());
             gestaoCaixa.setVenda(venda);
             gestaoCaixa.setCupom(novoCupom);
-            if (venda.getBalcao() && !venda.getRetirada() && !venda.getEntrega()) {
+            if ((venda.getBalcao()) && !venda.getRetirada() && !venda.getEntrega()) {
                 gestaoCaixa.setAtivo(false);
             }
             gestaoCaixaRepository.save(gestaoCaixa);
@@ -178,10 +178,7 @@ public class VendaService {
                 }
             }
         }
-
-
         String descricao;
-
         if (Boolean.TRUE.equals(venda.getBalcao())) {
             descricao = "Cadastrou venda de balcão com cupom nº " + novoCupom;
         } else if (Boolean.TRUE.equals(venda.getEntrega())) {
@@ -190,6 +187,9 @@ public class VendaService {
             descricao = "Cadastrou retirada com cupom nº " + novoCupom;
         } else {
             descricao = "Cadastrou venda na mesa nº " + venda.getMesa();
+        }
+        if (Boolean.TRUE.equals(venda.getConsumoInterno())) {
+            descricao += " (Consumo Interno)";
         }
 
         auditoriaService.salvarAuditoria(
@@ -204,8 +204,10 @@ public class VendaService {
         } else if (venda.getEntrega()) {
             return new MensagemDTO("Entrega salva com sucesso!", HttpStatus.CREATED);
         } else {
-            if (venda.getBalcao() && venda.getNomeImpressora() != null && !venda.getRetirada() && !venda.getEntrega()) {
-                processarImpressaoService.processarImpressaoComprovanteEnotaFiscal(venda, novoCupom, matriz);
+            if (venda.getConsumoInterno() && venda.getNomeImpressora() != null && matriz.getConfiguracaoImpressao().getImprimirComprovanteConsumo()) {
+                processarImpressaoService.processarImpressaoComprovanteRecebimento(venda, novoCupom);
+            } else if ((venda.getBalcao() && venda.getNomeImpressora() != null && !venda.getRetirada() && !venda.getEntrega()) && matriz.getConfiguracaoImpressao().getImprimirComprovanteRecebementoBalcao()) {
+                processarImpressaoService.processarImpressaoComprovanteRecebimento(venda, novoCupom);
             }
             return new MensagemDTO("Venda realizada com sucesso!", HttpStatus.CREATED);
         }
@@ -251,7 +253,9 @@ public class VendaService {
         GestaoCaixa gestaoCaixa = null;
         // se a venda e tipo mesa e tem pagamento e tem caixa entao finalizada cria um cupom desativado e desativa a venda
         if (vendaAtualizada.getMesa() != null && vendaAtualizada.getVendaPagamento() != null) {
-            if (vendaAtualizada.getCaixa() == null) throw new IllegalStateException("Caixa indefinida");
+            if (!vendaAtualizada.getConsumoInterno()) {
+                if (vendaAtualizada.getCaixa() == null) throw new IllegalStateException("Caixa indefinida");
+            }
             Optional<GestaoCaixa> ultimoCupomOpt = gestaoCaixaRepository.findTopByMatrizIdOrderByIdDesc(vendaAtualizada.getMatriz().getId());
 
             if (ultimoCupomOpt.isPresent()) {
@@ -303,9 +307,15 @@ public class VendaService {
                     processarImpressaoService.processarImpressaoComprovanteProdutoDeletado(vendaAtualizada, produtosRemovidos, cupomExistente);
                 }
             }
-            if (vendaAtualizada.getRetirada() && vendaAtualizada.getCaixa() != null && matriz.getConfiguracaoImpressao().getImprimirComprovanteRecebementoRetirada() || vendaAtualizada.getEntrega() && vendaAtualizada.getCaixa() != null && matriz.getConfiguracaoImpressao().getImprimirComprovanteRecebementoEntrega() || vendaAtualizada.getMesa() != null && vendaAtualizada.getVendaPagamento() != null && matriz.getConfiguracaoImpressao().getImprimirComprovanteRecebementoMesa()) {
-                processarImpressaoService.processarImpressaoComprovanteEnotaFiscal(vendaAtualizada, cupomExistente, matriz);
+            if (vendaAtualizada.getConsumoInterno() != null && vendaAtualizada.getVendaPagamento() != null && matriz.getConfiguracaoImpressao().getImprimirComprovanteConsumo() ||
+                    vendaAtualizada.getRetirada() && vendaAtualizada.getCaixa() != null && matriz.getConfiguracaoImpressao().getImprimirComprovanteRecebementoRetirada() ||
+                    vendaAtualizada.getEntrega() && vendaAtualizada.getCaixa() != null && matriz.getConfiguracaoImpressao().getImprimirComprovanteRecebementoEntrega() ||
+                    vendaAtualizada.getMesa() != null && vendaAtualizada.getVendaPagamento() != null && matriz.getConfiguracaoImpressao().getImprimirComprovanteRecebementoMesa()) {
+                processarImpressaoService.processarImpressaoComprovanteRecebimento(vendaAtualizada, cupomExistente);
             }
+        }
+        if (vendaAtualizada.getConsumoInterno() && vendaAtualizada.getVendaPagamento() != null) {
+            vendaAtualizada.setAtivo(false);
         }
 
         vendaRepository.save(vendaAtualizada);
@@ -318,9 +328,14 @@ public class VendaService {
                 : (vendaAtualizada.getEntrega() ? "entrega (cupom nº " + cupomExistente + ")"
                 : "retirada (cupom nº " + cupomExistente + ")");
 
-        StringBuilder descricao = new StringBuilder();
+        if (Boolean.TRUE.equals(vendaAtualizada.getConsumoInterno())) {
+            tipoVenda += " (Consumo Interno)";
+        }
 
-        if (vendaAtualizada.getVendaPagamento() != null && vendaAtualizada.getCaixa() != null) {
+        StringBuilder descricao = new StringBuilder();
+        if (vendaAtualizada.getVendaPagamento() != null && Boolean.TRUE.equals(vendaAtualizada.getConsumoInterno())) {
+            descricao.append("Finalizou a venda ").append(tipoVenda);
+        } else if (vendaAtualizada.getVendaPagamento() != null && vendaAtualizada.getCaixa() != null) {
             descricao.append("Finalizou a venda ").append(tipoVenda);
         } else {
             descricao.append("Editou a venda ").append(tipoVenda);
@@ -374,9 +389,14 @@ public class VendaService {
             estoqueRepository.saveAll(resultadoGeral.getEstoques());
         }
         Integer cupomExistente = 0;
-        GestaoCaixa gestaoCaixa = null;
-        // se a venda e tipo mesa cria um cupom desativado e desativa a venda
-        if (vendaAtualizada.getMesa() != null) {
+        GestaoCaixa gestaoCaixa = gestaoCaixaRepository.findByVendaId(vendaAtualizada.getId()).orElse(null);
+        if (gestaoCaixa != null) {
+            // Já existe cupom pra essa venda
+            cupomExistente = gestaoCaixa.getCupom();
+            gestaoCaixa.setAtivo(false);
+            gestaoCaixaRepository.save(gestaoCaixa);
+        } else if (vendaAtualizada.getMesa() != null) {
+
             Optional<GestaoCaixa> ultimoCupomOpt = gestaoCaixaRepository.findTopByMatrizIdOrderByIdDesc(vendaAtualizada.getMatriz().getId());
 
             if (ultimoCupomOpt.isPresent()) {
@@ -398,15 +418,6 @@ public class VendaService {
             gestaoCaixa.setCupom(cupomExistente);
             gestaoCaixa.setAtivo(false);
             gestaoCaixaRepository.save(gestaoCaixa);
-        }
-        // se e tipo retirada ou entrega e tem caixa entao finalizada desativa a venda e o cupom
-        else if (vendaAtualizada.getRetirada() || vendaAtualizada.getEntrega()) {
-            gestaoCaixa = gestaoCaixaRepository.findByVendaId(vendaAtualizada.getId()).orElse(null);
-            if (gestaoCaixa != null) {
-                cupomExistente = gestaoCaixa.getCupom();
-                gestaoCaixa.setAtivo(false);
-                gestaoCaixaRepository.save(gestaoCaixa);
-            }
         }
         if (vendaAtualizada.getNomeImpressora() != null) {
             if (!produtosRemovidosParaImpressao.isEmpty() && vendaAtualizada.getImprimirDeletar()) {

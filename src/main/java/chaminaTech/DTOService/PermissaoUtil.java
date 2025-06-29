@@ -100,6 +100,11 @@ public class PermissaoUtil {
             case "editarConfiguracoes" -> permissao.getEditarConfiguracoes();
             case "auditoria" -> permissao.getAuditoria();
 
+            case "relatorio" -> permissao.getRelatorio();
+            case "cadastrarRelatorio" -> permissao.getCadastrarRelatorio();
+            case "editarRelatorio" -> permissao.getEditarRelatorio();
+            case "deletarRelatorio" -> permissao.getDeletarRelatorio();
+
             default -> false;
         };
     }

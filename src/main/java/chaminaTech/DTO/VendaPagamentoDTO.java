@@ -15,6 +15,7 @@ public class VendaPagamentoDTO {
     private BigDecimal debito;
     private BigDecimal credito;
     private BigDecimal pix;
+    private BigDecimal consumoInterno;
 
     private BigDecimal descontoDinheiro;
     private BigDecimal descontoDebito;

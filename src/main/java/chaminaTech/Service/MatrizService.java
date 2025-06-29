@@ -135,6 +135,7 @@ public class MatrizService {
         confImpressao.setImprimirSuprimento(true);
         confImpressao.setMostarMotivoDeletarVenda(true);
         confImpressao.setMostarMotivoDeletarProduto(true);
+        confImpressao.setImprimirComprovanteConsumo(true);
         matriz.setConfiguracaoImpressao(confImpressao);
 
         // Configuração de Entrega

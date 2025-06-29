@@ -62,6 +62,8 @@ public class ConfiguracaoImpressao {
     private Boolean mostarMotivoDeletarVenda = true;
     @Column(nullable = false)
     private Boolean mostarMotivoDeletarProduto = true;
+    @Column(nullable = false)
+    private Boolean imprimirComprovanteConsumo = true;
 
     @OneToMany(mappedBy = "configuracaoImpressao", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnoreProperties("configuracaoImpressao")

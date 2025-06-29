@@ -1,6 +1,5 @@
 package chaminaTech.Entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,7 +22,5 @@ public class GestaoCaixa {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "gestao_caixa_matriz", nullable = false)
-    @JsonIgnoreProperties(value = { "configuracaoEntrega", "configuracaoRetirada", "configuracaoImpressao",
-            "configuracaoTaxaServico", }, allowSetters = true)
     private Matriz matriz;
 }

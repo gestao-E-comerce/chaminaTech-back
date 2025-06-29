@@ -98,6 +98,10 @@ public class DatabaseSeeder implements CommandLineRunner {
             permissao.setDeletarProduto(true);
             permissao.setEditarConfiguracoes(true);
             permissao.setAuditoria(true);
+            permissao.setRelatorio(true);
+            permissao.setCadastrarRelatorio(true);
+            permissao.setEditarRelatorio(true);
+            permissao.setDeletarRelatorio(true);
 
             permissaoRepository.save(permissao);
 

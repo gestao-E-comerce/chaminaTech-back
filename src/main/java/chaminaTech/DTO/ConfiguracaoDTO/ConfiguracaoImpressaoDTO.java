@@ -35,6 +35,7 @@ public class ConfiguracaoImpressaoDTO {
     private Boolean imprimirGorjeta = true;
     private Boolean mostarMotivoDeletarVenda = true;
     private Boolean mostarMotivoDeletarProduto = true;
+    private Boolean imprimirComprovanteConsumo = true;
 
     private List<ImpressoraDTO> impressoras;
 

@@ -47,8 +47,8 @@ public class GestaoCaixaService {
         }).orElse(null);
     }
 
-    public List<Map<String, Object>> buscarCuponsEntregaByMatrizId(Long matrizId) {
-        List<Object[]> resultados = gestaoCaixaRepository.buscarCuponsEntregaByMatrizId(matrizId);
+    public List<Map<String, Object>> buscarCuponsEntregaByMatrizId(Long matrizId, String nome) {
+        List<Object[]> resultados = gestaoCaixaRepository.buscarCuponsEntregaByMatrizId(matrizId, nome);
 
         List<Map<String, Object>> cuponsEntraga = new ArrayList<>();
         for (Object[] resultado : resultados) {
@@ -66,8 +66,8 @@ public class GestaoCaixaService {
         return cuponsEntraga;
     }
 
-    public List<Map<String, Object>> buscarCuponsRetiradaByMatrizId(Long matrizId) {
-        List<Object[]> resultados = gestaoCaixaRepository.buscarCuponsRetiradaByMatrizId(matrizId);
+    public List<Map<String, Object>> buscarCuponsRetiradaByMatrizId(Long matrizId, String nome) {
+        List<Object[]> resultados = gestaoCaixaRepository.buscarCuponsRetiradaByMatrizId(matrizId, nome);
 
         List<Map<String, Object>> cuponsRetirada = new ArrayList<>();
         for (Object[] resultado : resultados) {
@@ -88,6 +88,12 @@ public class GestaoCaixaService {
     public List<GestaoCaixaDTO> buscarHistoricoComFiltro(Long matrizId, String tipo, String cupom) {
         PermissaoUtil.validarOuLancar("historicoVenda");
         List<GestaoCaixa> lista = gestaoCaixaRepository.buscarHistoricoComFiltro(matrizId, tipo, cupom);
+        return lista.stream().map(entityToDTO::gestaoCaixaToDTO).collect(Collectors.toList());
+    }
+
+    public List<GestaoCaixaDTO> buscarConsumosHistoricoComFiltro(Long matrizId, String tipo, String cupom) {
+        PermissaoUtil.validarOuLancar("historicoVenda");
+        List<GestaoCaixa> lista = gestaoCaixaRepository.buscarConsumosHistoricoComFiltro(matrizId, tipo, cupom);
         return lista.stream().map(entityToDTO::gestaoCaixaToDTO).collect(Collectors.toList());
     }
 

@@ -33,31 +33,31 @@ public interface CaixaRepository extends JpaRepository<Caixa, Long> {
     @Query("SELECT v FROM Venda v WHERE v.ativo = true AND v.matriz.id = :matrizId")
     List<Venda> findVendasAtivasByMatrizId(@Param("matrizId") Long matrizId);
 
-    @Query("SELECT SUM(v.valorBruto) FROM Venda v WHERE v.caixa.id = :caixaId")
+    @Query("SELECT SUM(v.valorBruto) FROM Venda v WHERE v.caixa.id = :caixaId AND v.deletado = false")
     BigDecimal findTotalVendasBrutoByCaixaId(@Param("caixaId") Long caixaId);
 
-    @Query("SELECT SUM(vp.pix) FROM VendaPagamento vp JOIN vp.venda v WHERE v.caixa.id = :caixaId")
+    @Query("SELECT SUM(vp.pix) FROM VendaPagamento vp JOIN vp.venda v WHERE v.caixa.id = :caixaId AND v.deletado = false")
     BigDecimal findTotalPixByCaixaId(@Param("caixaId") Long caixaId);
 
-    @Query("SELECT SUM(vp.dinheiro) FROM VendaPagamento vp WHERE vp.venda.caixa.id = :caixaId")
+    @Query("SELECT SUM(vp.dinheiro) FROM VendaPagamento vp JOIN vp.venda v WHERE v.caixa.id = :caixaId AND v.deletado = false")
     BigDecimal findTotalDinheiroByCaixaId(@Param("caixaId") Long caixaId);
 
-    @Query("SELECT SUM(vp.debito) FROM VendaPagamento vp JOIN vp.venda v WHERE v.caixa.id = :caixaId")
+    @Query("SELECT SUM(vp.debito) FROM VendaPagamento vp JOIN vp.venda v WHERE v.caixa.id = :caixaId AND v.deletado = false")
     BigDecimal findTotalDebitoByCaixaId(@Param("caixaId") Long caixaId);
 
-    @Query("SELECT SUM(vp.credito) FROM VendaPagamento vp JOIN vp.venda v WHERE v.caixa.id = :caixaId")
+    @Query("SELECT SUM(vp.credito) FROM VendaPagamento vp JOIN vp.venda v WHERE v.caixa.id = :caixaId AND v.deletado = false")
     BigDecimal findTotalCreditoByCaixaId(@Param("caixaId") Long caixaId);
 
-    @Query("SELECT SUM(v.valorServico) FROM Venda v WHERE v.caixa.id = :caixaId")
-    BigDecimal findTotalServiciosByCaixaId(@Param("caixaId") Long caixaId);
+    @Query("SELECT SUM(v.valorServico) FROM Venda v WHERE v.caixa.id = :caixaId AND v.deletado = false")
+    BigDecimal findTotalServicosByCaixaId(@Param("caixaId") Long caixaId);
 
-    @Query("SELECT SUM(v.desconto) FROM Venda v WHERE v.caixa.id = :caixaId")
+    @Query("SELECT SUM(v.desconto) FROM Venda v WHERE v.caixa.id = :caixaId AND v.deletado = false")
     BigDecimal findTotalDescontosByCaixaId(@Param("caixaId") Long caixaId);
 
-    @Query("SELECT SUM(s.valor) FROM Sangria s WHERE s.caixa.id = :caixaId")
+    @Query("SELECT SUM(s.valor) FROM Sangria s WHERE s.caixa.id = :caixaId AND s.ativo = true")
     BigDecimal findTotalSangriasByCaixaId(@Param("caixaId") Long caixaId);
 
-    @Query("SELECT SUM(s.valor) FROM Suprimento s WHERE s.caixa.id = :caixaId")
+    @Query("SELECT SUM(s.valor) FROM Suprimento s WHERE s.caixa.id = :caixaId AND s.ativo = true")
     BigDecimal findTotalSuprimentosByCaixaId(@Param("caixaId") Long caixaId);
 
     @Query("""
@@ -68,6 +68,7 @@ public interface CaixaRepository extends JpaRepository<Caixa, Long> {
                     COALESCE(SUM(COALESCE(g.pix, 0)), 0)
                 FROM Gorjeta g
                 WHERE g.caixa.id = :caixaId
+                AND g.ativo = true
             """)
     BigDecimal findTotalGorjetasByCaixaId(@Param("caixaId") Long caixaId);
 
@@ -75,6 +76,7 @@ public interface CaixaRepository extends JpaRepository<Caixa, Long> {
                 SELECT COALESCE(SUM(vp.servicoDinheiro), 0)
                 FROM VendaPagamento vp
                 WHERE vp.venda.caixa.id = :caixaId
+                AND vp.venda.deletado = false
             """)
     BigDecimal findTotalServicoDinheiroByCaixaId(@Param("caixaId") Long caixaId);
 
@@ -82,6 +84,7 @@ public interface CaixaRepository extends JpaRepository<Caixa, Long> {
                 SELECT COALESCE(SUM(vp.descontoDinheiro), 0)
                 FROM VendaPagamento vp
                 WHERE vp.venda.caixa.id = :caixaId
+                AND vp.venda.deletado = false
             """)
     BigDecimal findTotalDescontoDinheiroByCaixaId(@Param("caixaId") Long caixaId);
 }

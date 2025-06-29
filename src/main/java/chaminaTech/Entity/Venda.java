@@ -30,6 +30,11 @@ public class Venda {
     @Column(nullable = false)
     private Boolean entrega;
 
+    @Column(nullable = false)
+    private Boolean consumoInterno;
+
+    private String motivoConsumo;
+
     private Integer mesa;
 
     private String chaveUnico;
@@ -71,7 +76,7 @@ public class Venda {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "venda_cliente")
-    @JsonIgnoreProperties(value = { "matriz", "enderecos" })
+    @JsonIgnoreProperties(value = {"matriz", "enderecos"})
     private Cliente cliente;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -80,27 +85,25 @@ public class Venda {
     private Endereco endereco;
 
     @OneToMany(mappedBy = "venda", cascade = CascadeType.ALL)
-    @JsonIgnoreProperties(value = { "venda" }, allowSetters = true)
+    @JsonIgnoreProperties(value = {"venda"}, allowSetters = true)
     @OrderBy("data ASC")
     private List<ProdutoVenda> produtoVendas;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "venda_funcionario", nullable = false)
-    @JsonIgnoreProperties(value = { "matriz", "caixas" })
+    @JsonIgnoreProperties(value = {"matriz", "caixas"})
     private Funcionario funcionario;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "venda_caixa")
-    @JsonIgnoreProperties(value = { "vendas", "matriz", "funcionario", "sangrias", "suprimentos" })
+    @JsonIgnoreProperties(value = {"vendas", "matriz", "funcionario", "sangrias", "suprimentos"})
     private Caixa caixa;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "venda_matriz", nullable = false)
-    @JsonIgnoreProperties(value = { "configuracaoEntrega", "configuracaoRetirada", "configuracaoImpressao",
-            "configuracaoTaxaServico", }, allowSetters = true)
     private Matriz matriz;
 
     @OneToOne(mappedBy = "venda", cascade = CascadeType.ALL)
-    @JsonIgnoreProperties(value = { "venda" }, allowSetters = true)
+    @JsonIgnoreProperties(value = {"venda"}, allowSetters = true)
     private VendaPagamento vendaPagamento;
 }

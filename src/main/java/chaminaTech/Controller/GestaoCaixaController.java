@@ -39,15 +39,15 @@ public class GestaoCaixaController {
     }
 
     @GetMapping("/cuponsEntregaAtivos/{matrizId}")
-    public ResponseEntity<List<Map<String, Object>>> buscarCuponsEntregaByMatrizId(@PathVariable Long matrizId) {
-        List<Map<String, Object>> cuponsEntrega = gestaoCaixaService.buscarCuponsEntregaByMatrizId(matrizId);
+    public ResponseEntity<List<Map<String, Object>>> buscarCuponsEntregaByMatrizId(@PathVariable Long matrizId, @RequestParam(required = false) String nome) {
+        List<Map<String, Object>> cuponsEntrega = gestaoCaixaService.buscarCuponsEntregaByMatrizId(matrizId, nome);
         return ResponseEntity.ok(cuponsEntrega);
     }
 
     // Endpoint para obter cupons de retirada
     @GetMapping("/cuponsRetiradaAtivos/{matrizId}")
-    public ResponseEntity<List<Map<String, Object>>> buscarCuponsRetiradaByMatrizId(@PathVariable Long matrizId) {
-        List<Map<String, Object>> cupons = gestaoCaixaService.buscarCuponsRetiradaByMatrizId(matrizId);
+    public ResponseEntity<List<Map<String, Object>>> buscarCuponsRetiradaByMatrizId(@PathVariable Long matrizId, @RequestParam(required = false) String nome) {
+        List<Map<String, Object>> cupons = gestaoCaixaService.buscarCuponsRetiradaByMatrizId(matrizId, nome);
         return ResponseEntity.ok(cupons);
     }
 
@@ -58,6 +58,16 @@ public class GestaoCaixaController {
             @RequestParam(required = false) String cupom
     ) {
         List<GestaoCaixaDTO> lista = gestaoCaixaService.buscarHistoricoComFiltro(matrizId, tipo, cupom);
+        return ResponseEntity.ok(lista);
+    }
+
+    @GetMapping("/consumosHistorico")
+    public ResponseEntity<List<GestaoCaixaDTO>> buscarConsumosHistoricoComFiltro(
+            @RequestParam Long matrizId,
+            @RequestParam(required = false) String tipo,
+            @RequestParam(required = false) String cupom
+    ) {
+        List<GestaoCaixaDTO> lista = gestaoCaixaService.buscarConsumosHistoricoComFiltro(matrizId, tipo, cupom);
         return ResponseEntity.ok(lista);
     }
 

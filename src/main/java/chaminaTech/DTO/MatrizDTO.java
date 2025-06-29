@@ -35,5 +35,5 @@ public class MatrizDTO extends UsuarioDTO {
 
     private ConfiguracaoImpressaoDTO configuracaoImpressao;
 
-    private ConfiguracaoTaxaServicoDTO configuracaoTaxaServicio;
+    private ConfiguracaoTaxaServicoDTO configuracaoTaxaServico;
 }

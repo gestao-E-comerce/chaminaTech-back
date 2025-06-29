@@ -129,8 +129,8 @@ public class CaixaController {
     public BigDecimal getTotalGorjetasByCaixaId(@PathVariable Long caixaId) {
         return caixaService.getTotalGorjetasByCaixaId(caixaId);
     }
-    @GetMapping("/{caixaId}/totalServicios")
-    public BigDecimal getTotalServiciosByCaixaId(@PathVariable Long caixaId) {
-        return caixaService.getTotalServiciosByCaixaId(caixaId);
+    @GetMapping("/{caixaId}/totalServicos")
+    public BigDecimal getTotalServicosByCaixaId(@PathVariable Long caixaId) {
+        return caixaService.getTotalServicosByCaixaId(caixaId);
     }
 }

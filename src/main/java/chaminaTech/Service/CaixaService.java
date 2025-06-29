@@ -69,7 +69,7 @@ public class CaixaService {
         BigDecimal totalSuprimentos = caixaRepository.findTotalSuprimentosByCaixaId(caixa.getId());
         BigDecimal totalSangrias = caixaRepository.findTotalSangriasByCaixaId(caixa.getId());
         BigDecimal totalDescontos = caixaRepository.findTotalDescontosByCaixaId(caixa.getId());
-        BigDecimal totalServico = caixaRepository.findTotalServiciosByCaixaId(caixa.getId());
+        BigDecimal totalServico = caixaRepository.findTotalServicosByCaixaId(caixa.getId());
         BigDecimal totalGorjetas = caixaRepository.findTotalGorjetasByCaixaId(caixa.getId());
 
         // Garantir que os valores não sejam null
@@ -187,7 +187,7 @@ public class CaixaService {
     public BigDecimal getTotalGorjetasByCaixaId(Long caixaId) {
         return caixaRepository.findTotalGorjetasByCaixaId(caixaId);
     }
-    public BigDecimal getTotalServiciosByCaixaId(Long caixaId) {
-        return caixaRepository.findTotalServiciosByCaixaId(caixaId);
+    public BigDecimal getTotalServicosByCaixaId(Long caixaId) {
+        return caixaRepository.findTotalServicosByCaixaId(caixaId);
     }
 }

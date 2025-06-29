@@ -93,6 +93,11 @@ public class PermissaoDTO {
     private Boolean editarConfiguracoes = false;
     private Boolean auditoria = false;
 
+    private Boolean relatorio = false;
+    private Boolean cadastrarRelatorio = false;
+    private Boolean editarRelatorio = false;
+    private Boolean deletarRelatorio = false;
+
     @JsonIgnoreProperties(value = {"permissao"})
     private UsuarioDTO usuario;
 }

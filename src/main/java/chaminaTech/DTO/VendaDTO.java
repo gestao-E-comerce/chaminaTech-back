@@ -21,6 +21,10 @@ public class VendaDTO {
 
     private Boolean entrega;
 
+    private Boolean consumoInterno;
+
+    private String motivoConsumo;
+
     private String chaveUnico;
 
     private Boolean imprimirDeletar = true;
@@ -59,24 +63,17 @@ public class VendaDTO {
 
     private String motivoDesconto;
 
-//    @JsonIgnoreProperties(value = {"matriz","enderecos"})
     private ClienteDTO cliente;
 
-//    @JsonIgnoreProperties("cliente")
     private EnderecoDTO endereco;
 
-//    @JsonIgnoreProperties(value = {"venda"}, allowSetters = true)
     private List<ProdutoVendaDTO> produtoVendas;
 
-//    @JsonIgnoreProperties(value = {"matriz","caixas"})
     private FuncionarioDTO funcionario;
 
-//    @JsonIgnoreProperties(value = {"vendas","matriz","funcionario","sangrias","suprimentos"})
     private CaixaDTO caixa;
 
-//    @JsonIgnoreProperties(value = {"configuracaoEntrega", "configuracaoRetirada", "configuracaoImpressao", "configuracaoTaxaServico", }, allowSetters = true)
     private MatrizDTO matriz;
 
-//    @JsonIgnoreProperties(value = {"venda"}, allowSetters = true)
     private VendaPagamentoDTO vendaPagamento;
 }
