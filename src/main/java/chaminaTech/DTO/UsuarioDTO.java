@@ -1,6 +1,5 @@
 package chaminaTech.DTO;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -28,6 +27,5 @@ public class UsuarioDTO {
 
     private String role;
 
-    @JsonIgnoreProperties("matriz")
     private PermissaoDTO permissao;
 }

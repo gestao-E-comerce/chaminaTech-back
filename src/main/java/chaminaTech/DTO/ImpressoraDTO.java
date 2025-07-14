@@ -1,7 +1,5 @@
 package chaminaTech.DTO;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import chaminaTech.DTO.ConfiguracaoDTO.ConfiguracaoImpressaoDTO;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,6 +13,5 @@ public class ImpressoraDTO {
 
     private String nomeImpressora;
 
-    @JsonIgnoreProperties("impressoras")
     private ConfiguracaoImpressaoDTO configuracaoImpressao;
 }

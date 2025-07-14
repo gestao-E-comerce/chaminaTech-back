@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -53,7 +54,7 @@ public class AdminFuncionarioService {
                     .map(entityToDTO::adminFuncionarioToDTO)
                     .collect(Collectors.toList());
 
-        }  finally {
+        } finally {
             PermissaoUtil.limparUsuarioLogado();
         }
     }
@@ -61,9 +62,10 @@ public class AdminFuncionarioService {
     public MensagemDTO cadastrarAdminFuncionario(AdminFuncionarioDTO adminFuncionarioDTO) {
         PermissaoUtil.validarOuLancar("cadastrarFuncionario");
         AdminFuncionario adminFuncionario = dtoToEntity.DTOToAdminFuncionario(adminFuncionarioDTO);
-        if (adminFuncionario.getPassword() == null) {
+        if (adminFuncionario.getPassword() == null || adminFuncionario.getPassword().isBlank()) {
             throw new IllegalStateException("Password obrigatório!");
         }
+        validarSenhaOuLancar(adminFuncionario.getPassword());
         if (loginRepository.existsByUsername(adminFuncionario.getUsername())) {
             throw new IllegalStateException("Username inválido! Tente outro!");
         }
@@ -71,7 +73,7 @@ public class AdminFuncionarioService {
         adminFuncionario.setRole("ADMINFUNCIONARIO");
         adminFuncionario.setPassword(passwordEncoder.encode(adminFuncionario.getPassword()));
         if (adminFuncionarioRepository.existsByNomeAndAdminIdAndDeletado(adminFuncionarioDTO.getAdmin().getId(), adminFuncionario.getNome())) {
-            throw new IllegalStateException("UserName indispensável!");
+            throw new IllegalStateException("Username inválido! Tente outro!");
         }
 
         adminFuncionarioRepository.save(adminFuncionario);
@@ -95,12 +97,13 @@ public class AdminFuncionarioService {
         adminFuncionarioDTO.setId(id);
         AdminFuncionario adminFuncionario = dtoToEntity.DTOToAdminFuncionario(adminFuncionarioDTO);
         if (loginRepository.existsByUsernameExcludingId(adminFuncionario.getUsername(), adminFuncionario.getId())) {
-            throw new IllegalStateException("UserName indispensável!.");
+            throw new IllegalStateException("Username inválido! Tente outro!");
         }
         if (adminFuncionario.getPassword() == null) {
             String senha = loginRepository.findSenhaById(adminFuncionario.getId());
             adminFuncionario.setPassword(senha);
         } else {
+            validarSenhaOuLancar(adminFuncionario.getPassword());
             adminFuncionario.setPassword(passwordEncoder.encode(adminFuncionario.getPassword()));
         }
 
@@ -179,5 +182,20 @@ public class AdminFuncionarioService {
         adminFuncionario.setDeletado(true);
         adminFuncionario.setAtivo(false);
         adminFuncionarioRepository.save(adminFuncionario);
+    }
+
+    private void validarSenhaOuLancar(String senha) {
+        List<String> erros = new ArrayList<>();
+
+        if (senha.length() < 8) erros.add("mínimo de 8 caracteres");
+        if (!senha.matches(".*[A-Z].*")) erros.add("1 letra maiúscula");
+        if (!senha.matches(".*[a-z].*")) erros.add("1 letra minúscula");
+        if (!senha.matches(".*\\d.*")) erros.add("1 número");
+        if (!senha.matches(".*[\\W_].*")) erros.add("1 caractere especial");
+        if (senha.matches(".*\\s.*")) erros.add("sem espaços");
+
+        if (!erros.isEmpty()) {
+            throw new IllegalArgumentException("Senha inválida: deve conter " + String.join(", ", erros) + ".");
+        }
     }
 }

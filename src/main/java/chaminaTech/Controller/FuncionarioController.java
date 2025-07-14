@@ -35,6 +35,12 @@ public class FuncionarioController {
         return funcionarioService.listarFuncionarios(matrizId, termoPesquisa, ativo);
     }
 
+    @GetMapping("/listaTudo")
+    public List<FuncionarioDTO> listarTudoFuncionarios(
+            @RequestParam Long matrizId) {
+        return funcionarioService.listarTudosFuncionarios(matrizId);
+    }
+
     @PostMapping
     public ResponseEntity<MensagemDTO> cadastrarFuncionario(@RequestBody FuncionarioDTO funcionarioDTO) {
         try {

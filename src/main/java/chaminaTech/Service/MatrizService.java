@@ -22,6 +22,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -59,9 +60,10 @@ public class MatrizService {
     public MensagemDTO cadastrarMatriz(MatrizDTO matrizDTO) {
         PermissaoUtil.validarOuLancar("cadastrarMatriz");
         Matriz matriz = dtoToEntity.DTOToMatriz(matrizDTO);
-        if (matriz.getPassword() == null) {
+        if (matriz.getPassword() == null || matriz.getPassword().isBlank()) {
             throw new IllegalStateException("Password obrigatório!");
         }
+        validarSenhaOuLancar(matriz.getPassword());
         if (loginRepository.existsByUsername(matriz.getUsername())) {
             throw new IllegalStateException("Username inválido! Tente outro!");
         }
@@ -166,7 +168,7 @@ public class MatrizService {
         matrizDTO.setId(id);
         Matriz matriz = dtoToEntity.DTOToMatriz(matrizDTO);
         if (loginRepository.existsByUsernameExcludingId(matriz.getUsername(), matriz.getId())) {
-            throw new IllegalStateException("UserName indispensável!.");
+            throw new IllegalStateException("Username inválido! Tente outro!");
         }
         if (matrizRepository.existsByNomeAndDeletadoAndNotId(matrizDTO.getNome(), matrizDTO.getId())) {
             throw new IllegalStateException("Já existe uma matriz com esse nome!");
@@ -175,33 +177,10 @@ public class MatrizService {
             String senha = loginRepository.findSenhaById(matriz.getId());
             matriz.setPassword(senha);
         } else {
+            validarSenhaOuLancar(matriz.getPassword());
             matriz.setPassword(passwordEncoder.encode(matriz.getPassword()));
         }
 
-//        if (matriz.getPermissao() != null) {
-//            Permissao permissaoMatriz = matriz.getPermissao();
-//            List<Funcionario> funcionarios = funcionarioRepository.buscarFuncionarios(matriz.getId(), null, null);
-//
-//            if (funcionarios != null && !funcionarios.isEmpty()) {
-//                for (Funcionario funcionario : funcionarios) {
-//                    Permissao p = funcionario.getPermissao();
-//                    if (p != null) {
-//                        if (!Boolean.TRUE.equals(permissaoMatriz.getVendaBalcao())) p.setVendaBalcao(false);
-//                        if (!Boolean.TRUE.equals(permissaoMatriz.getVendaEntrega())) p.setVendaEntrega(false);
-//                        if (!Boolean.TRUE.equals(permissaoMatriz.getVendaMesa())) p.setVendaMesa(false);
-//                        if (!Boolean.TRUE.equals(permissaoMatriz.getVendaRetirada())) p.setVendaRetirada(false);
-//                        if (!Boolean.TRUE.equals(permissaoMatriz.getEstoque())) p.setEstoque(false);
-//                        if (!Boolean.TRUE.equals(permissaoMatriz.getDeposito())) p.setDeposito(false);
-//                        if (!Boolean.TRUE.equals(permissaoMatriz.getMateria())) p.setMateria(false);
-//                        if (!Boolean.TRUE.equals(permissaoMatriz.getFilho())) p.setFilho(false);
-//                        if (!Boolean.TRUE.equals(permissaoMatriz.getMatrizPermissao())) p.setMatrizPermissao(false);
-//                    }
-//                }
-//
-//                // 🔐 persistir alterações
-//                funcionarioRepository.saveAll(funcionarios);
-//            }
-//        }
         matrizRepository.save(matriz);
 
         Usuario usuarioLogado = PermissaoUtil.getUsuarioLogado();
@@ -282,5 +261,19 @@ public class MatrizService {
                 matrizIdAuditoria
         );
         return new MensagemDTO(mensagem, HttpStatus.CREATED);
+    }
+    private void validarSenhaOuLancar(String senha) {
+        List<String> erros = new ArrayList<>();
+
+        if (senha.length() < 8) erros.add("mínimo de 8 caracteres");
+        if (!senha.matches(".*[A-Z].*")) erros.add("1 letra maiúscula");
+        if (!senha.matches(".*[a-z].*")) erros.add("1 letra minúscula");
+        if (!senha.matches(".*\\d.*")) erros.add("1 número");
+        if (!senha.matches(".*[\\W_].*")) erros.add("1 caractere especial");
+        if (senha.matches(".*\\s.*")) erros.add("sem espaços");
+
+        if (!erros.isEmpty()) {
+            throw new IllegalArgumentException("Senha inválida: deve conter " + String.join(", ", erros) + ".");
+        }
     }
 }

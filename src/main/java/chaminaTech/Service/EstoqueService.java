@@ -147,7 +147,7 @@ public class EstoqueService {
         }
 
         if (estoqueTotalDisponivel.compareTo(quantidadeDescartar) < 0) {
-            throw new IllegalStateException("Depósito insuficiente para a matéria: " + produto.getNome());
+            throw new IllegalStateException("Estoque insuficiente para a matéria: " + produto.getNome());
         }
 
         List<Estoque> estoquesParaSalvar = new ArrayList<>();
@@ -186,6 +186,6 @@ public class EstoqueService {
                 estoqueDescartar.getMatriz().getId()
         );
 
-        return new MensagemDTO("Matéria descartada com sucesso!", HttpStatus.OK);
+        return new MensagemDTO("Produto descartado com sucesso!", HttpStatus.OK);
     }
 }

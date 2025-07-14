@@ -1,77 +1,117 @@
 package chaminaTech.Config;
 
 import chaminaTech.Entity.Usuario;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.io.Decoders;
-import io.jsonwebtoken.security.Keys;
+import com.nimbusds.jose.EncryptionMethod;
+import com.nimbusds.jose.JWEAlgorithm;
+import com.nimbusds.jose.JWEHeader;
+import com.nimbusds.jose.crypto.DirectDecrypter;
+import com.nimbusds.jose.crypto.DirectEncrypter;
+import com.nimbusds.jwt.EncryptedJWT;
+import com.nimbusds.jwt.JWTClaimsSet;
+import jakarta.annotation.PostConstruct;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import java.security.Key;
-import java.util.*;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
+import java.util.Base64;
+import java.util.Date;
 import java.util.function.Function;
 
 
 @Service
 public class JwtServiceGenerator {
 
+    private SecretKey secretKey;
+
+    @PostConstruct
+    public void init() {
+        byte[] keyBytes = Base64.getDecoder().decode(JwtParameters.SECRET_KEY);
+        this.secretKey = new SecretKeySpec(keyBytes, "AES");
+    }
+
     public String generateToken(Usuario userDetails) {
-        Map<String, Object> extraClaims = new HashMap<>();
-        extraClaims.put("nome", userDetails.getNome());
-        extraClaims.put("id", userDetails.getId().toString());
-        extraClaims.put("role", userDetails.getRole());
-        extraClaims.put("ativo", userDetails.getAtivo());
+        try {
+            JWTClaimsSet claims = new JWTClaimsSet.Builder()
+                    .subject(userDetails.getUsername())
+                    .claim("nome", userDetails.getNome())
+                    .claim("id", userDetails.getId().toString())
+                    .claim("role", userDetails.getRole())
+                    .claim("ativo", userDetails.getAtivo())
+                    .issueTime(new Date())
+                    .expirationTime(new Date(System.currentTimeMillis() + (long) (3600000 * JwtParameters.HORAS_EXPIRACAO_TOKEN)))
+                    .build();
 
-        long expirationTime = new Date().getTime() + (long)(3600000 * JwtParameters.HORAS_EXPIRACAO_TOKEN);
+            JWEHeader header = new JWEHeader(JWEAlgorithm.DIR, EncryptionMethod.A192CBC_HS384);
+            EncryptedJWT jwt = new EncryptedJWT(header, claims);
+            jwt.encrypt(new DirectEncrypter(secretKey));
 
-        return Jwts.builder()
-                .setClaims(extraClaims)
-                .setSubject(userDetails.getUsername())
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(expirationTime))  // Define a expiração do token
-                .signWith(getSigningKey(), JwtParameters.ALGORITMO_ASSINATURA)  // Assina o token com a chave secreta
-                .compact();
+            return jwt.serialize();
+
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao gerar token JWE", e);
+        }
+    }
+
+    public String generateImpressaoToken(Long id) {
+        try {
+            JWTClaimsSet claims = new JWTClaimsSet.Builder()
+                    .claim("id", id.toString())
+                    .issueTime(new Date()) // opcional
+                    .build(); // sem expirationTime
+
+            JWEHeader header = new JWEHeader(JWEAlgorithm.DIR, EncryptionMethod.A192CBC_HS384);
+            EncryptedJWT jwt = new EncryptedJWT(header, claims);
+            jwt.encrypt(new DirectEncrypter(secretKey));
+
+            return jwt.serialize();
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao gerar token JWE para impressão", e);
+        }
     }
 
     public boolean isTokenValid(String token, UserDetails userDetails) {
-        final String username = extractUsername(token);  // Extrai o nome de usuário do token
-        return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);  // Verifica se o token é válido
-    }
-
-    private boolean isTokenExpired(String token) {
-        return extractExpiration(token).before(new Date());  // Verifica se o token expirou
+        try {
+            JWTClaimsSet claims = decryptToken(token);
+            String username = claims.getSubject();
+            Date expiration = claims.getExpirationTime();
+            return username.equals(userDetails.getUsername()) && expiration.after(new Date());
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     public Date extractExpiration(String token) {
-        return extractClaim(token, Claims::getExpiration);  // Extrai a data de expiração do token
-    }
-
-    private Key getSigningKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(JwtParameters.SECRET_KEY);  // Decodifica a chave secreta
-        return Keys.hmacShaKeyFor(keyBytes);  // Cria a chave secreta para assinar o token
+        try {
+            return decryptToken(token).getExpirationTime();
+        } catch (Exception e) {
+            return new Date(0);
+        }
     }
 
     public String extractUsername(String token) {
-        return extractClaim(token, Claims::getSubject);  // Extrai o nome de usuário do token
-    }
-
-    public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
-        final Claims claims = extractAllClaims(token);  // Extrai todos os claims do token
-        return claimsResolver.apply(claims);  // Aplica a função para extrair o valor desejado
-    }
-
-    private Claims extractAllClaims(String token) {
         try {
-            return Jwts.parserBuilder()
-                    .setSigningKey(getSigningKey())
-                    .build()
-                    .parseClaimsJws(token)
-                    .getBody();
-        } catch (io.jsonwebtoken.ExpiredJwtException e) {
-            throw new RuntimeException("Token expirado. Faça login novamente.");
-        } catch (io.jsonwebtoken.JwtException e) {
-            throw new RuntimeException("Token inválido.");
+            return decryptToken(token).getSubject();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public <T> T extractClaim(String token, Function<JWTClaimsSet, T> resolver) {
+        try {
+            return resolver.apply(decryptToken(token));
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public JWTClaimsSet decryptToken(String token) {
+        try {
+            EncryptedJWT jwt = EncryptedJWT.parse(token);
+            jwt.decrypt(new DirectDecrypter(secretKey));
+            return jwt.getJWTClaimsSet();
+        } catch (Exception e) {
+            throw new TokenExpiradoException("Token inválido ou corrompido.");
         }
     }
 }

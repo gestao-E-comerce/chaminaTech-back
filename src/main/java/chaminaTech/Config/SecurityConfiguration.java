@@ -35,7 +35,7 @@ public class SecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/api/login", "/api/app/impressao/**", "/api/ws/**", "/sockjs/**").permitAll()
+                        .requestMatchers("/api/login", "/api/ws/**", "/sockjs/**").permitAll()
                         .anyRequest().authenticated())
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
@@ -58,9 +58,9 @@ public class SecurityConfiguration {
         // Configuração padrão para os outros endpoints
         CorsConfiguration defaultConfig = new CorsConfiguration();
         defaultConfig.setAllowCredentials(true);
-//        defaultConfig.setAllowedOrigins(List.of("http://localhost:4200", "https://chaminatech.com",
-//                "https://www.chaminatech.com", "http://192.168.0.104:4200"));
-        defaultConfig.addAllowedOriginPattern("*");
+        defaultConfig.setAllowedOrigins(List.of("http://localhost:4200", "https://chaminatech.com",
+                "https://www.chaminatech.com"));
+//        defaultConfig.addAllowedOriginPattern("*");
         defaultConfig.setAllowedMethods(Arrays.asList(HttpMethod.GET.name(), HttpMethod.POST.name(),
                 HttpMethod.PUT.name(), HttpMethod.DELETE.name(), HttpMethod.PATCH.name(), HttpMethod.OPTIONS.name()));
         defaultConfig.setAllowedHeaders(Arrays.asList(HttpHeaders.AUTHORIZATION, HttpHeaders.CONTENT_TYPE,

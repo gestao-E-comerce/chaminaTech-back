@@ -7,7 +7,7 @@ if %errorlevel% neq 0 (
     exit /b
 )
 
-set "INSTALL_DIR=C:\MeuServicoInstaller"
+set "INSTALL_DIR=C:\ChaminaTechApp"
 if not exist "%INSTALL_DIR%" (
     mkdir "%INSTALL_DIR%"
     xcopy "%~dp0*" "%INSTALL_DIR%\" /E /H /C /I >nul
@@ -19,14 +19,14 @@ if not exist "%INSTALL_DIR%" (
 )
 
 cd /d "%INSTALL_DIR%"
-set "TASK_NAME=MeuServicoTask"
+set "TASK_NAME=ChaminaTechTask"
 schtasks /query /tn "%TASK_NAME%" >nul 2>&1
 if %errorlevel%==0 (
     schtasks /end /tn "%TASK_NAME%" >nul 2>&1
     schtasks /delete /tn "%TASK_NAME%" /f >nul 2>&1
 )
 
-set "LOG_DIR=C:\MeuServicoLogs"
+set "LOG_DIR=C:\ChaminaTechLogs"
 if exist "%LOG_DIR%" (
     rmdir /s /q "%LOG_DIR%"
 )
@@ -36,6 +36,7 @@ if exist "%INSTALL_DIR%\start_app.bat" (
 )
 
 set MATRIZ_ID=${MATRIZ_ID}
+set TOKEN=${TOKEN}
 set PORT=8080
 :PORT_CHECK
 netstat -ano | findstr :%PORT% >nul 2>&1
@@ -44,37 +45,27 @@ if %errorlevel%==0 (
     goto PORT_CHECK
 )
 
+:: ---------- LOCALIZA / INSTALA JDK 17 ----------
 set "JAVA_EXEC="
-for /f "delims=" %%i in ('where javaw 2^>nul') do (
-    "%%i" -version 2>&1 | findstr /i "17\." >nul
-    if not errorlevel 1 (
-        set "JAVA_EXEC=%%i"
-        goto JAVA_FOUND
-    )
+for /d %%D in ("C:\Program Files\Eclipse Adoptium\jdk-17*") do (
+    if exist "%%D\bin\java.exe" set "JAVA_EXEC=%%D\bin\java.exe"
 )
 
-if not exist "%INSTALL_DIR%\jdk64.msi" (
-    echo [ERRO] Arquivo jdk64.msi nao encontrado em %INSTALL_DIR%.
-    pause
-    exit /b
-)
-msiexec /i "%INSTALL_DIR%\jdk64.msi" /quiet /norestart
-if %errorlevel% neq 0 (
-    echo [ERRO] Falha ao instalar o JDK. Verifique o instalador.
-    pause
-    exit /b
-)
-
-for /f "delims=" %%i in ('where javaw 2^>nul') do (
-    "%%i" -version 2>&1 | findstr /i "17\." >nul
-    if not errorlevel 1 (
-        set "JAVA_EXEC=%%i"
-        goto JAVA_FOUND
+if not defined JAVA_EXEC (
+    if not exist "%INSTALL_DIR%\jdk64.msi" (
+        echo [ERRO] Java 17 nao encontrado e jdk64.msi ausente.
+        pause & exit /b
+    )
+    echo [INFO] Instalando Java 17…
+    msiexec /i "%INSTALL_DIR%\jdk64.msi" /quiet /norestart
+    for /d %%D in ("C:\Program Files\Eclipse Adoptium\jdk-17*") do (
+        if exist "%%D\bin\java.exe" set "JAVA_EXEC=%%D\bin\java.exe"
     )
 )
-echo [ERRO] JDK nao foi instalado corretamente. Abandonando o instalador.
-pause
-exit /b
+if not defined JAVA_EXEC (
+    echo [ERRO] Java 17 ainda nao localizado. Abortando.
+    pause & exit /b
+)
 
 :JAVA_FOUND
 for %%a in ("%JAVA_EXEC%") do set "JAVA_HOME=%%~dpa.."
@@ -88,7 +79,7 @@ if not exist "%APP_PATH%" (
 mkdir "%LOG_DIR%"
 (
     echo @echo off
-    echo start "" /B "%JAVA_EXEC%" -jar "%APP_PATH%" --server.port=%PORT% --matriz.id=%MATRIZ_ID% ^> "%LOG_DIR%\stdout.log" 2^> "%LOG_DIR%\stderr.log"
+    echo start "" /B "%JAVA_EXEC%" -jar "%APP_PATH%" --server.port=%PORT% --matriz.id=%MATRIZ_ID% --token=%TOKEN% ^> "%LOG_DIR%\stdout.log" 2^> "%LOG_DIR%\stderr.log"
 ) > "%INSTALL_DIR%\start_app.bat"
 
 schtasks /create /tn "%TASK_NAME%" ^

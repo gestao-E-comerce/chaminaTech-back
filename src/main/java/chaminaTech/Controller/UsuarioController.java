@@ -23,4 +23,14 @@ public class UsuarioController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @PostMapping("/token")
+    public ResponseEntity<UsuarioDTO> findUsuarioByToken(@RequestBody String token) {
+        try {
+            UsuarioDTO usuarioDTO = usuarioService.findUsuarioByToken(token);
+            return ResponseEntity.ok(usuarioDTO);
+        } catch (Exception e) {
+            return ResponseEntity.status(401).build();
+        }
+    }
 }

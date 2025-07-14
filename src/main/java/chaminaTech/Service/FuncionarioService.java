@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,6 +37,15 @@ public class FuncionarioService {
     public FuncionarioDTO findFuncionarioById(Long id) {
         Funcionario funcionario = funcionarioRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Funcionário não encontrado!"));
         return entityToDTO.funcionarioToDTO(funcionario);
+    }
+
+    public List<FuncionarioDTO> listarTudosFuncionarios(Long matrizId) {
+        PermissaoUtil.validarOuLancar("funcionario");
+        Usuario usuarioLogado = PermissaoUtil.getUsuarioLogado();
+
+        return funcionarioRepository.buscarTudosFuncionarios(matrizId).stream()
+                .map(entityToDTO::funcionarioToDTO)
+                .collect(Collectors.toList());
     }
 
     public List<FuncionarioDTO> listarFuncionarios(Long matrizId, String termoPesquisa, Boolean ativo) {
@@ -76,17 +86,11 @@ public class FuncionarioService {
     public MensagemDTO cadastrarFuncionario(FuncionarioDTO funcionarioDTO) {
         PermissaoUtil.validarOuLancar("cadastrarFuncionario");
         Funcionario funcionario = dtoToEntity.DTOToFuncionario(funcionarioDTO);
-//        Long matrizId = funcionario.getMatriz().getId();
-//        int totalFuncionarios = funcionarioRepository.contarFuncionariosAtivosPorMatriz(matrizId);
-//        int limiteFuncionarios = funcionario.getMatriz().getLimiteFuncionarios();
-//
-//        if (totalFuncionarios == limiteFuncionarios) {
-//            throw new IllegalStateException("Limite máximo de funcionários já foi atingido para esta matriz.");
-//        }
 
-        if (funcionario.getPassword() == null) {
+        if (funcionario.getPassword() == null || funcionario.getPassword().isBlank()) {
             throw new IllegalStateException("Password obrigatório!");
         }
+        validarSenhaOuLancar(funcionario.getPassword());
         if (loginRepository.existsByUsername(funcionario.getUsername())) {
             throw new IllegalStateException("Username inválido! Tente outro!");
         }
@@ -113,12 +117,13 @@ public class FuncionarioService {
         funcionarioDTO.setId(id);
         Funcionario funcionario = dtoToEntity.DTOToFuncionario(funcionarioDTO);
         if (loginRepository.existsByUsernameExcludingId(funcionario.getUsername(), funcionario.getId())) {
-            throw new IllegalStateException("UserName indispensável!.");
+            throw new IllegalStateException("Username inválido! Tente outro!");
         }
         if (funcionario.getPassword() == null) {
             String senha = loginRepository.findSenhaById(funcionario.getId());
             funcionario.setPassword(senha);
         } else {
+            validarSenhaOuLancar(funcionario.getPassword());
             funcionario.setPassword(passwordEncoder.encode(funcionario.getPassword()));
         }
 
@@ -207,5 +212,20 @@ public class FuncionarioService {
         funcionario.setDeletado(true);
         funcionario.setAtivo(false);
         funcionarioRepository.save(funcionario);
+    }
+
+    private void validarSenhaOuLancar(String senha) {
+        List<String> erros = new ArrayList<>();
+
+        if (senha.length() < 8) erros.add("mínimo de 8 caracteres");
+        if (!senha.matches(".*[A-Z].*")) erros.add("1 letra maiúscula");
+        if (!senha.matches(".*[a-z].*")) erros.add("1 letra minúscula");
+        if (!senha.matches(".*\\d.*")) erros.add("1 número");
+        if (!senha.matches(".*[\\W_].*")) erros.add("1 caractere especial");
+        if (senha.matches(".*\\s.*")) erros.add("sem espaços");
+
+        if (!erros.isEmpty()) {
+            throw new IllegalArgumentException("Senha inválida: deve conter " + String.join(", ", erros) + ".");
+        }
     }
 }

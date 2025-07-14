@@ -1,6 +1,5 @@
 package chaminaTech.DTO;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,7 +11,6 @@ import java.sql.Timestamp;
 public class DepositoDescartarDTO {
     private Long id;
 
-    @JsonIgnoreProperties(value = {"matriz"})
     private MateriaDTO materia;
 
     private BigDecimal quantidade = BigDecimal.ZERO;
@@ -21,6 +19,5 @@ public class DepositoDescartarDTO {
 
     private String motivo;
 
-    @JsonIgnoreProperties(value = {"configuracaoEntrega", "configuracaoRetirada", "configuracaoImpressao", "configuracaoTaxaServico", }, allowSetters = true)
     private MatrizDTO matriz;
 }

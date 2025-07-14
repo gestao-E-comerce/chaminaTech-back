@@ -82,11 +82,11 @@ public class EntityToDTO {
             matrizDTO.setConfiguracaoTaxaServico(configuracaoTaxaServicoDTO);
         }
 
-        if (matriz.getMatriz() != null) {
-            MatrizDTO filhoDTO = new MatrizDTO();
-            filhoDTO.setId(matriz.getMatriz().getId());
-            matrizDTO.setMatriz(filhoDTO.getMatriz());
-        }
+//        if (matriz.getMatriz() != null) {
+//            MatrizDTO filhoDTO = new MatrizDTO();
+//            filhoDTO.setId(matriz.getMatriz().getId());
+//            matrizDTO.setMatriz(filhoDTO);
+//        }
 
         if (matriz.getPermissao() != null) {
             PermissaoDTO permissaoDTO = permissaoToDTO(matriz.getPermissao());
@@ -228,10 +228,6 @@ public class EntityToDTO {
         if (gestaoCaixa.getMatriz() != null) {
             MatrizDTO matrizDTO = new MatrizDTO();
             matrizDTO.setId(gestaoCaixa.getMatriz().getId());
-//
-//            matrizDTO.setConfiguracaoImpressao(
-//                    configuracaoImpressaoToDTO(gestaoCaixa.getMatriz().getConfiguracaoImpressao())
-//            );
 
             gestaoCaixaDTO.setMatriz(matrizDTO);
         }
@@ -286,17 +282,18 @@ public class EntityToDTO {
         funcionarioDTO.setPreferenciaImpressaoProdutoNovo(funcionario.getPreferenciaImpressaoProdutoNovo());
         funcionarioDTO.setPreferenciaImpressaoProdutoDeletado(funcionario.getPreferenciaImpressaoProdutoDeletado());
 
-        MatrizDTO matrizDTO = new MatrizDTO();
         if (funcionario.getMatriz() != null) {
+            MatrizDTO matrizDTO = new MatrizDTO();
             matrizDTO.setId(funcionario.getMatriz().getId());
             funcionarioDTO.setMatriz(matrizDTO);
         }
 
         List<CaixaDTO> listaCaixas = new ArrayList<>();
-        if (funcionario.getCaixas() != null)
+        if (funcionario.getCaixas() != null) {
             for (int i = 0; i < funcionario.getCaixas().size(); i++) {
                 listaCaixas.add(caixaToDTO(funcionario.getCaixas().get(i)));
             }
+        }
         funcionarioDTO.setCaixas(listaCaixas);
 
         if (funcionario.getPermissao() != null) {
@@ -400,8 +397,8 @@ public class EntityToDTO {
         permissaoDTO.setEditarRelatorio(permissao.getEditarRelatorio());
         permissaoDTO.setDeletarRelatorio(permissao.getDeletarRelatorio());
 
-        UsuarioDTO usuarioDTO = new UsuarioDTO();
         if (permissao.getUsuario() != null) {
+            UsuarioDTO usuarioDTO = new UsuarioDTO();
             usuarioDTO.setId(permissao.getUsuario().getId());
             permissaoDTO.setUsuario(usuarioDTO);
         }
@@ -421,15 +418,15 @@ public class EntityToDTO {
         depositoDTO.setDataCadastrar(deposito.getDataCadastrar());
         depositoDTO.setDataDesativar(deposito.getDataDesativar());
 
-        MateriaDTO materiaDTO = new MateriaDTO();
         if (deposito.getMateria() != null) {
+            MateriaDTO materiaDTO = new MateriaDTO();
             materiaDTO.setId(deposito.getMateria().getId());
             materiaDTO.setNome(deposito.getMateria().getNome());
             depositoDTO.setMateria(materiaDTO);
         }
 
-        MatrizDTO matrizDTO = new MatrizDTO();
         if (deposito.getMatriz() != null) {
+            MatrizDTO matrizDTO = new MatrizDTO();
             matrizDTO.setId(deposito.getMatriz().getId());
             depositoDTO.setMatriz(matrizDTO);
         }
@@ -445,15 +442,15 @@ public class EntityToDTO {
         depositoDescartarDTO.setDataDescartar(depositoDescartar.getDataDescartar());
         depositoDescartarDTO.setMotivo(depositoDescartar.getMotivo());
 
-        MateriaDTO materiaDTO = new MateriaDTO();
         if (depositoDescartar.getMateria() != null) {
+            MateriaDTO materiaDTO = new MateriaDTO();
             materiaDTO.setId(depositoDescartar.getMateria().getId());
             materiaDTO.setNome(depositoDescartar.getMateria().getNome());
             depositoDescartarDTO.setMateria(materiaDTO);
         }
 
-        MatrizDTO matrizDTO = new MatrizDTO();
         if (depositoDescartar.getMatriz() != null) {
+            MatrizDTO matrizDTO = new MatrizDTO();
             matrizDTO.setId(depositoDescartar.getMatriz().getId());
             depositoDescartarDTO.setMatriz(matrizDTO);
         }
@@ -473,16 +470,16 @@ public class EntityToDTO {
         estoqueDTO.setDataCadastrar(estoque.getDataCadastrar());
         estoqueDTO.setDataDesativar(estoque.getDataDesativar());
 
-        ProdutoDTO produtoDTO = new ProdutoDTO();
         if (estoque.getProduto() != null) {
+            ProdutoDTO produtoDTO = new ProdutoDTO();
             produtoDTO.setId(estoque.getProduto().getId());
             produtoDTO.setNome(estoque.getProduto().getNome());
             produtoDTO.setValor(estoque.getProduto().getValor());
             estoqueDTO.setProduto(produtoDTO);
         }
 
-        MatrizDTO matrizDTO = new MatrizDTO();
         if (estoque.getMatriz() != null) {
+            MatrizDTO matrizDTO = new MatrizDTO();
             matrizDTO.setId(estoque.getMatriz().getId());
             estoqueDTO.setMatriz(matrizDTO);
         }
@@ -499,16 +496,16 @@ public class EntityToDTO {
         estoqueDescartarDTO.setDataDescartar(estoqueDescartar.getDataDescartar());
         estoqueDescartarDTO.setMotivo(estoqueDescartar.getMotivo());
 
-        ProdutoDTO produtoDTO = new ProdutoDTO();
         if (estoqueDescartar.getProduto() != null) {
+            ProdutoDTO produtoDTO = new ProdutoDTO();
             produtoDTO.setId(estoqueDescartar.getProduto().getId());
             produtoDTO.setNome(estoqueDescartar.getProduto().getNome());
             produtoDTO.setValor(estoqueDescartar.getProduto().getValor());
             estoqueDescartarDTO.setProduto(produtoDTO);
         }
 
-        MatrizDTO matrizDTO = new MatrizDTO();
         if (estoqueDescartar.getMatriz() != null) {
+            MatrizDTO matrizDTO = new MatrizDTO();
             matrizDTO.setId(estoqueDescartar.getMatriz().getId());
             estoqueDescartarDTO.setMatriz(matrizDTO);
         }
@@ -549,15 +546,15 @@ public class EntityToDTO {
         caixaDTO.setSaldo(caixa.getSaldo());
         caixaDTO.setNomeImpressora(caixa.getNomeImpressora());
 
-        FuncionarioDTO funcionarioDTO = new FuncionarioDTO();
         if (caixa.getFuncionario() != null) {
+            FuncionarioDTO funcionarioDTO = new FuncionarioDTO();
             funcionarioDTO.setId(caixa.getFuncionario().getId());
             funcionarioDTO.setNome(caixa.getFuncionario().getNome());
             caixaDTO.setFuncionario(funcionarioDTO);
         }
 
-        MatrizDTO matrizDTO = new MatrizDTO();
         if (caixa.getMatriz() != null) {
+            MatrizDTO matrizDTO = new MatrizDTO();
             matrizDTO.setId(caixa.getMatriz().getId());
             caixaDTO.setMatriz(matrizDTO);
         }
@@ -599,7 +596,34 @@ public class EntityToDTO {
         return caixaDTO;
     }
 
-    private SuprimentoDTO suprimentoToDTO(Suprimento suprimento) {
+    public CaixaDTO caixaToDTORelatorio(Caixa caixa) {
+        CaixaDTO caixaDTO = new CaixaDTO();
+
+        caixaDTO.setId(caixa.getId());
+        caixaDTO.setAtivo(caixa.getAtivo());
+        caixaDTO.setDeletado(caixa.getDeletado());
+        caixaDTO.setValorAbertura(caixa.getValorAbertura());
+        caixaDTO.setDataAbertura(caixa.getDataAbertura());
+        caixaDTO.setDataFechamento(caixa.getDataFechamento());
+        caixaDTO.setSaldo(caixa.getSaldo());
+
+        if (caixa.getFuncionario() != null) {
+            FuncionarioDTO funcionarioDTO = new FuncionarioDTO();
+            funcionarioDTO.setId(caixa.getFuncionario().getId());
+            funcionarioDTO.setNome(caixa.getFuncionario().getNome());
+            caixaDTO.setFuncionario(funcionarioDTO);
+        }
+
+        if (caixa.getMatriz() != null) {
+            MatrizDTO matrizDTO = new MatrizDTO();
+            matrizDTO.setId(caixa.getMatriz().getId());
+            caixaDTO.setMatriz(matrizDTO);
+        }
+
+        return caixaDTO;
+    }
+
+    public SuprimentoDTO suprimentoToDTO(Suprimento suprimento) {
         SuprimentoDTO suprimentoDTO = new SuprimentoDTO();
 
         suprimentoDTO.setId(suprimento.getId());
@@ -609,14 +633,14 @@ public class EntityToDTO {
         suprimentoDTO.setValor(suprimento.getValor());
         suprimentoDTO.setNomeImpressora(suprimento.getNomeImpressora());
 
-        if (suprimentoDTO.getFuncionario() != null) {
+        if (suprimento.getFuncionario() != null) {
             FuncionarioDTO funcionarioDTO = new FuncionarioDTO();
             funcionarioDTO.setId(suprimento.getFuncionario().getId());
             funcionarioDTO.setNome(suprimento.getFuncionario().getNome());
             suprimentoDTO.setFuncionario(funcionarioDTO);
         }
 
-        if (suprimentoDTO.getCaixa() != null) {
+        if (suprimento.getCaixa() != null) {
             CaixaDTO caixaDTO = new CaixaDTO();
             caixaDTO.setId(suprimento.getCaixa().getId());
             suprimentoDTO.setCaixa(caixaDTO);
@@ -625,7 +649,7 @@ public class EntityToDTO {
         return suprimentoDTO;
     }
 
-    private GorjetaDTO gorjetaToDTO(Gorjeta gorjeta) {
+    public GorjetaDTO gorjetaToDTO(Gorjeta gorjeta) {
         GorjetaDTO gorjetaDTO = new GorjetaDTO();
 
         gorjetaDTO.setId(gorjeta.getId());
@@ -637,14 +661,14 @@ public class EntityToDTO {
         gorjetaDTO.setPix(gorjeta.getPix());
         gorjetaDTO.setNomeImpressora(gorjeta.getNomeImpressora());
 
-        if (gorjetaDTO.getFuncionario() != null) {
+        if (gorjeta.getFuncionario() != null) {
             FuncionarioDTO funcionarioDTO = new FuncionarioDTO();
             funcionarioDTO.setId(gorjeta.getFuncionario().getId());
             funcionarioDTO.setNome(gorjeta.getFuncionario().getNome());
             gorjetaDTO.setFuncionario(funcionarioDTO);
         }
 
-        if (gorjetaDTO.getCaixa() != null) {
+        if (gorjeta.getCaixa() != null) {
             CaixaDTO caixaDTO = new CaixaDTO();
             caixaDTO.setId(gorjeta.getCaixa().getId());
             gorjetaDTO.setCaixa(caixaDTO);
@@ -653,7 +677,7 @@ public class EntityToDTO {
         return gorjetaDTO;
     }
 
-    private SangriaDTO sangriaToDTO(Sangria sangria) {
+    public SangriaDTO sangriaToDTO(Sangria sangria) {
         SangriaDTO sangriaDTO = new SangriaDTO();
 
         sangriaDTO.setId(sangria.getId());
@@ -665,14 +689,14 @@ public class EntityToDTO {
         sangriaDTO.setTipo(sangria.getTipo());
         sangriaDTO.setNomeFuncionario(sangria.getNomeFuncionario());
 
-        if (sangriaDTO.getFuncionario() != null) {
+        if (sangria.getFuncionario() != null) {
             FuncionarioDTO funcionarioDTO = new FuncionarioDTO();
             funcionarioDTO.setId(sangria.getFuncionario().getId());
             funcionarioDTO.setNome(sangria.getFuncionario().getNome());
             sangriaDTO.setFuncionario(funcionarioDTO);
         }
 
-        if (sangriaDTO.getCaixa() != null) {
+        if (sangria.getCaixa() != null) {
             CaixaDTO caixaDTO = new CaixaDTO();
             caixaDTO.setId(sangria.getCaixa().getId());
             sangriaDTO.setCaixa(caixaDTO);
@@ -720,8 +744,8 @@ public class EntityToDTO {
             vendaDTO.setEndereco(enderecoToDTO(venda.getEndereco()));
         }
 
-        FuncionarioDTO funcionarioDTO = new FuncionarioDTO();
         if (venda.getFuncionario() != null) {
+            FuncionarioDTO funcionarioDTO = new FuncionarioDTO();
             funcionarioDTO.setId(venda.getFuncionario().getId());
             funcionarioDTO.setNome(venda.getFuncionario().getNome());
             vendaDTO.setFuncionario(funcionarioDTO);
@@ -780,6 +804,77 @@ public class EntityToDTO {
             vendaPagamentoDTO.setServicoDebito(venda.getVendaPagamento().getServicoDebito());
             vendaPagamentoDTO.setServicoPix(venda.getVendaPagamento().getServicoPix());
 
+
+            vendaDTO.setVendaPagamento(vendaPagamentoDTO);
+        }
+
+        return vendaDTO;
+    }
+
+    public VendaDTO vendaToDTORelatorio(Venda venda) {
+        VendaDTO vendaDTO = new VendaDTO();
+
+        vendaDTO.setId(venda.getId());
+        vendaDTO.setMesa(venda.getMesa());
+        vendaDTO.setRetirada(venda.getRetirada());
+        vendaDTO.setEntrega(venda.getEntrega());
+        vendaDTO.setBalcao(venda.getBalcao());
+        vendaDTO.setDeletado(venda.getDeletado());
+        vendaDTO.setValorTotal(venda.getValorTotal());
+        vendaDTO.setDataVenda(venda.getDataVenda());
+        vendaDTO.setTaxaEntrega(venda.getTaxaEntrega());
+        vendaDTO.setValorServico(venda.getValorServico());
+        vendaDTO.setValorBruto(venda.getValorBruto());
+        vendaDTO.setDesconto(venda.getDesconto());
+
+        if (venda.getFuncionario() != null) {
+            FuncionarioDTO funcionarioDTO = new FuncionarioDTO();
+            funcionarioDTO.setId(venda.getFuncionario().getId());
+            funcionarioDTO.setNome(venda.getFuncionario().getNome());
+            vendaDTO.setFuncionario(funcionarioDTO);
+        }
+
+        if (venda.getVendaPagamento() != null) {
+            VendaPagamentoDTO vendaPagamentoDTO = new VendaPagamentoDTO();
+
+            vendaPagamentoDTO.setId(venda.getVendaPagamento().getId());
+            vendaPagamentoDTO.setDinheiro(venda.getVendaPagamento().getDinheiro());
+            vendaPagamentoDTO.setPix(venda.getVendaPagamento().getPix());
+            vendaPagamentoDTO.setDebito(venda.getVendaPagamento().getDebito());
+            vendaPagamentoDTO.setCredito(venda.getVendaPagamento().getCredito());
+
+            vendaDTO.setVendaPagamento(vendaPagamentoDTO);
+        }
+
+        return vendaDTO;
+    }
+    public VendaDTO vendaConsumoToDTORelatorio(Venda venda) {
+        VendaDTO vendaDTO = new VendaDTO();
+
+        vendaDTO.setId(venda.getId());
+        vendaDTO.setMesa(venda.getMesa());
+        vendaDTO.setRetirada(venda.getRetirada());
+        vendaDTO.setEntrega(venda.getEntrega());
+        vendaDTO.setBalcao(venda.getBalcao());
+        vendaDTO.setDeletado(venda.getDeletado());
+        vendaDTO.setValorTotal(venda.getValorTotal());
+        vendaDTO.setDataVenda(venda.getDataVenda());
+
+        if (venda.getFuncionario() != null) {
+            FuncionarioDTO funcionarioDTO = new FuncionarioDTO();
+            funcionarioDTO.setId(venda.getFuncionario().getId());
+            funcionarioDTO.setNome(venda.getFuncionario().getNome());
+            vendaDTO.setFuncionario(funcionarioDTO);
+        }
+
+        if (venda.getVendaPagamento() != null) {
+            VendaPagamentoDTO vendaPagamentoDTO = new VendaPagamentoDTO();
+
+            vendaPagamentoDTO.setId(venda.getVendaPagamento().getId());
+            vendaPagamentoDTO.setDinheiro(venda.getVendaPagamento().getDinheiro());
+            vendaPagamentoDTO.setPix(venda.getVendaPagamento().getPix());
+            vendaPagamentoDTO.setDebito(venda.getVendaPagamento().getDebito());
+            vendaPagamentoDTO.setCredito(venda.getVendaPagamento().getCredito());
 
             vendaDTO.setVendaPagamento(vendaPagamentoDTO);
         }
@@ -852,8 +947,8 @@ public class EntityToDTO {
             vendaDTO.setId(produtoVenda.getVenda().getId());
             produtoVendaDTO.setVenda(vendaDTO);
         }
-        FuncionarioDTO funcionarioDTO = new FuncionarioDTO();
         if (produtoVenda.getFuncionario() != null) {
+            FuncionarioDTO funcionarioDTO = new FuncionarioDTO();
             funcionarioDTO.setId(produtoVenda.getFuncionario().getId());
             funcionarioDTO.setNome(produtoVenda.getFuncionario().getNome());
             produtoVendaDTO.setFuncionario(funcionarioDTO);
@@ -910,8 +1005,8 @@ public class EntityToDTO {
                         .collect(Collectors.toList()) : new ArrayList<>();
         produtoDTO.setProdutoCompostos(compostosDTO);
 
-        MatrizDTO matrizDTO = new MatrizDTO();
         if (produto.getMatriz() != null) {
+            MatrizDTO matrizDTO = new MatrizDTO();
             matrizDTO.setId(produto.getMatriz().getId());
             produtoDTO.setMatriz(matrizDTO);
         }
@@ -1033,8 +1128,8 @@ public class EntityToDTO {
             observacoesDTO.setValor(observacoes.getValor());
         }
 
-        CategoriaDTO categoriaDTO = new CategoriaDTO();
         if (observacoes.getCategoria() != null) {
+            CategoriaDTO categoriaDTO = new CategoriaDTO();
             categoriaDTO.setId(observacoes.getCategoria().getId());
             observacoesDTO.setCategoria(categoriaDTO);
         }
@@ -1067,8 +1162,8 @@ public class EntityToDTO {
         observacoesDTO.setId(ObservacaoMateria.getObservacoes().getId());
         observacaoMateriaDTO.setObservacoes(observacoesDTO);
 
-        MateriaDTO materiaDTO = new MateriaDTO();
         if (ObservacaoMateria.getMateria() != null) {
+            MateriaDTO materiaDTO = new MateriaDTO();
             materiaDTO.setId(ObservacaoMateria.getMateria().getId());
             materiaDTO.setAtivo(ObservacaoMateria.getMateria().getAtivo());
             materiaDTO.setDeletado(ObservacaoMateria.getMateria().getDeletado());
@@ -1153,30 +1248,43 @@ public class EntityToDTO {
         return adminFuncionarioDTO;
     }
 
-    public RelatorioDTO relatorioToDTO(Relatorio relatorio) {
-        RelatorioDTO relatorioDTO = new RelatorioDTO();
-
-        relatorioDTO.setId(relatorio.getId());
-        relatorioDTO.setNome(relatorio.getNome());
-        if (relatorio.getMatriz() != null) {
+    public RelatorioDTO relatorioToDTO(Relatorio entity) {
+        RelatorioDTO dto = new RelatorioDTO();
+        dto.setId(entity.getId());
+        dto.setNome(entity.getNome());
+        dto.setTipoConsulta(entity.getTipoConsulta());
+        if (entity.getMatriz() != null) {
             MatrizDTO matrizDTO = new MatrizDTO();
-            matrizDTO.setId(relatorio.getMatriz().getId());
-            relatorioDTO.setMatriz(matrizDTO);
+            matrizDTO.setId(entity.getMatriz().getId());
+            dto.setMatriz(matrizDTO);
         }
-        relatorioDTO.setTipoConsulta(relatorio.getTipoConsulta());
-        relatorioDTO.setDeletado(relatorio.getDeletado());
-        relatorioDTO.setFuncionarioId(relatorio.getFuncionarioId());
-        relatorioDTO.setTiposVenda(relatorio.getTiposVenda());
-        relatorioDTO.setDataInicio(relatorio.getDataInicio());
-        relatorioDTO.setDataFim(relatorio.getDataFim());
-        relatorioDTO.setTaxaEntrega(relatorio.getTaxaEntrega());
-        relatorioDTO.setTaxaServico(relatorio.getTaxaServico());
-        relatorioDTO.setDesconto(relatorio.getDesconto());
-        relatorioDTO.setFormasPagamento(relatorio.getFormasPagamento());
-        relatorioDTO.setOrdenacao(relatorio.getOrdenacao());
-        relatorioDTO.setPagina(relatorio.getPagina());
-        relatorioDTO.setTamanho(relatorio.getTamanho());
-
-        return relatorioDTO;
+        dto.setDeletado(entity.getDeletado());
+        dto.setAtivo(entity.getAtivo());
+        dto.setFuncionarioId(entity.getFuncionarioId());
+        dto.setClienteId(entity.getClienteId());
+        dto.setBalcao(entity.getBalcao());
+        dto.setRetirada(entity.getRetirada());
+        dto.setEntrega(entity.getEntrega());
+        dto.setMesa(entity.getMesa());
+        dto.setDataInicio(entity.getDataInicio());
+        dto.setDataFim(entity.getDataFim());
+        dto.setTaxaEntrega(entity.getTaxaEntrega());
+        dto.setTaxaServico(entity.getTaxaServico());
+        dto.setDesconto(entity.getDesconto());
+        dto.setPix(entity.getPix());
+        dto.setDebito(entity.getDebito());
+        dto.setCredito(entity.getCredito());
+        dto.setDinheiro(entity.getDinheiro());
+        dto.setPeriodoDia(entity.getPeriodoDia());
+        dto.setTipo(entity.getTipo());
+        dto.setCaixaId(entity.getCaixaId());
+        dto.setFuncionarioNome(entity.getFuncionarioNome());
+        dto.setProdutoId(entity.getProdutoId());
+        dto.setMateriaId(entity.getMateriaId());
+        dto.setOrdenacao(entity.getOrdenacao());
+        dto.setAgrupamento(entity.getAgrupamento());
+        dto.setPagina(entity.getPagina());
+        dto.setTamanho(entity.getTamanho());
+        return dto;
     }
 }

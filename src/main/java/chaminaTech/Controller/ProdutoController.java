@@ -50,6 +50,15 @@ public class ProdutoController {
         List<ProdutoDTO> resultado = produtoService.listarProdutosComFiltro(matrizId, ativo, cardapio, estocavel, validarExestencia, categoriaNome, nome);
         return ResponseEntity.ok(resultado);
     }
+
+    @GetMapping("/listaTudos")
+    public ResponseEntity<List<ProdutoDTO>> listarTudo(
+            @RequestParam Long matrizId
+    ) {
+        List<ProdutoDTO> resultado = produtoService.listarTudosProdutos(matrizId);
+        return ResponseEntity.ok(resultado);
+    }
+
     @GetMapping("/listarProdutosEstoque")
     public ResponseEntity<List<ProdutoDTO>> listarProdutosEstoque(
             @RequestParam Long matrizId,

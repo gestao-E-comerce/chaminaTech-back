@@ -1,8 +1,5 @@
 package chaminaTech.DTO;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import jakarta.persistence.Column;
-import jakarta.persistence.JoinColumn;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,17 +11,13 @@ import java.sql.Timestamp;
 public class EstoqueDescartarDTO {
     private Long id;
 
-    @JsonIgnoreProperties(value = {"matriz"})
     private ProdutoDTO produto;
 
-    @Column(nullable = false)
     private BigDecimal quantidade = BigDecimal.ZERO;
 
     private Timestamp dataDescartar;
 
     private String motivo;
 
-    @JoinColumn(nullable = false)
-    @JsonIgnoreProperties(value = {"configuracaoEntrega", "configuracaoRetirada", "configuracaoImpressao", "configuracaoTaxaServico", }, allowSetters = true)
     private MatrizDTO matriz;
 }

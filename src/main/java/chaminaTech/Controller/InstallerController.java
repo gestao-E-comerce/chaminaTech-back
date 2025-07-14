@@ -1,5 +1,7 @@
 package chaminaTech.Controller;
 
+import chaminaTech.Service.AppImpressaoTokenService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
@@ -17,6 +19,8 @@ import java.util.zip.ZipOutputStream;
 @RequestMapping("/api/installer")
 @CrossOrigin(origins = "*")
 public class InstallerController {
+    @Autowired
+    private AppImpressaoTokenService appImpressaoTokenService;
 
     @GetMapping("/download")
     public ResponseEntity<Resource> downloadInstaller(@RequestParam("matrizId") Long matrizId) throws IOException {
@@ -28,30 +32,31 @@ public class InstallerController {
         Path zipPath = baseDir.resolve("installer.zip");
 
         // Verifica se os arquivos existem
-        if (!Files.exists(scriptTemplatePath) || !Files.exists(jarPath) ||
-                !Files.exists(jdk64Path)){
-            System.err.println("Erro: Alguns arquivos necessários não foram encontrados!");
-            throw new IOException("Verifique se installer-template.bat, app.jar, jdk64.msi estão presentes.");
+        if (!Files.exists(scriptTemplatePath) || !Files.exists(jarPath) || !Files.exists(jdk64Path)) {
+            throw new IOException("Arquivos necessários não encontrados.");
         }
 
-        // Substitui o placeholder no script
+        // Gera token em memória (não salva ainda)
+        String token = appImpressaoTokenService.gerarTokenMemoria(matrizId);
+
+        // Substitui os placeholders no .bat
         String scriptContent = Files.readString(scriptTemplatePath);
-        scriptContent = scriptContent.replace("${MATRIZ_ID}", matrizId.toString());
+        scriptContent = scriptContent
+                .replace("${MATRIZ_ID}", matrizId.toString())
+                .replace("${TOKEN}", token);
         Files.writeString(scriptPath, scriptContent);
 
-        // Lista de arquivos a serem zipados
-        List<Path> filesToZip = Arrays.asList(
-                scriptPath, jarPath, jdk64Path
-        );
-
-        // Compactar todos os arquivos
+        // Compacta os arquivos
+        List<Path> filesToZip = Arrays.asList(scriptPath, jarPath, jdk64Path);
         zipFiles(filesToZip, zipPath);
 
         // Verifica se o ZIP foi criado
         if (!Files.exists(zipPath)) {
-            System.err.println("Erro: Arquivo ZIP não foi criado.");
             throw new IOException("Falha ao criar o arquivo ZIP.");
         }
+
+        // Tudo certo → agora salva o token no banco
+        appImpressaoTokenService.criarRegistroToken(token, matrizId);
 
         Resource resource = new UrlResource(zipPath.toUri());
         return ResponseEntity.ok()

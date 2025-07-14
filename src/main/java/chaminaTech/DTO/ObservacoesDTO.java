@@ -1,6 +1,5 @@
 package chaminaTech.DTO;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,7 +12,6 @@ public class ObservacoesDTO {
 
     private Boolean ativo = true;
 
-    @JsonIgnoreProperties(value = {"produtos", "matriz","observacoes"})
     private CategoriaDTO categoria;
 
     private String observacao;
@@ -24,9 +22,7 @@ public class ObservacoesDTO {
 
     private Boolean extra = false;
 
-    @JsonIgnoreProperties("observacoes")
     private List<ObservacaoMateriaDTO> observacaoMaterias;
 
-    @JsonIgnoreProperties("observacoes")
     private List<ObservacaoProdutoDTO> observacaoProdutos;
 }

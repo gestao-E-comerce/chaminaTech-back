@@ -28,12 +28,9 @@ public class ProdutoVendaDTO {
 
     private List<ObservacoesDTO> observacoesProdutoVenda;
 
-//    @JsonIgnoreProperties(value = {"cliente","endereco","produtoVendas","funcionario","caixa","matriz","vendaPagamentos"})
     private VendaDTO venda;
 
-//    @JsonIgnoreProperties(value = {"matriz"})
     private ProdutoDTO produto;
 
-//    @JsonIgnoreProperties(value = {"matriz","caixas"})
     private FuncionarioDTO funcionario;
 }

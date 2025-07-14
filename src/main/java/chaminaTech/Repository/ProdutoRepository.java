@@ -33,6 +33,15 @@ public interface ProdutoRepository extends JpaRepository<Produto, Long> {
     );
 
     @Query("""
+                SELECT p FROM Produto p
+                WHERE p.matriz.id = :matrizId
+                ORDER BY p.codigo ASC
+            """)
+    List<Produto> listarTudosProdutos(
+            @Param("matrizId") Long matrizId
+    );
+
+    @Query("""
                 SELECT p, COALESCE(SUM(e.quantidade - e.quantidadeVendido), 0)
                 FROM Produto p
                 LEFT JOIN Estoque e ON e.produto = p AND e.deletado = false AND e.ativo = true AND e.matriz.id = p.matriz.id

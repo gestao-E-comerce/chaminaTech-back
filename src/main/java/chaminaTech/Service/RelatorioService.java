@@ -1,18 +1,14 @@
 package chaminaTech.Service;
 
-import chaminaTech.DTO.RelatorioDTO;
 import chaminaTech.DTO.MensagemDTO;
+import chaminaTech.DTO.RelatorioDTO;
 import chaminaTech.DTOService.DTOToEntity;
 import chaminaTech.DTOService.EntityToDTO;
 import chaminaTech.DTOService.PermissaoUtil;
-import chaminaTech.Entity.*;
+import chaminaTech.Entity.Relatorio;
 import chaminaTech.Repository.RelatorioRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -39,7 +35,7 @@ public class RelatorioService {
                 .collect(Collectors.toList());
     }
 
-    public MensagemDTO cadastrarRelatorio(RelatorioDTO relatorioDTO) {
+    public RelatorioDTO  cadastrarRelatorio(RelatorioDTO relatorioDTO) throws IllegalStateException {
         PermissaoUtil.validarOuLancar("cadastrarRelatorio");
         Relatorio relatorio = dtoToEntity.DTOToRelatorio(relatorioDTO);
 
@@ -48,7 +44,7 @@ public class RelatorioService {
         }
 
 
-        relatorioRepository.save(relatorio);
+        Relatorio salvo = relatorioRepository.save(relatorio);
         auditoriaService.salvarAuditoria(
                 "CADASTRAR",
                 "RELATORIO",
@@ -56,10 +52,10 @@ public class RelatorioService {
                 PermissaoUtil.getUsuarioLogado().getNome(),
                 relatorio.getMatriz().getId()
         );
-        return new MensagemDTO("Relatório cadastrado com sucesso!", HttpStatus.CREATED);
+        return entityToDTO.relatorioToDTO(salvo);
     }
 
-    public MensagemDTO editarRelatorio(Long id, RelatorioDTO relatorioDTO) {
+    public RelatorioDTO  editarRelatorio(Long id, RelatorioDTO relatorioDTO) throws IllegalStateException {
         PermissaoUtil.validarOuLancar("editarRelatorio");
         relatorioDTO.setId(id);
         Relatorio relatorio = dtoToEntity.DTOToRelatorio(relatorioDTO);
@@ -68,15 +64,15 @@ public class RelatorioService {
             throw new IllegalStateException("Já existe um relatorio com esse nome!");
         }
 
-        relatorioRepository.save(relatorio);
+        Relatorio salvo = relatorioRepository.save(relatorio);
         auditoriaService.salvarAuditoria(
                 "EDITAR",
-                "CATEGORIA",
+                "RELATORIO",
                 "Editou a relatório: " + relatorio.getNome(),
                 PermissaoUtil.getUsuarioLogado().getNome(),
                 relatorio.getMatriz().getId()
         );
-        return new MensagemDTO("Relatório atualizado com sucesso!", HttpStatus.CREATED);
+        return entityToDTO.relatorioToDTO(salvo);
     }
 
     public MensagemDTO deletarRelatorio(Long id) {
@@ -87,99 +83,11 @@ public class RelatorioService {
         relatorioRepository.delete(relatorioBanco);
         auditoriaService.salvarAuditoria(
                 "DELETAR",
-                "CATEGORIA",
+                "RELATORIO",
                 "Deletou a relatório: " + relatorioBanco.getNome(),
                 PermissaoUtil.getUsuarioLogado().getNome(),
                 relatorioBanco.getMatriz().getId()
         );
         return new MensagemDTO("Relatório deledato com sucesso!", HttpStatus.CREATED);
-    }
-
-    public Page<?> gerarRelatorio(RelatorioDTO relatorioDTO) {
-        Pageable pageable = criarPageable(relatorioDTO);
-
-        switch (relatorioDTO.getTipoConsulta()) {
-            case "VENDA":
-                return relatorioRepository.findVendasWithFilters(
-                        relatorioDTO.getDeletado(),
-                        relatorioDTO.getFuncionarioId(),
-                        relatorioDTO.getTiposVenda(),
-                        relatorioDTO.getDataInicio(),
-                        relatorioDTO.getDataFim(),
-                        relatorioDTO.getTaxaEntrega(),
-                        relatorioDTO.getTaxaServico(),
-                        relatorioDTO.getDesconto(),
-                        relatorioDTO.getFormasPagamento(),
-                        pageable
-                );
-            // você pode adicionar outros cases tipo:
-            // case "PRODUTO":
-            //     return produtoRepository.findComFiltros(...);
-            default:
-                throw new IllegalArgumentException("Tipo de consulta inválido: " + relatorioDTO.getTipoConsulta());
-        }
-    }
-
-    private Pageable criarPageable(RelatorioDTO relatorioDTO) {
-        String ordenar = relatorioDTO.getOrdenacao();
-        Sort sort;
-
-        if (ordenar == null || ordenar.isBlank()) {
-            sort = Sort.by(Sort.Direction.DESC, "dataVenda");
-        } else {
-            switch (ordenar) {
-                case "valorTotalDesc":
-                    sort = Sort.by(Sort.Direction.DESC, "valorTotal");
-                    break;
-                case "valorTotalAsc":
-                    sort = Sort.by(Sort.Direction.ASC, "valorTotal");
-                    break;
-
-                case "valorBrutoDesc":
-                    sort = Sort.by(Sort.Direction.DESC, "valorBruto");
-                    break;
-                case "valorBrutoAsc":
-                    sort = Sort.by(Sort.Direction.ASC, "valorBruto");
-                    break;
-
-                case "descontoDesc":
-                    sort = Sort.by(Sort.Direction.DESC, "desconto");
-                    break;
-                case "descontoAsc":
-                    sort = Sort.by(Sort.Direction.ASC, "desconto");
-                    break;
-
-                case "valorServicoDesc":
-                    sort = Sort.by(Sort.Direction.DESC, "valorServico");
-                    break;
-                case "valorServicoAsc":
-                    sort = Sort.by(Sort.Direction.ASC, "valorServico");
-                    break;
-
-                case "taxaEntregaDesc":
-                    sort = Sort.by(Sort.Direction.DESC, "taxaEntrega");
-                    break;
-                case "taxaEntregaAsc":
-                    sort = Sort.by(Sort.Direction.ASC, "taxaEntrega");
-                    break;
-
-                case "funcionarioAsc":
-                    sort = Sort.by(Sort.Direction.ASC, "funcionario.nome");
-                    break;
-                case "funcionarioDesc":
-                    sort = Sort.by(Sort.Direction.DESC, "funcionario.nome");
-                    break;
-
-                case "dataAsc":
-                    sort = Sort.by(Sort.Direction.ASC, "dataVenda");
-                    break;
-                case "dataDesc":
-                default:
-                    sort = Sort.by(Sort.Direction.DESC, "dataVenda");
-                    break;
-            }
-        }
-
-        return PageRequest.of(relatorioDTO.getPagina(), relatorioDTO.getTamanho(), sort);
     }
 }

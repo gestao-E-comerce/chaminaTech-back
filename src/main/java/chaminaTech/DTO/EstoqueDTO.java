@@ -1,6 +1,5 @@
 package chaminaTech.DTO;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,7 +14,6 @@ public class EstoqueDTO {
 
     private Boolean deletado = false;
 
-    @JsonIgnoreProperties(value = {"matriz"})
     private ProdutoDTO produto;
 
     private BigDecimal quantidade;
@@ -28,6 +26,5 @@ public class EstoqueDTO {
 
     private Timestamp dataDesativar;
 
-    @JsonIgnoreProperties(value = {"configuracaoEntrega", "configuracaoRetirada", "configuracaoImpressao", "configuracaoTaxaServico", }, allowSetters = true)
     private MatrizDTO matriz;
 }

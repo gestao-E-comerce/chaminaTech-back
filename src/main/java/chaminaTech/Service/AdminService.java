@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -40,12 +41,13 @@ public class AdminService {
         adminDTO.setId(id);
         Admin admin = dtoToEntity.DTOToAdmin(adminDTO);
         if (loginRepository.existsByUsernameExcludingId(admin.getUsername(), admin.getId())) {
-            throw new IllegalStateException("UserName indispensável!.");
+            throw new IllegalStateException("Username inválido! Tente outro!");
         }
-        if (admin.getPassword() == null){
+        if (admin.getPassword() == null) {
             String senha = loginRepository.findSenhaById(admin.getId());
             admin.setPassword(senha);
         } else {
+            validarSenhaOuLancar(admin.getPassword());
             admin.setPassword(passwordEncoder.encode(admin.getPassword()));
         }
 
@@ -56,6 +58,7 @@ public class AdminService {
     public List<MatrizDTO> listarMatrizes(String termoPesquisa, Boolean ativo) {
         return adminRepository.findAllMatrizes(termoPesquisa, ativo).stream().map(entityToDTO::matrizToDTO).toList();
     }
+
     public List<MatrizDTO> listarFilhos(String termoPesquisa, Boolean ativo) {
         return adminRepository.findAllFilhos(termoPesquisa, ativo).stream().map(entityToDTO::matrizToDTO).toList();
     }
@@ -64,5 +67,20 @@ public class AdminService {
         return adminRepository.findByRole("ADMIN")
                 .map(Admin::getChaveApiCoordenades)
                 .orElseThrow(() -> new RuntimeException("Administrador com chave não encontrado."));
+    }
+
+    private void validarSenhaOuLancar(String senha) {
+        List<String> erros = new ArrayList<>();
+
+        if (senha.length() < 8) erros.add("mínimo de 8 caracteres");
+        if (!senha.matches(".*[A-Z].*")) erros.add("1 letra maiúscula");
+        if (!senha.matches(".*[a-z].*")) erros.add("1 letra minúscula");
+        if (!senha.matches(".*\\d.*")) erros.add("1 número");
+        if (!senha.matches(".*[\\W_].*")) erros.add("1 caractere especial");
+        if (senha.matches(".*\\s.*")) erros.add("sem espaços");
+
+        if (!erros.isEmpty()) {
+            throw new IllegalArgumentException("Senha inválida: deve conter " + String.join(", ", erros) + ".");
+        }
     }
 }

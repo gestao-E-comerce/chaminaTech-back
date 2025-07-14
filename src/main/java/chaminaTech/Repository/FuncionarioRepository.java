@@ -24,6 +24,13 @@ public interface FuncionarioRepository extends JpaRepository<Funcionario, Long> 
             @Param("ativo") Boolean ativo);
 
     @Query("""
+                SELECT f FROM Funcionario f
+                WHERE f.matriz.id = :matrizId
+                  ORDER BY f.id ASC
+            """)
+    List<Funcionario> buscarTudosFuncionarios(@Param("matrizId") Long matrizId);
+
+    @Query("""
             SELECT COUNT(f) > 0 FROM Funcionario f
             WHERE f.matriz.id = :matrizId
             AND f.nome = :nome

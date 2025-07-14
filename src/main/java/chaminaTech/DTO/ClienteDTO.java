@@ -18,9 +18,7 @@ public class ClienteDTO {
 
     private String celular;
 
-//    @JsonIgnoreProperties(value = {"cliente"}, allowSetters = true)
     private List<EnderecoDTO> enderecos;
 
-//    @JsonIgnoreProperties(value = {"configuracaoEntrega", "configuracaoRetirada", "configuracaoImpressao", "configuracaoTaxaServico", }, allowSetters = true)
     private MatrizDTO matriz;
 }

@@ -717,35 +717,38 @@ public class VendaService {
 
         BigDecimal valorServico = Optional.ofNullable(venda.getValorServico()).orElse(BigDecimal.ZERO);
         BigDecimal valorDesconto = Optional.ofNullable(venda.getDesconto()).orElse(BigDecimal.ZERO);
-        BigDecimal valorTotal = venda.getValorTotal();
 
-        if (valorTotal == null || valorTotal.compareTo(BigDecimal.ZERO) == 0) return;
+        BigDecimal dinheiro = Optional.ofNullable(pagamento.getDinheiro()).orElse(BigDecimal.ZERO);
+        BigDecimal credito = Optional.ofNullable(pagamento.getCredito()).orElse(BigDecimal.ZERO);
+        BigDecimal debito = Optional.ofNullable(pagamento.getDebito()).orElse(BigDecimal.ZERO);
+        BigDecimal pix = Optional.ofNullable(pagamento.getPix()).orElse(BigDecimal.ZERO);
 
-        BigDecimal pctServicoTotal = valorServico.divide(valorTotal, 6, RoundingMode.HALF_UP);
-        BigDecimal pctDescontoTotal = valorDesconto.divide(valorTotal, 6, RoundingMode.HALF_UP);
+        BigDecimal totalPago = dinheiro.add(credito).add(debito).add(pix);
+        if (totalPago.compareTo(BigDecimal.ZERO) == 0) return;
 
-        if (pagamento.getDinheiro() != null && pagamento.getDinheiro().compareTo(BigDecimal.ZERO) > 0) {
-            BigDecimal pctPagamento = pagamento.getDinheiro().divide(valorTotal, 6, RoundingMode.HALF_UP);
-            pagamento.setServicoDinheiro(pctServicoTotal.multiply(pctPagamento));
-            pagamento.setDescontoDinheiro(pctDescontoTotal.multiply(pctPagamento));
+        // Distribuir proporcionalmente com base no total pago
+        if (dinheiro.compareTo(BigDecimal.ZERO) > 0) {
+            BigDecimal pct = dinheiro.divide(totalPago, 6, RoundingMode.HALF_UP);
+            pagamento.setServicoDinheiro(valorServico.multiply(pct));
+            pagamento.setDescontoDinheiro(valorDesconto.multiply(pct));
         }
 
-        if (pagamento.getDebito() != null && pagamento.getDebito().compareTo(BigDecimal.ZERO) > 0) {
-            BigDecimal pctPagamento = pagamento.getDebito().divide(valorTotal, 6, RoundingMode.HALF_UP);
-            pagamento.setServicoDebito(pctServicoTotal.multiply(pctPagamento));
-            pagamento.setDescontoDebito(pctDescontoTotal.multiply(pctPagamento));
+        if (credito.compareTo(BigDecimal.ZERO) > 0) {
+            BigDecimal pct = credito.divide(totalPago, 6, RoundingMode.HALF_UP);
+            pagamento.setServicoCredito(valorServico.multiply(pct));
+            pagamento.setDescontoCredito(valorDesconto.multiply(pct));
         }
 
-        if (pagamento.getCredito() != null && pagamento.getCredito().compareTo(BigDecimal.ZERO) > 0) {
-            BigDecimal pctPagamento = pagamento.getCredito().divide(valorTotal, 6, RoundingMode.HALF_UP);
-            pagamento.setServicoCredito(pctServicoTotal.multiply(pctPagamento));
-            pagamento.setDescontoCredito(pctDescontoTotal.multiply(pctPagamento));
+        if (debito.compareTo(BigDecimal.ZERO) > 0) {
+            BigDecimal pct = debito.divide(totalPago, 6, RoundingMode.HALF_UP);
+            pagamento.setServicoDebito(valorServico.multiply(pct));
+            pagamento.setDescontoDebito(valorDesconto.multiply(pct));
         }
 
-        if (pagamento.getPix() != null && pagamento.getPix().compareTo(BigDecimal.ZERO) > 0) {
-            BigDecimal pctPagamento = pagamento.getPix().divide(valorTotal, 6, RoundingMode.HALF_UP);
-            pagamento.setServicoPix(pctServicoTotal.multiply(pctPagamento));
-            pagamento.setDescontoPix(pctDescontoTotal.multiply(pctPagamento));
+        if (pix.compareTo(BigDecimal.ZERO) > 0) {
+            BigDecimal pct = pix.divide(totalPago, 6, RoundingMode.HALF_UP);
+            pagamento.setServicoPix(valorServico.multiply(pct));
+            pagamento.setDescontoPix(valorDesconto.multiply(pct));
         }
     }
 

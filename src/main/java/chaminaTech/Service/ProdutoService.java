@@ -46,6 +46,14 @@ public class ProdutoService {
                 .collect(Collectors.toList());
     }
 
+    public List<ProdutoDTO> listarTudosProdutos(Long matrizId) {
+        List<Produto> produtos = produtoRepository.listarTudosProdutos(matrizId);
+
+        return produtos.stream()
+                .map(entityToDTO::produtoToDTO)
+                .collect(Collectors.toList());
+    }
+
     public List<ProdutoDTO> listarProdutosEstoques(Long matrizId, String termoPesquisa) {
         List<Object[]> resultados = produtoRepository.listarProdutosEstoques(matrizId, termoPesquisa);
         return resultados.stream().map(obj -> {

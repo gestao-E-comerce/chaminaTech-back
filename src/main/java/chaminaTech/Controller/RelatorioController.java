@@ -4,7 +4,6 @@ import chaminaTech.DTO.MensagemDTO;
 import chaminaTech.DTO.RelatorioDTO;
 import chaminaTech.Service.RelatorioService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,28 +24,22 @@ public class RelatorioController {
     }
 
     @PostMapping
-    public ResponseEntity<MensagemDTO> cadastrarRelatorio(@RequestBody RelatorioDTO relatorioDTO) {
+    public ResponseEntity<?> cadastrarRelatorio(@RequestBody RelatorioDTO relatorioDTO) {
         try {
-            return ResponseEntity.ok(relatorioService.cadastrarRelatorio(relatorioDTO));
+            RelatorioDTO relatorioSalvo = relatorioService.cadastrarRelatorio(relatorioDTO);
+            return ResponseEntity.status(HttpStatus.CREATED).body(relatorioSalvo);
         } catch (Exception e) {
-            MensagemDTO mensagem = new MensagemDTO(e.getMessage(), HttpStatus.BAD_REQUEST);
-            return ResponseEntity.badRequest().body(mensagem);
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
-    @PostMapping("/gerarRelatorio")
-    public ResponseEntity<Page<?>> gerarRelatorio(@RequestBody RelatorioDTO relatorioDTO) {
-        Page<?> resultado = relatorioService.gerarRelatorio(relatorioDTO);
-        return ResponseEntity.ok(resultado);
-    }
-
     @PutMapping("/{id}")
-    public ResponseEntity<MensagemDTO> editarRelatorio(@PathVariable Long id, @RequestBody RelatorioDTO relatorioDTO) {
+    public ResponseEntity<?> editarRelatorio(@PathVariable Long id, @RequestBody RelatorioDTO relatorioDTO) {
         try {
-            return ResponseEntity.ok(relatorioService.editarRelatorio(id, relatorioDTO));
+            RelatorioDTO relatorioEditado = relatorioService.editarRelatorio(id, relatorioDTO);
+            return ResponseEntity.ok(relatorioEditado);
         } catch (Exception e) {
-            MensagemDTO mensagem = new MensagemDTO(e.getMessage(), HttpStatus.BAD_REQUEST);
-            return ResponseEntity.badRequest().body(mensagem);
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 

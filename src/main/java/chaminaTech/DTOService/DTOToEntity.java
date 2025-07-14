@@ -1340,15 +1340,30 @@ public class DTOToEntity {
         }
         novoRelatorio.setTipoConsulta(relatorioDTO.getTipoConsulta());
         novoRelatorio.setDeletado(relatorioDTO.getDeletado());
+        novoRelatorio.setAtivo(relatorioDTO.getAtivo());
         novoRelatorio.setFuncionarioId(relatorioDTO.getFuncionarioId());
-        novoRelatorio.setTiposVenda(relatorioDTO.getTiposVenda());
+        novoRelatorio.setClienteId(relatorioDTO.getClienteId());
+        novoRelatorio.setBalcao(relatorioDTO.getBalcao());
+        novoRelatorio.setRetirada(relatorioDTO.getRetirada());
+        novoRelatorio.setEntrega(relatorioDTO.getEntrega());
+        novoRelatorio.setMesa(relatorioDTO.getMesa());
         novoRelatorio.setDataInicio(relatorioDTO.getDataInicio());
         novoRelatorio.setDataFim(relatorioDTO.getDataFim());
         novoRelatorio.setTaxaEntrega(relatorioDTO.getTaxaEntrega());
         novoRelatorio.setTaxaServico(relatorioDTO.getTaxaServico());
         novoRelatorio.setDesconto(relatorioDTO.getDesconto());
-        novoRelatorio.setFormasPagamento(relatorioDTO.getFormasPagamento());
+        novoRelatorio.setPix(relatorioDTO.getPix());
+        novoRelatorio.setDebito(relatorioDTO.getDebito());
+        novoRelatorio.setCredito(relatorioDTO.getCredito());
+        novoRelatorio.setDinheiro(relatorioDTO.getDinheiro());
+        novoRelatorio.setPeriodoDia(relatorioDTO.getPeriodoDia());
+        novoRelatorio.setTipo(relatorioDTO.getTipo());
+        novoRelatorio.setCaixaId(relatorioDTO.getCaixaId());
+        novoRelatorio.setFuncionarioNome(relatorioDTO.getFuncionarioNome());
+        novoRelatorio.setProdutoId(relatorioDTO.getProdutoId());
+        novoRelatorio.setMateriaId(relatorioDTO.getMateriaId());
         novoRelatorio.setOrdenacao(relatorioDTO.getOrdenacao());
+        novoRelatorio.setAgrupamento(relatorioDTO.getAgrupamento());
         novoRelatorio.setPagina(relatorioDTO.getPagina());
         novoRelatorio.setTamanho(relatorioDTO.getTamanho());
 
