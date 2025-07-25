@@ -12,7 +12,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/adminFuncionario")
-@CrossOrigin(origins = "*")
 public class AdminFuncionarioController {
     @Autowired
     AdminFuncionarioService adminFuncionarioService;

@@ -97,5 +97,10 @@ public class PermissaoDTO {
     private Boolean editarRelatorio = false;
     private Boolean deletarRelatorio = false;
 
+    private Boolean dadosFiscal = false;
+    private Boolean cadastrarDadosFiscal = false;
+    private Boolean editarDadosFiscal = false;
+    private Boolean deletarDadosFiscal = false;
+
     private UsuarioDTO usuario;
 }

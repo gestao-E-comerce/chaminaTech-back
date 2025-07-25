@@ -44,6 +44,18 @@ public class Matriz extends Usuario{
     @Column(nullable = false)
     private int limiteFuncionarios;
 
+    @Column(nullable = false)
+    private String fantasia;
+
+    @Column(nullable = false)
+    private String inscricaoEstadual;
+
+    @Column(nullable = false)
+    private Integer regimeTributario;
+
+    @Column(nullable = false)
+    private String codMunicipio;
+
     @OneToOne(mappedBy = "matriz", cascade = CascadeType.ALL)
     @JsonIgnoreProperties(value = {"matriz"})
     private ConfiguracaoEntrega configuracaoEntrega;

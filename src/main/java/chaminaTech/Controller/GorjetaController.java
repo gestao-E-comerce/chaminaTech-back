@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/gorjeta")
-@CrossOrigin(origins = "*")
 public class GorjetaController {
 
     @Autowired

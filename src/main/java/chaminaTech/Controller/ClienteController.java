@@ -12,20 +12,9 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/cliente")
-@CrossOrigin(origins = "*")
 public class ClienteController {
     @Autowired
     private ClienteService clienteService;
-
-//    @GetMapping("/{id}")
-//    public ResponseEntity<ClienteDTO> findClienteById(@PathVariable Long id) {
-//        ClienteDTO clienteDTO = clienteService.findClienteById(id);
-//        if (clienteDTO != null) {
-//            return ResponseEntity.ok(clienteDTO);
-//        } else {
-//            return ResponseEntity.notFound().build();
-//        }
-//    }
 
     @GetMapping("/lista/{matrizId}")
     public List<ClienteDTO> listarClientesPorMatrizId(@PathVariable Long matrizId) {

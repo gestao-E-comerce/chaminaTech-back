@@ -12,7 +12,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/permissao")
-@CrossOrigin(origins = "*")
 public class PermissaoController {
     @Autowired
     private PermissaoService permissaoService;

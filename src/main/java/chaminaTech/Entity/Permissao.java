@@ -104,6 +104,11 @@ public class Permissao {
     private Boolean editarRelatorio = false;
     private Boolean deletarRelatorio = false;
 
+    private Boolean dadosFiscal = false;
+    private Boolean cadastrarDadosFiscal = false;
+    private Boolean editarDadosFiscal = false;
+    private Boolean deletarDadosFiscal = false;
+
     @ManyToOne
     @JoinColumn(name = "permissao_usuario",nullable = false)
     @JsonIgnoreProperties(value = {"permissao"})

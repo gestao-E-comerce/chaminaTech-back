@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/confImpressao")
-@CrossOrigin(origins = "*")
 public class ConfiguracaoImpressaoController {
     @Autowired
     private ConfiguracaoImpressaoService configuracaoImpressaoService;

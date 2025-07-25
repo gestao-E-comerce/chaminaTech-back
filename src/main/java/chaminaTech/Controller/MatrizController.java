@@ -12,7 +12,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/matriz")
-@CrossOrigin(origins = "*")
 public class MatrizController {
     @Autowired
     private MatrizService matrizService;

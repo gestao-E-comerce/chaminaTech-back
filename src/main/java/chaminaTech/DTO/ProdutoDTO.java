@@ -16,14 +16,6 @@ public class ProdutoDTO {
 
     private Boolean cardapio = true;
 
-    private String nome;
-
-    private BigDecimal valor;
-
-    private Boolean tipo;
-
-    private Integer codigo;
-
     private Boolean validarExestencia = false;
 
     private Boolean estocavel = false;
@@ -43,4 +35,48 @@ public class ProdutoDTO {
     private BigDecimal quantidadeDisponivel;
 
     private BigDecimal quantidadeDescartada;
+
+    private BigDecimal margemLucro;
+
+    private String nome;
+
+    private BigDecimal valor;
+
+    private BigDecimal valorCusto;
+
+    private String unidadeComercial;
+
+    private String unidadeTributavel;
+
+    private Integer codigo;
+
+    private String codigoBarras;
+
+    private String ncm;
+
+    private String cest;
+
+    private String cfop;
+
+    private Integer origem;
+
+    // ===== ICMS (Imposto sobre Circulação de Mercadorias) =====
+    private String csosnIcms;                 // CSOSNDTO (para Simples Nacional)
+    private String cstIcms;                   // CSTDTO (para Regime Normal)
+    private Integer modalidadeBaseCalculoIcms; // modBC
+    private BigDecimal aliquotaIcms;          // pICMS
+
+    // ===== IPI (Imposto sobre Produtos Industrializados) =====
+    private String cstIpi;                    // Código de Situação Tributária IPI
+    private String codigoEnquadramentoIpi;    // cEnq
+    private Integer tipoCalculoIpi;           // 1 = Alíquota, 2 = Valor fixo
+    private BigDecimal aliquotaIpi;           // pIPI
+
+    // ===== PIS (Programa de Integração Social) =====
+    private String cstPis;                    // Código de Situação Tributária PIS
+    private BigDecimal aliquotaPis;           // pPIS
+
+    // ===== COFINS (Contribuição para o Financiamento da Seguridade Social) =====
+    private String cstCofins;                 // Código de Situação Tributária COFINS
+    private BigDecimal aliquotaCofins;        // pCOFINS
 }

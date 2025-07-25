@@ -1,6 +1,9 @@
 package chaminaTech.DTO;
 
-import chaminaTech.DTO.ConfiguracaoDTO.*;
+import chaminaTech.DTO.ConfiguracaoDTO.ConfiguracaoEntregaDTO;
+import chaminaTech.DTO.ConfiguracaoDTO.ConfiguracaoImpressaoDTO;
+import chaminaTech.DTO.ConfiguracaoDTO.ConfiguracaoRetiradaDTO;
+import chaminaTech.DTO.ConfiguracaoDTO.ConfiguracaoTaxaServicoDTO;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -28,6 +31,14 @@ public class MatrizDTO extends UsuarioDTO {
     private BigDecimal longitude;
 
     private int limiteFuncionarios;
+
+    private String fantasia;
+
+    private String inscricaoEstadual;
+
+    private Integer regimeTributario;
+
+    private String codMunicipio;
 
     private ConfiguracaoEntregaDTO configuracaoEntrega;
 

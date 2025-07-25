@@ -17,7 +17,6 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/venda")
-@CrossOrigin(origins = "*")
 public class VendaController {
     @Autowired
     private VendaService vendaService;

@@ -13,7 +13,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/caixa")
-@CrossOrigin(origins = "*")
 public class CaixaController {
 
     @Autowired

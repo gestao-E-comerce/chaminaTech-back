@@ -5,11 +5,13 @@ import chaminaTech.DTO.ConfiguracaoDTO.ConfiguracaoEntregaDTO;
 import chaminaTech.DTO.ConfiguracaoDTO.ConfiguracaoImpressaoDTO;
 import chaminaTech.DTO.ConfiguracaoDTO.ConfiguracaoRetiradaDTO;
 import chaminaTech.DTO.ConfiguracaoDTO.ConfiguracaoTaxaServicoDTO;
+import chaminaTech.DTO.DadosFiscais.*;
 import chaminaTech.Entity.*;
 import chaminaTech.Entity.Configuracao.ConfiguracaoEntrega;
 import chaminaTech.Entity.Configuracao.ConfiguracaoImpressao;
 import chaminaTech.Entity.Configuracao.ConfiguracaoRetirada;
 import chaminaTech.Entity.Configuracao.ConfiguracaoTaxaServico;
+import chaminaTech.Entity.DadosFiscais.*;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.stereotype.Component;
@@ -45,6 +47,10 @@ public class DTOToEntity {
         novoMatriz.setLatitude(matrizDTO.getLatitude());
         novoMatriz.setLongitude(matrizDTO.getLongitude());
         novoMatriz.setLimiteFuncionarios(matrizDTO.getLimiteFuncionarios());
+        novoMatriz.setFantasia(matrizDTO.getFantasia());
+        novoMatriz.setInscricaoEstadual(matrizDTO.getInscricaoEstadual());
+        novoMatriz.setRegimeTributario(matrizDTO.getRegimeTributario());
+        novoMatriz.setCodMunicipio(matrizDTO.getCodMunicipio());
 
         if (matrizDTO.getPermissao() != null) {
             Permissao permissao = DTOToPermissao(matrizDTO.getPermissao());
@@ -690,10 +696,6 @@ public class DTOToEntity {
         novoProduto.setAtivo(produtoDTO.getAtivo());
         novoProduto.setDeletado(produtoDTO.getDeletado());
         novoProduto.setCardapio(produtoDTO.getCardapio());
-        novoProduto.setNome(removerCaracteresESubirParaMaiusculo(produtoDTO.getNome()));
-        novoProduto.setTipo(produtoDTO.getTipo());
-        novoProduto.setValor(produtoDTO.getValor());
-        novoProduto.setCodigo(produtoDTO.getCodigo());
         novoProduto.setValidarExestencia(produtoDTO.getValidarExestencia());
         novoProduto.setEstocavel(produtoDTO.getEstocavel());
         if (produtoDTO.getDeveImprimir() != null) {
@@ -735,6 +737,34 @@ public class DTOToEntity {
             novoProduto.setCategoria(categoria);
         }
 
+        novoProduto.setMargemLucro(produtoDTO.getMargemLucro());
+        novoProduto.setNome(removerCaracteresESubirParaMaiusculo(produtoDTO.getNome()));
+        novoProduto.setValor(produtoDTO.getValor());
+        novoProduto.setValorCusto(produtoDTO.getValorCusto());
+        novoProduto.setUnidadeComercial(produtoDTO.getUnidadeComercial());
+        novoProduto.setUnidadeTributavel(produtoDTO.getUnidadeTributavel());
+        novoProduto.setCodigo(produtoDTO.getCodigo());
+        novoProduto.setCodigoBarras(produtoDTO.getCodigoBarras());
+        novoProduto.setNcm(produtoDTO.getNcm());
+        novoProduto.setCest(produtoDTO.getCest());
+        novoProduto.setCfop(produtoDTO.getCfop());
+        novoProduto.setOrigem(produtoDTO.getOrigem());
+
+        novoProduto.setCsosnIcms(produtoDTO.getCsosnIcms());
+        novoProduto.setCstIcms(produtoDTO.getCstIcms());
+        novoProduto.setModalidadeBaseCalculoIcms(produtoDTO.getModalidadeBaseCalculoIcms());
+        novoProduto.setAliquotaIcms(produtoDTO.getAliquotaIcms());
+
+        novoProduto.setCstIpi(produtoDTO.getCstIpi());
+        novoProduto.setCodigoEnquadramentoIpi(produtoDTO.getCodigoEnquadramentoIpi());
+        novoProduto.setTipoCalculoIpi(produtoDTO.getTipoCalculoIpi());
+        novoProduto.setAliquotaIpi(produtoDTO.getAliquotaIpi());
+
+        novoProduto.setCstPis(produtoDTO.getCstPis());
+        novoProduto.setAliquotaPis(produtoDTO.getAliquotaPis());
+        novoProduto.setCstCofins(produtoDTO.getCstCofins());
+        novoProduto.setAliquotaCofins(produtoDTO.getAliquotaCofins());
+
         return novoProduto;
     }
 
@@ -749,7 +779,7 @@ public class DTOToEntity {
             Produto produtoComposto = new Produto();
             produtoComposto.setId(produtoCompostoDTO.getProdutoComposto().getId());
             produtoComposto.setNome(produtoCompostoDTO.getProdutoComposto().getNome());
-            produtoComposto.setTipo(produtoCompostoDTO.getProdutoComposto().getTipo());
+            produtoComposto.setUnidadeComercial(produtoCompostoDTO.getProdutoComposto().getUnidadeComercial());
             produtoComposto.setValidarExestencia(produtoCompostoDTO.getProdutoComposto().getValidarExestencia());
             produtoComposto.setEstocavel(produtoCompostoDTO.getProdutoComposto().getEstocavel());
 
@@ -1065,6 +1095,11 @@ public class DTOToEntity {
         permissao.setEditarRelatorio(permissaoDTO.getEditarRelatorio());
         permissao.setDeletarRelatorio(permissaoDTO.getDeletarRelatorio());
 
+        permissao.setDadosFiscal(permissaoDTO.getDadosFiscal());
+        permissao.setCadastrarDadosFiscal(permissaoDTO.getCadastrarDadosFiscal());
+        permissao.setEditarDadosFiscal(permissaoDTO.getEditarDadosFiscal());
+        permissao.setDeletarDadosFiscal(permissaoDTO.getDeletarDadosFiscal());
+
         // Conversão de Matriz (do Permissao)
         Usuario usuario = new Usuario();
         if (permissaoDTO.getUsuario() != null) {
@@ -1368,5 +1403,61 @@ public class DTOToEntity {
         novoRelatorio.setTamanho(relatorioDTO.getTamanho());
 
         return novoRelatorio;
+    }
+
+    public Origem DTOToOrigem(OrigemDTO origrmDTO) {
+        Origem novoOrigem = new Origem();
+        novoOrigem.setId(origrmDTO.getId());
+        novoOrigem.setCodigo(origrmDTO.getCodigo());
+        novoOrigem.setDescricao(removerCaracteresESubirParaMaiusculo(origrmDTO.getDescricao()));
+        return novoOrigem;
+    }
+
+    public CST DTOToCST(CSTDTO cstdto) {
+        CST novoCST = new CST();
+        novoCST.setId(cstdto.getId());
+        novoCST.setCodigo(cstdto.getCodigo());
+        novoCST.setDescricao(removerCaracteresESubirParaMaiusculo(cstdto.getDescricao()));
+        return novoCST;
+    }
+
+    public CSOSN DTOToCSOSN(CSOSNDTO csosndto) {
+        CSOSN novoCSOSN = new CSOSN();
+        novoCSOSN.setId(csosndto.getId());
+        novoCSOSN.setCodigo(csosndto.getCodigo());
+        novoCSOSN.setDescricao(removerCaracteresESubirParaMaiusculo(csosndto.getDescricao()));
+        return novoCSOSN;
+    }
+
+    public ModalidadeBaseCalculoIcms DTOToModalidadeBaseCalculoIcms(ModalidadeBaseCalculoIcmsDTO modalidadeBaseCalculoIcmsDTO) {
+        ModalidadeBaseCalculoIcms novoModalidadeBaseCalculoIcms = new ModalidadeBaseCalculoIcms();
+        novoModalidadeBaseCalculoIcms.setId(modalidadeBaseCalculoIcmsDTO.getId());
+        novoModalidadeBaseCalculoIcms.setCodigo(modalidadeBaseCalculoIcmsDTO.getCodigo());
+        novoModalidadeBaseCalculoIcms.setDescricao(removerCaracteresESubirParaMaiusculo(modalidadeBaseCalculoIcmsDTO.getDescricao()));
+        return novoModalidadeBaseCalculoIcms;
+    }
+
+    public CSTPIS DTOToCSTPIS(CSTPISDTO cstpisdto) {
+        CSTPIS cstpis = new CSTPIS();
+        cstpis.setId(cstpisdto.getId());
+        cstpis.setCodigo(cstpisdto.getCodigo());
+        cstpis.setDescricao(removerCaracteresESubirParaMaiusculo(cstpisdto.getDescricao()));
+        return cstpis;
+    }
+
+    public CSTIPI DTOToCSTIPI(CSTIPIDTO cstipidto) {
+        CSTIPI cstipi = new CSTIPI();
+        cstipi.setId(cstipidto.getId());
+        cstipi.setCodigo(cstipidto.getCodigo());
+        cstipi.setDescricao(removerCaracteresESubirParaMaiusculo(cstipidto.getDescricao()));
+        return cstipi;
+    }
+
+    public CSTCOFINS DTOToCSTCOFINS(CSTCOFINSDTO cstcofinsdto) {
+        CSTCOFINS cstcofins = new CSTCOFINS();
+        cstcofins.setId(cstcofinsdto.getId());
+        cstcofins.setCodigo(cstcofinsdto.getCodigo());
+        cstcofins.setDescricao(removerCaracteresESubirParaMaiusculo(cstcofinsdto.getDescricao()));
+        return cstcofins;
     }
 }

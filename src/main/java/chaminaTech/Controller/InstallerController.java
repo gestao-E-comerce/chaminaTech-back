@@ -17,7 +17,6 @@ import java.util.zip.ZipOutputStream;
 
 @RestController
 @RequestMapping("/api/installer")
-@CrossOrigin(origins = "*")
 public class InstallerController {
     @Autowired
     private AppImpressaoTokenService appImpressaoTokenService;

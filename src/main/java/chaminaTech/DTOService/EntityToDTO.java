@@ -5,11 +5,13 @@ import chaminaTech.DTO.ConfiguracaoDTO.ConfiguracaoEntregaDTO;
 import chaminaTech.DTO.ConfiguracaoDTO.ConfiguracaoImpressaoDTO;
 import chaminaTech.DTO.ConfiguracaoDTO.ConfiguracaoRetiradaDTO;
 import chaminaTech.DTO.ConfiguracaoDTO.ConfiguracaoTaxaServicoDTO;
+import chaminaTech.DTO.DadosFiscais.*;
 import chaminaTech.Entity.*;
 import chaminaTech.Entity.Configuracao.ConfiguracaoEntrega;
 import chaminaTech.Entity.Configuracao.ConfiguracaoImpressao;
 import chaminaTech.Entity.Configuracao.ConfiguracaoRetirada;
 import chaminaTech.Entity.Configuracao.ConfiguracaoTaxaServico;
+import chaminaTech.Entity.DadosFiscais.*;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -61,6 +63,10 @@ public class EntityToDTO {
         matrizDTO.setLatitude(matriz.getLatitude());
         matrizDTO.setLongitude(matriz.getLongitude());
         matrizDTO.setLimiteFuncionarios(matriz.getLimiteFuncionarios());
+        matrizDTO.setFantasia(matriz.getFantasia());
+        matrizDTO.setInscricaoEstadual(matriz.getInscricaoEstadual());
+        matrizDTO.setRegimeTributario(matriz.getRegimeTributario());
+        matrizDTO.setCodMunicipio(matriz.getCodMunicipio());
 
         if (matriz.getConfiguracaoEntrega() != null) {
             ConfiguracaoEntregaDTO configuracaoEntregaDTO = configuracaoEntregaToDTO(matriz.getConfiguracaoEntrega());
@@ -396,6 +402,11 @@ public class EntityToDTO {
         permissaoDTO.setCadastrarRelatorio(permissao.getCadastrarRelatorio());
         permissaoDTO.setEditarRelatorio(permissao.getEditarRelatorio());
         permissaoDTO.setDeletarRelatorio(permissao.getDeletarRelatorio());
+
+        permissaoDTO.setDadosFiscal(permissao.getDadosFiscal());
+        permissaoDTO.setCadastrarDadosFiscal(permissao.getCadastrarDadosFiscal());
+        permissaoDTO.setEditarDadosFiscal(permissao.getEditarDadosFiscal());
+        permissaoDTO.setDeletarDadosFiscal(permissao.getDeletarDadosFiscal());
 
         if (permissao.getUsuario() != null) {
             UsuarioDTO usuarioDTO = new UsuarioDTO();
@@ -972,10 +983,6 @@ public class EntityToDTO {
         produtoDTO.setAtivo(produto.getAtivo());
         produtoDTO.setDeletado(produto.getDeletado());
         produtoDTO.setCardapio(produto.getCardapio());
-        produtoDTO.setNome(produto.getNome());
-        produtoDTO.setValor(produto.getValor());
-        produtoDTO.setTipo(produto.getTipo());
-        produtoDTO.setCodigo(produto.getCodigo());
         produtoDTO.setValidarExestencia(produto.getValidarExestencia());
         produtoDTO.setEstocavel(produto.getEstocavel());
         if (produto.getDeveImprimir() != null) {
@@ -1015,6 +1022,34 @@ public class EntityToDTO {
             produtoDTO.setCategoria(categoriaToDTO(produto.getCategoria()));
         }
 
+        produtoDTO.setMargemLucro(produto.getMargemLucro());
+        produtoDTO.setNome(produto.getNome());
+        produtoDTO.setValor(produto.getValor());
+        produtoDTO.setValorCusto(produto.getValorCusto());
+        produtoDTO.setUnidadeComercial(produto.getUnidadeComercial());
+        produtoDTO.setUnidadeTributavel(produto.getUnidadeTributavel());
+        produtoDTO.setCodigo(produto.getCodigo());
+        produtoDTO.setCodigoBarras(produto.getCodigoBarras());
+        produtoDTO.setNcm(produto.getNcm());
+        produtoDTO.setCest(produto.getCest());
+        produtoDTO.setCfop(produto.getCfop());
+        produtoDTO.setOrigem(produto.getOrigem());
+
+        produtoDTO.setCsosnIcms(produto.getCsosnIcms());
+        produtoDTO.setCstIcms(produto.getCstIcms());
+        produtoDTO.setModalidadeBaseCalculoIcms(produto.getModalidadeBaseCalculoIcms());
+        produtoDTO.setAliquotaIcms(produto.getAliquotaIcms());
+
+        produtoDTO.setCstIpi(produto.getCstIpi());
+        produtoDTO.setCodigoEnquadramentoIpi(produto.getCodigoEnquadramentoIpi());
+        produtoDTO.setTipoCalculoIpi(produto.getTipoCalculoIpi());
+        produtoDTO.setAliquotaIpi(produto.getAliquotaIpi());
+
+        produtoDTO.setCstPis(produto.getCstPis());
+        produtoDTO.setAliquotaPis(produto.getAliquotaPis());
+        produtoDTO.setCstCofins(produto.getCstCofins());
+        produtoDTO.setAliquotaCofins(produto.getAliquotaCofins());
+
         return produtoDTO;
     }
 
@@ -1037,7 +1072,7 @@ public class EntityToDTO {
             compostoDTO.setDeletado(produtoCompostoEntity.getDeletado());
             compostoDTO.setCardapio(produtoCompostoEntity.getCardapio());
             compostoDTO.setNome(produtoCompostoEntity.getNome());
-            compostoDTO.setTipo(produtoCompostoEntity.getTipo());
+            compostoDTO.setUnidadeComercial(produtoCompostoEntity.getUnidadeComercial());
             compostoDTO.setValor(produtoCompostoEntity.getValor());
             compostoDTO.setCodigo(produtoCompostoEntity.getCodigo());
             compostoDTO.setValidarExestencia(produtoCompostoEntity.getValidarExestencia());
@@ -1286,5 +1321,61 @@ public class EntityToDTO {
         dto.setPagina(entity.getPagina());
         dto.setTamanho(entity.getTamanho());
         return dto;
+    }
+
+    public OrigemDTO origemToDTO(Origem origem) {
+        OrigemDTO origemDTO = new OrigemDTO();
+        origemDTO.setId(origem.getId());
+        origemDTO.setCodigo(origem.getCodigo());
+        origemDTO.setDescricao(origem.getDescricao());
+        return origemDTO;
+    }
+
+    public CSTDTO cstToDTO(CST cst) {
+        CSTDTO cstdto = new CSTDTO();
+        cstdto.setId(cst.getId());
+        cstdto.setCodigo(cst.getCodigo());
+        cstdto.setDescricao(cst.getDescricao());
+        return cstdto;
+    }
+
+    public CSOSNDTO csosnToDTO(CSOSN csosn) {
+        CSOSNDTO csosndto = new CSOSNDTO();
+        csosndto.setId(csosn.getId());
+        csosndto.setCodigo(csosn.getCodigo());
+        csosndto.setDescricao(csosn.getDescricao());
+        return csosndto;
+    }
+
+    public ModalidadeBaseCalculoIcmsDTO modalidadeBaseCalculoIcmsToDTO(ModalidadeBaseCalculoIcms origemModalidadeBaseCalculoIcms) {
+        ModalidadeBaseCalculoIcmsDTO modalidadeBaseCalculoIcmsDTO = new ModalidadeBaseCalculoIcmsDTO();
+        modalidadeBaseCalculoIcmsDTO.setId(origemModalidadeBaseCalculoIcms.getId());
+        modalidadeBaseCalculoIcmsDTO.setCodigo(origemModalidadeBaseCalculoIcms.getCodigo());
+        modalidadeBaseCalculoIcmsDTO.setDescricao(origemModalidadeBaseCalculoIcms.getDescricao());
+        return modalidadeBaseCalculoIcmsDTO;
+    }
+
+    public CSTPISDTO cstpisToDTO(CSTPIS cstpis) {
+        CSTPISDTO cstpisdto = new CSTPISDTO();
+        cstpisdto.setId(cstpis.getId());
+        cstpisdto.setCodigo(cstpis.getCodigo());
+        cstpisdto.setDescricao(cstpis.getDescricao());
+        return cstpisdto;
+    }
+
+    public CSTIPIDTO cstipiToDTO(CSTIPI cstipi) {
+        CSTIPIDTO cstipidto = new CSTIPIDTO();
+        cstipidto.setId(cstipi.getId());
+        cstipidto.setCodigo(cstipi.getCodigo());
+        cstipidto.setDescricao(cstipi.getDescricao());
+        return cstipidto;
+    }
+
+    public CSTCOFINSDTO cstcofinsToDTO(CSTCOFINS cstcofins) {
+        CSTCOFINSDTO cstcofinsdto = new CSTCOFINSDTO();
+        cstcofinsdto.setId(cstcofins.getId());
+        cstcofinsdto.setCodigo(cstcofins.getCodigo());
+        cstcofinsdto.setDescricao(cstcofins.getDescricao());
+        return cstcofinsdto;
     }
 }

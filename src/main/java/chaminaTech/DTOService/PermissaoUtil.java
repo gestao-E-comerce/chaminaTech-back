@@ -105,6 +105,11 @@ public class PermissaoUtil {
             case "editarRelatorio" -> permissao.getEditarRelatorio();
             case "deletarRelatorio" -> permissao.getDeletarRelatorio();
 
+            case "dadosFiscal" -> permissao.getDadosFiscal();
+            case "cadastrarDadosFiscal" -> permissao.getCadastrarDadosFiscal();
+            case "editarDadosFiscal" -> permissao.getEditarDadosFiscal();
+            case "deletarDadosFiscal" -> permissao.getDeletarDadosFiscal();
+
             default -> false;
         };
     }

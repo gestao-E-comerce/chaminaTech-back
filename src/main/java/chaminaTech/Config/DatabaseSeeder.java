@@ -23,7 +23,7 @@ public class DatabaseSeeder implements CommandLineRunner {
             Admin admin = new Admin();
             admin.setNome("Administrador Padrão");
             admin.setUsername("admin");
-            admin.setPassword(passwordEncoder.encode("Admin@123"));
+            admin.setPassword(passwordEncoder.encode("admin"));
             admin.setRole("ADMIN");
             admin.setAtivo(true);
 
@@ -102,6 +102,10 @@ public class DatabaseSeeder implements CommandLineRunner {
             permissao.setCadastrarRelatorio(true);
             permissao.setEditarRelatorio(true);
             permissao.setDeletarRelatorio(true);
+            permissao.setDadosFiscal(true);
+            permissao.setCadastrarDadosFiscal(true);
+            permissao.setEditarDadosFiscal(true);
+            permissao.setDeletarDadosFiscal(true);
 
             permissaoRepository.save(permissao);
 

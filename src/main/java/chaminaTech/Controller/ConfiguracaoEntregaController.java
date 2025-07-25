@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/confEntrega")
-@CrossOrigin(origins = "*")
 public class ConfiguracaoEntregaController {
     @Autowired
     private ConfiguracaoEntregaService configuracaoEntregaService;

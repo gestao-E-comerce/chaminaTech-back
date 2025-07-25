@@ -14,7 +14,6 @@ import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/api/auditoria")
-@CrossOrigin(origins = "*")
 public class AuditoriaController {
 
     @Autowired

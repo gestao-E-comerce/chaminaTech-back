@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/confRetirada")
-@CrossOrigin(origins = "*")
 public class ConfiguracaoRetiradaController {
     @Autowired
     private ConfiguracaoRetiradaService configuracaoRetiradaService;

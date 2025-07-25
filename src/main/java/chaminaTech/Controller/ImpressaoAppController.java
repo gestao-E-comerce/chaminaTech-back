@@ -9,7 +9,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/app/impressao")
-@CrossOrigin(origins = "*")
 public class ImpressaoAppController {
     @Autowired
     private ImpressaoService impressaoService;
